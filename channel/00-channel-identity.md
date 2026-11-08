@@ -5,28 +5,36 @@ Tagline: *"One impossible question. Followed to the very end."*
 
 Handle ideas: `@hypotheticatv`, `@hypothetica.stories`
 
+## Format: voiceless
+No narrator. Every story is told with **on-screen text** over animation and an ambient music score.
+- Text sits in the bottom widescreen bar, one short line at a time, timed for comfortable reading (~15 characters per second, minimum 3 seconds).
+- Music carries the emotion: soft pads + bell notes, and it **drops to silence right before the twist**.
+- Works for viewers with sound off, and translates easily (swap the text for other languages).
+
 ## About text (paste into YouTube)
 > Welcome to Hypothetica. Every episode asks one impossible question — and then refuses to stop asking. What happens on day one? Year one? What does real science say would actually break first?
 >
-> Chalk-drawn stories, real research, and an ending you won't see coming.
+> Silent cinematic stories, real research, and an ending you won't see coming.
 >
 > New episodes every week. Drop your own "what if" in the comments — the best ones get made.
 
-## Visual style (our own look, not stickman silhouettes)
-- **Chalkboard world.** Every scene is drawn in white and colored chalk on a dark green-black board (`#1E2A24`). Lines look hand-drawn and slightly smudged.
-- **One color per episode.** The "impossible thing" is always drawn in a single accent color (episode 1 = amber `#F2A93B`). Everything else stays white chalk. Viewers learn to track the color.
-- **Host character: Wren.** A round-headed doodle with big square glasses, a scarf, and a chalk-dust trail when moving. Wren is the main character in every story (different life each time, same face). Wren is *never* a stick figure — thick body outline, mitten hands.
-- **Science cards.** When real science shows up, a "chalk index card" slides in with a one-line fact and a source.
-- **Ending signature.** Every episode ends with the board being wiped clean by an eraser swipe, leaving one word behind.
+## Visual style
+- **Cinematic silhouettes.** Solid black figures and objects against glowing gradient skies (sunset, dawn, night, warm interiors). Widescreen black bars and light film grain.
+- **One color per episode.** The impossible thing is always shown in a single accent color (episode 1 = amber `#FFB040`). One rare second color can mark a key plot object (episode 1 = the red umbrella).
+- **Main character: Wren.** A silhouette with square glasses sticking out past the profile and a scarf that blows in the wind. Wren is the main character in every story (different life each time).
+- **Science cards.** When real science shows up, a cream "REAL SCIENCE" index card slides in with a short fact.
+- **Ending signature.** Every episode ends on black with one amber word.
 
-## Format
-- Length: 7–10 minutes
-- Structure: **Hook (0:00–0:30) → Day One → Escalation → The Science → The Cost → Twist → Eraser wipe**
-- Voice: calm, curious narrator, 2nd person ("you") in the hook, 3rd person ("Wren") for the story
-- Music: lo-fi piano + low synth pad; drop to silence right before the twist
+## Structure
+**Hook (question to the viewer) → Title card → Day One → Escalation → Real Science → The Cost → Twist (music cuts out) → Reveal → One-word ending**
+
+Length: 3–5 minutes.
 
 ## Thumbnail formula
-Dark board background, Wren's face large on one side with one emotion, the episode's accent-color object on the other side, 3–4 word text max in chalk font.
+Big black silhouette of Wren against a bright sky, the episode's accent-color object glowing beside it, 3–4 words of text max.
 
 ## Upload schedule
-1 long video per week + 2–3 Shorts cut from the hook and twist.
+1 episode per week + 2–3 Shorts cut from the hook and twist.
+
+## How episodes are made
+`channel/preview/render_episode.py` generates the whole episode (animation, text, and music) — see `channel/preview/README.md`.
