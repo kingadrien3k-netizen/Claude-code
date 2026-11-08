@@ -7,6 +7,7 @@ Steps are 16ths within a bar (0–15). Append every new beat.
 | 1 | 2026-11-08 | Come Up Beat | (pre-brief) dark trap | 140 | C minor | synth bell | Cm–Ab–Fm–G; 8ths per bar: G Eb C Eb G Eb D Eb / Ab Eb C Eb Ab Eb C Bb / F C Ab C F C Ab C / G D B D F D B G (oct 4) | [0,10] [0,3,10] [0,10,13] [0,6,10,14]; clap step 8 | none | demo |
 | 2 | 2026-11-08 | Smooth Beat | (pre-brief) melodic, swung | 100 | A minor | KS guitar + Rhodes | Am9–Fmaj7–Cmaj7–Em7; 8ths: A C E G E C D C / A C F E – C A G / G C E G E D C – / B G E G B D B – (oct 4–5) | [0,7,10] [0,3,10] [0,6,10,15] [0,7,9,14]; snare 4,12 | none | demo |
 | 3 | 2026-11-08 | Nobody Pray 142 | 1 ghetto gospel | 142 | F# maj / D# min | organ | D#m7–Bmaj7–F#/A#–C#. CALL: A#4@0(3) C#5@3(3) A#4@6(2) G#4@10(2) F#4@12(4) / D#4@0(6) F#4@8(2) G#4@11(5); RESP (8vb): C#5@0(3) A#4@3(3) G#4@6(2) F#4@8(2) D#4@12(4) / F#4@0(4) E#4@4(2) F#4@6(10); verse run F#-G#-A#-C# @12-15 | A [0,5,11] / B [0,2,9,13]; snare 8 | Fisk 1909 "I Couldn't Hear Nobody Pray" (LOC jukebox-128142), intro 144.0s+, bridge stabs 148.2/149.6/150.6/131.1s, retuned -37.6c | delivered |
+| 4 | 2026-11-08 | Little David 97 | 1 ghetto gospel | 97 | E minor | soul Rhodes | Em9–Cmaj9–Am9–B7. CALL: B4@0(2) D5@2(1) E5@3(5) G5@10(2) F#5@12(1) E5@13(3) / D5@2(2) B4@4(4) G4@10(6); RESP: C5@0(3) B4@3(1) A4@4(4) E5@12(4) / F#5@0(2) D#5@2(2) B4@4(6) A4@12(2) F#4@14(2); 12% swing | A [0,3,8,11] / B [0,2,10,11]; snare 4,12 | Fisk 1909 "Little David, Play On Yo' Harp" (LOC jukebox-128180), intro 92.6s+, stabs 114.2/138.0/140.0/115.2s, retuned +47c | delivered |
 | — | earlier | Rylo 86 | 2 | 86 | E minor | nylon | not on file — get notes/stems from Adrien before claiming no-match | ? | ? | approved |
 | — | earlier | Vanish 94 | 3 | 94 | ? | pluck | not on file | ? | ? | approved |
 
@@ -14,7 +15,8 @@ Steps are 16ths within a bar (0–15). Append every new beat.
 - Fisk Univ. Jubilee Singers — "I Couldn't Hear Nobody Pray" (Victor 16448, 1909) — used in #3
 
 ## Lead rotation (lane 1)
-- #3 organ → next lane-1 lead must NOT be organ
+- #3 organ
+- #4 soul Rhodes → next lane-1 lead must NOT be Rhodes (try piano / guitar / soul keys)
 
 ## Starred (approved) beats from Adrien's email — metadata only
 Audio not analyzed yet: the Gmail connector can't download attachments, so motifs/kick patterns for these are unknown.
@@ -58,6 +60,8 @@ Treat their titles + feel as off-limits to copy. Lane-1 favorites cluster at **9
 - "Shall We Gather at the River" — Haydn Quartet, 1909 (Gather 140)
 - Unnamed 1909 chops in Ghetto Gospel 96, Seraph 150, Choir 140/88 — identity unknown
 - "I Couldn't Hear Nobody Pray" — Fisk, 1909 (Nobody Pray 142, this session)
+- "Little David, Play On Yo' Harp" — Fisk, 1909 (Little David 97)
+- Downloaded but NOT used yet: "Great Campmeeting" — Fisk, 1909 (LOC jukebox-128259), sits ~F#
 
 ### Audio fingerprints pulled from Gmail (2026-11-08)
 Rough, auto-detected from the full mix (kick = low-band onsets on a 16-step grid; topline = loudest pitch class per 8th in the loudest bar). Use as a "don't land near this" guide, not exact transcription.
