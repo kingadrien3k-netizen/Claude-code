@@ -473,7 +473,7 @@ function makeChance(timing, flick) {
   let p = timing === 'perfect' ? base + 0.42 : timing === 'good' ? base : base * 0.35;
   if (flick) p *= 0.85;
   const dd = nearestDef(player);
-  if (dd < 0.9) p *= 0.45; else if (dd < 1.6) p *= 0.75;
+  if (dd < 0.8) p *= 0.5; else if (dd < 1.2) p *= 0.8;
   return clamp(p, 0.02, 0.97);
 }
 function releaseShot(flick) {
@@ -644,7 +644,7 @@ function update(dt, t) {
       const r = Math.min(1, dt * (2.2 + level * 0.35));
       d.rx = lerp(d.rx, P.x, r); d.rz = lerp(d.rz, P.z, r);
       const n = norm(HOOP.x - d.rx, HOOP.z - d.rz);
-      target = { x: d.rx + n.x * 0.95, z: d.rz + n.z * 0.95 };
+      target = { x: d.rx + n.x * 1.3, z: d.rz + n.z * 1.3 };
     } else {
       const home = { x: 0, z: -3.6 }, near = d2(P, HOOP) < 4.8;
       target = near ? { x: lerp(home.x, P.x, 0.6), z: lerp(home.z, P.z, 0.6) } : home;
