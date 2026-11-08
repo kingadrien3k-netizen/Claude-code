@@ -35,3 +35,21 @@ npm test           # end-to-end protocol smoke test
 | `public/rooms.js` | Animated room backdrops |
 | `public/game.js` | Star Catch mini-game |
 | `public/client.js` | UI, networking, rendering loop, dress-up / shop / map / friends |
+
+---
+
+# Thumb Hoops (`hoops/`)
+
+A one-thumb portrait basketball game for phones. Open `hoops/index.html` in any mobile
+browser — no install, no build step.
+
+| Gesture | Action |
+|---|---|
+| Drag anywhere | Dribble (floating joystick appears under your thumb) |
+| Press & hold still | Shot meter — release in the green for a perfect shot |
+| Quick tap | Crossover burst — can break the defender's ankles |
+| Flick upward while dribbling | Quick-release jump shot |
+| Drive into the restricted area | Automatic layup (dunk if you're bursting or on fire) |
+
+90-second games, 14-second shot clock, 2s and 3s, rebounds off misses, steals, blocks,
+an "on fire" streak bonus, a second defender once you hit 10 points, and a saved best score.
