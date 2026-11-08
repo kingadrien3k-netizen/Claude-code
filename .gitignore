@@ -1,3 +1,6 @@
 __pycache__/
 *.pyc
 channel/preview/build/
+asmr/*sample*.mp4
+asmr/*h.mp4
+asmr/build/
