@@ -229,7 +229,7 @@ function releaseShot(flick) {
   }
   const dd = nearestDef(player);
   if (dd < 30 && timing !== 'perfect' && Math.random() < 0.3) return blocked();
-  shoot(makeChance(timing, flick), { three: isThree(player), timing, z0: 46, dunk: false });
+  shoot(makeChance(timing, flick), { three: isThree(player), timing, z0: 128, dunk: false });
 }
 function flickShot() {
   if (!hasBall() || player.mode !== 'dribble') return;
@@ -358,8 +358,8 @@ function update(dt) {
   if (ball.mode === 'held') {
     if (P.mode === 'free' || P.mode === 'recover') P.mode = 'dribble';
     const bounce = Math.abs(Math.sin(P.phase * 0.9));
-    ball.x = P.x + P.hand * 15; ball.y = P.y + 4;
-    ball.z = P.mode === 'charge' ? 48 : bounce * 24;
+    ball.x = P.mode === 'charge' ? P.x : P.x + P.hand * 15; ball.y = P.y + 4;
+    ball.z = P.mode === 'charge' ? 128 : bounce * 24;
     if (P.mode === 'dribble' && bounce < 0.12 && P.lastBounce > 0.2) { sfx.dribble(); P.lastBounce = 0; }
     P.lastBounce += dt;
     // drive to the rim → automatic layup / dunk
@@ -468,31 +468,65 @@ function buildFloor() {
 
 function drawShadow(x, y, r) { ctx.fillStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.ellipse(x, y, r, r * 0.4, 0, 0, Math.PI * 2); ctx.fill(); }
 
-function drawBaller(b, opts) {
-  const { jersey, trim, skin, hair, num, armsUp, lift } = opts;
-  const x = b.x, y = b.y - (lift || 0) * ZS;
-  drawShadow(b.x, b.y + 2, 15);
-  const step = Math.sin(b.phase) * 4, moving = Math.hypot(b.vx, b.vy) > 15;
-  // legs
-  ctx.fillStyle = skin;
-  ctx.fillRect(x - 8, y - 16 + (moving ? step : 0) * 0.5, 6, 16);
-  ctx.fillRect(x + 2, y - 16 - (moving ? step : 0) * 0.5, 6, 16);
-  ctx.fillStyle = '#fff'; ctx.fillRect(x - 9, y - 3 + (moving ? step * 0.5 : 0), 8, 4); ctx.fillRect(x + 1, y - 3 - (moving ? step * 0.5 : 0), 8, 4);
-  // shorts
-  ctx.fillStyle = trim; ctx.beginPath(); ctx.roundRect(x - 11, y - 26, 22, 13, 3); ctx.fill();
-  // arms
-  ctx.strokeStyle = skin; ctx.lineWidth = 5; ctx.lineCap = 'round';
-  ctx.beginPath();
-  if (armsUp) { ctx.moveTo(x - 10, y - 42); ctx.lineTo(x - 13, y - 62); ctx.moveTo(x + 10, y - 42); ctx.lineTo(x + 13, y - 62); }
-  else { ctx.moveTo(x - 11, y - 42); ctx.lineTo(x - 15, y - 26 - step); ctx.moveTo(x + 11, y - 42); ctx.lineTo(x + 15, y - 26 + step); }
-  ctx.stroke();
-  // jersey
-  ctx.fillStyle = jersey; ctx.beginPath(); ctx.roundRect(x - 12, y - 46, 24, 22, 6); ctx.fill();
-  ctx.fillStyle = trim; ctx.font = 'bold 11px system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(num, x, y - 31);
-  // head
-  ctx.fillStyle = skin; ctx.beginPath(); ctx.arc(x, y - 54, 9, 0, Math.PI * 2); ctx.fill();
-  ctx.fillStyle = hair; ctx.beginPath(); ctx.arc(x, y - 56, 9, Math.PI, 0); ctx.fill();
-  ctx.fillStyle = trim; ctx.fillRect(x - 9, y - 58, 18, 3); // headband
+function drawBaller(b, o) {
+  // Realistic-proportioned athlete: swept hair, face mask, zip track jacket, fingerless gloves,
+  // glossy black pants and boots. Shaded with gradients for a 3D look.
+  const x = b.x, y = b.y - (o.lift || 0) * ZS;
+  drawShadow(b.x, b.y + 2, 16);
+  const moving = Math.hypot(b.vx, b.vy) > 15, step = moving ? Math.sin(b.phase) * 5 : 0;
+
+  // legs + boots
+  const pants = ctx.createLinearGradient(x - 10, 0, x + 10, 0);
+  pants.addColorStop(0, '#0b0b0d'); pants.addColorStop(0.35, '#3b3b42'); pants.addColorStop(0.55, '#16161a'); pants.addColorStop(1, '#0b0b0d');
+  for (const [lx, off] of [[-5.5, step * 0.5], [5.5, -step * 0.5]]) {
+    ctx.fillStyle = pants; ctx.beginPath(); ctx.roundRect(x + lx - 4.5, y - 35 + off, 9, 29, 3); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.22)'; ctx.fillRect(x + lx - 2, y - 32 + off, 1.4, 22);   // leather sheen
+    ctx.fillStyle = '#141416'; ctx.beginPath(); ctx.roundRect(x + lx - 5.5, y - 9 + off, 11, 9, 3); ctx.fill();
+    ctx.fillStyle = '#000'; ctx.fillRect(x + lx - 5.5, y - 1.5 + off, 11, 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.35)'; ctx.fillRect(x + lx - 1.5, y - 8 + off, 3, 1.2);
+  }
+
+  // jacket torso
+  const jk = ctx.createLinearGradient(x - 14, 0, x + 14, 0);
+  jk.addColorStop(0, o.jacketDark); jk.addColorStop(0.3, o.jacket); jk.addColorStop(0.7, o.jacket); jk.addColorStop(1, o.jacketDark);
+  ctx.fillStyle = jk; ctx.beginPath(); ctx.roundRect(x - 13, y - 59, 26, 29, 7); ctx.fill();
+  ctx.fillStyle = o.jacketDark; ctx.beginPath(); ctx.roundRect(x - 12.5, y - 34, 25, 4.5, 2); ctx.fill();   // hem band
+  ctx.strokeStyle = '#1a1a1a'; ctx.lineWidth = 1.5; ctx.beginPath(); ctx.moveTo(x, y - 60); ctx.lineTo(x, y - 30); ctx.stroke(); // zipper
+  ctx.fillStyle = '#c9c9c9'; ctx.fillRect(x - 1, y - 58, 2, 3);                                             // zip pull
+  ctx.fillStyle = o.jacket; ctx.beginPath(); ctx.roundRect(x - 7, y - 63, 14, 6, 2); ctx.fill();             // stand-up collar
+  ctx.strokeStyle = o.jacketDark; ctx.lineWidth = 1; ctx.stroke();
+
+  // sleeves + gloves
+  const hands = o.armsUp ? [[-14, -84], [14, -84]] : [[-17, -31 - step], [17, -31 + step]];
+  for (const [i, [hx, hy]] of hands.entries()) {
+    const sx = i ? 11 : -11, sy = -56;
+    ctx.lineCap = 'round';
+    ctx.strokeStyle = o.jacketDark; ctx.lineWidth = 8.5; ctx.beginPath(); ctx.moveTo(x + sx, y + sy); ctx.lineTo(x + hx, y + hy); ctx.stroke();
+    ctx.strokeStyle = o.jacket; ctx.lineWidth = 6; ctx.beginPath(); ctx.moveTo(x + sx, y + sy); ctx.lineTo(x + hx * 0.97, y + hy * 0.99); ctx.stroke();
+    ctx.fillStyle = '#121214'; ctx.beginPath(); ctx.arc(x + hx, y + hy + (o.armsUp ? -2 : 2), 4, 0, Math.PI * 2); ctx.fill();   // glove
+    ctx.fillStyle = o.skin; ctx.beginPath(); ctx.arc(x + hx, y + hy + (o.armsUp ? -5 : 5), 1.8, 0, Math.PI * 2); ctx.fill();    // fingertips
+  }
+
+  // neck + head
+  ctx.fillStyle = o.skin; ctx.fillRect(x - 3, y - 66, 6, 5);
+  const face = ctx.createRadialGradient(x - 3, y - 74, 2, x, y - 71, 12);
+  face.addColorStop(0, o.skinLight); face.addColorStop(1, o.skin);
+  ctx.fillStyle = face; ctx.beginPath(); ctx.ellipse(x, y - 72, 8.5, 10, 0, 0, Math.PI * 2); ctx.fill();
+  // eyes
+  ctx.fillStyle = '#1c1410'; ctx.beginPath(); ctx.arc(x - 3.2, y - 74, 1.1, 0, 7); ctx.arc(x + 3.2, y - 74, 1.1, 0, 7); ctx.fill();
+  // face mask with ear straps
+  ctx.strokeStyle = 'rgba(40,50,60,0.7)'; ctx.lineWidth = 0.8;
+  ctx.beginPath(); ctx.moveTo(x - 7, y - 69); ctx.lineTo(x - 8.5, y - 73); ctx.moveTo(x + 7, y - 69); ctx.lineTo(x + 8.5, y - 73); ctx.stroke();
+  const mk = ctx.createLinearGradient(x - 7, 0, x + 7, 0);
+  mk.addColorStop(0, o.maskDark); mk.addColorStop(0.5, o.mask); mk.addColorStop(1, o.maskDark);
+  ctx.fillStyle = mk; ctx.beginPath(); ctx.roundRect(x - 7, y - 71.5, 14, 9.5, 4); ctx.fill();
+  ctx.strokeStyle = 'rgba(0,0,0,0.25)'; ctx.beginPath(); ctx.moveTo(x, y - 71.5); ctx.lineTo(x, y - 62); ctx.stroke();
+  // swept hair
+  ctx.fillStyle = o.hair;
+  ctx.beginPath(); ctx.ellipse(x, y - 77, 9.5, 7, 0, Math.PI, 0); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(x - 9.5, y - 77); ctx.quadraticCurveTo(x - 2, y - 81, x + 7, y - 74); ctx.quadraticCurveTo(x + 2, y - 79, x - 9.5, y - 75); ctx.fill();
+  ctx.fillRect(x - 9.5, y - 78, 2.5, 7); ctx.fillRect(x + 7, y - 78, 2.5, 6);
+  ctx.fillStyle = 'rgba(255,255,255,0.18)'; ctx.beginPath(); ctx.ellipse(x - 2, y - 81, 4, 1.5, -0.3, 0, Math.PI * 2); ctx.fill();
 }
 
 function drawBall() {
@@ -528,7 +562,7 @@ function drawHoop(front) {
 
 function drawMeter() {
   if (player.mode !== 'charge') return;
-  const m = player.charge / 0.8, x = player.x + 26, y = player.y - 70, h = 60;
+  const m = player.charge / 0.8, x = player.x + 26, y = player.y - 80, h = 60;
   ctx.fillStyle = 'rgba(0,0,0,0.6)'; ctx.beginPath(); ctx.roundRect(x - 2, y - 2, 12, h + 4, 4); ctx.fill();
   ctx.fillStyle = '#3ddc84'; ctx.fillRect(x, y + h * (1 - 0.91), 8, h * 0.12);
   const fill = clamp(m, 0, 1);
@@ -579,13 +613,15 @@ function draw() {
   drawHoop(false);
   if (state !== 'menu' && player) {
     const actors = [{ y: player.y, f: () => drawBaller(player, {
-        jersey: '#16c2a3', trim: '#0b4f45', skin: '#8d5a3b', hair: '#1b1b1b', num: '7',
+        jacket: '#f4f4f6', jacketDark: '#b9bcc4', skin: '#e2b08c', skinLight: '#f3cdb0', hair: '#5a3622',
+        mask: '#9fb3c6', maskDark: '#6f8396',
         armsUp: player.mode === 'charge' || player.mode === 'shoot',
         lift: player.mode === 'shoot' ? Math.sin(Math.PI * clamp(1 - player.airT / 0.45, 0, 1)) * (ball.flight && ball.flight.info.dunk ? 60 : 30) : 0 }) }];
     defenders.forEach((d, i) => actors.push({ y: d.y, f: () => {
-      drawBaller(d, { jersey: '#e2364f', trim: '#5c0f1c', skin: i ? '#f0c08a' : '#c98a5e', hair: i ? '#a0522d' : '#2b1a10', num: i ? '23' : '4',
+      drawBaller(d, { jacket: '#d8344a', jacketDark: '#8a1c2b', skin: i ? '#f0c8a0' : '#9a6440', skinLight: i ? '#fbe0c6' : '#b88160',
+        hair: i ? '#c89a52' : '#1e1410', mask: '#2a2a30', maskDark: '#121216',
         armsUp: player.mode === 'charge' && dist(d, player) < 70 });
-      if (d.stun > 0) { ctx.font = '16px system-ui'; ctx.textAlign = 'center'; ctx.fillText('💫', d.x, d.y - 70); }
+      if (d.stun > 0) { ctx.font = '16px system-ui'; ctx.textAlign = 'center'; ctx.fillText('💫', d.x, d.y - 92); }
     } }));
     actors.push({ y: ball.y + 0.5, f: drawBall });
     actors.sort((a, b) => a.y - b.y).forEach((a) => a.f());
