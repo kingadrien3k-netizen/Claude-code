@@ -479,7 +479,7 @@ function makeChance(timing, flick) {
 function releaseShot(flick) {
   if (!ball || ball.mode !== 'held') return;
   let timing = 'good';
-  if (!flick) { const diff = Math.abs(player.charge / 0.8 - 0.85); timing = diff < 0.06 ? 'perfect' : diff < 0.16 ? 'good' : 'poor'; }
+  if (!flick) { const diff = Math.abs(player.charge / 0.8 - 0.85); timing = diff < 0.08 ? 'perfect' : diff < 0.2 ? 'good' : 'poor'; }
   if (nearestDef(player) < 0.8 && timing !== 'perfect' && Math.random() < 0.3) return blocked();
   const three = isThree(player);
   info((three ? '3PT ATTEMPT' : 'JUMP SHOT') + ' · ' + feet(d2(player, HOOP)) + ' FT');
@@ -721,10 +721,10 @@ function render(t) {
   if (state === 'play' && player.mode === 'charge') {
     const sp = toScreen(player.x, 1.6, player.z), m = player.charge / 0.8, H = 90;
     meter.style.display = 'block'; meter.style.left = (sp.x + 46) + 'px'; meter.style.top = (sp.y - 60) + 'px';
-    meter.querySelector('.zone').style.cssText = `top:${H * (1 - 0.91)}px;height:${H * 0.12}px`;
+    meter.querySelector('.zone').style.cssText = `top:${H * (1 - 0.93)}px;height:${H * 0.16}px`;
     meter.querySelector('.mark').style.top = (H * (1 - 0.85) - 1) + 'px';
     const fill = meter.querySelector('.fill'); fill.style.height = clamp(m, 0, 1) * H + 'px';
-    fill.style.background = Math.abs(m - 0.85) < 0.06 ? 'var(--green)' : m > 0.91 ? 'var(--red)' : 'var(--gold)';
+    fill.style.background = Math.abs(m - 0.85) < 0.08 ? 'var(--green)' : m > 0.93 ? 'var(--red)' : 'var(--gold)';
   } else meter.style.display = 'none';
   const ring = $('joyRing'), knob = $('joyKnob');
   if (state === 'play' && touch.id !== null) {
