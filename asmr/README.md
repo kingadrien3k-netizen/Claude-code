@@ -59,6 +59,8 @@ ffmpeg -framerate 24 -i $OUT/frames/f%05d.png -c:v libx264 -pix_fmt yuv420p -crf
 ```
 
 `rainy-window-loop.mp4` (20 s) is already included, so step 1 is optional.
+`loop-small.mp4` is a lighter copy of the same loop (~720 kbps) that keeps a 1-hour video under 400 MB;
+use it with `ffmpeg -stream_loop -1 -i loop-small.mp4 ...` when file size matters.
 The audio is a 10-minute seamless rain track that repeats underneath; the thunder lands at different
 points against the 20-second picture loop, so it never feels like an obvious repeat.
 
