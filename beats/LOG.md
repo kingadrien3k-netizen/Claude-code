@@ -15,3 +15,46 @@ Steps are 16ths within a bar (0–15). Append every new beat.
 
 ## Lead rotation (lane 1)
 - #3 organ → next lane-1 lead must NOT be organ
+
+## Starred (approved) beats from Adrien's email — metadata only
+Audio not analyzed yet: the Gmail connector can't download attachments, so motifs/kick patterns for these are unknown.
+Treat their titles + feel as off-limits to copy. Lane-1 favorites cluster at **92–98 BPM**.
+
+| Title | BPM | Key | Notes from email |
+|---|---|---|---|
+| Testimony 92 | 92 | ? | "The best one" — ghetto gospel |
+| Ghetto Gospel 98 | 98 | minor | "the minor-key testimony one" |
+| Ghetto Gospel 96 | 96 | ? | "the choir one" (1909 chop, recording unnamed) |
+| Ghetto Gospel 94 | 94 | ? | "the marching one" |
+| No Drop 96 | 96 | ? | "the drop never comes" |
+| Altar 95 | 95 | D minor | |
+| Cornerstone 93 v2 | 93 | D major | hard intro |
+| Seraph 150 (Hymn Clean) | 150 | C major | 1909 gospel sample (recording unnamed) |
+| Momma 146 + Momma 146 (Acoustic) | 146 | ? | two versions |
+| Gilded 150 | 150 | ? | "winning formula" |
+| Radiant 150 (Eden v2) | 150 | ? | smooth comedown back into verse |
+| Kingdom 150 v2 (Open) | 150 | ? | open version, room to hop on |
+| Eden 150 | 150 | ? | with song "Eden" |
+| Heaven 144 | 144 | F major | clear, glowing, airy (heavenly lane) |
+| Halo 144 | 144 | C major | heavenly lane |
+| Pain 88 (Acoustic) | 88 | E minor | nylon fingerpicked version of Pain 150 |
+| Choir 88 (Acoustic) / Choir 140 | 88 / 140 | F minor | 1909 vocal chop in hooks (recording unnamed) |
+| Firstday Out 88 (Acoustic) | 88 | Eb minor | nylon |
+| Gather 140 | 140 | E major | sample: "Shall We Gather at the River", Haydn Quartet, Jan 1909; Salamander piano |
+| Homecoming 60 | 60 | Eb major | sample: "Swing Low, Sweet Chariot", Fisk Jubilee Quartet, Dec 1909; Salamander |
+| Fakeones 150 | 150 | B minor | piano only, Salamander |
+| Blessed 144 | 144 | D minor | piano only, Salamander |
+| Oldschool 144 | 144 | A minor | piano only, Salamander |
+| Amen 144 | 144 | G minor | piano only, Salamander |
+| Psalm 144 | 144 | F# minor | piano only, Salamander |
+| win-140 | 140 | ? | with "W" lyrics (motivational) |
+| Acoustic 91 | 91 | G minor | acoustic lane |
+| Original 140 | 140 | F# minor | |
+| No Time 142 / No Time 140 | 142 / 140 | D minor / E minor | pluggnb |
+| Acoustic 82, 84, 86, 88, 90, 92, 95, 98, 100, 102, 104 | 82–104 | ? | acoustic 10-pack + singles |
+
+### Choir/vintage recordings already used (never reuse)
+- "Swing Low, Sweet Chariot" — Fisk Jubilee Quartet, 1909 (Homecoming 60)
+- "Shall We Gather at the River" — Haydn Quartet, 1909 (Gather 140)
+- Unnamed 1909 chops in Ghetto Gospel 96, Seraph 150, Choir 140/88 — identity unknown
+- "I Couldn't Hear Nobody Pray" — Fisk, 1909 (Nobody Pray 142, this session)
