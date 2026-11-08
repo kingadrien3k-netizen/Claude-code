@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Avaterra</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Login / signup -->
+  <section id="login" class="screen">
+    <div class="login-card">
+      <h1 class="logo">Avaterra</h1>
+      <p class="tag">Make your avatar. Hang out. Play games. Earn coins.</p>
+      <canvas id="loginPreview" width="200" height="220"></canvas>
+      <form id="authForm" autocomplete="on">
+        <input id="authUser" placeholder="Avatar name" maxlength="16" autocomplete="username" required>
+        <input id="authPass" type="password" placeholder="Password" maxlength="64" autocomplete="current-password" required>
+        <div class="row">
+          <button type="submit" data-mode="login">Log in</button>
+          <button type="submit" data-mode="register" class="alt">Create avatar</button>
+        </div>
+        <p id="authMsg" class="msg"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- World -->
+  <section id="world" class="screen hidden">
+    <header class="topbar">
+      <span class="logo small">Avaterra</span>
+      <span id="roomName" class="room-name"></span>
+      <span class="spacer"></span>
+      <span class="coins">🪙 <b id="coinCount">0</b></span>
+      <button id="btnDaily" title="Daily bonus">🎁 Daily</button>
+      <button id="btnDress">👕 Dress Up</button>
+      <button id="btnShop">🛍️ Shop</button>
+      <button id="btnMap">🗺️ Map</button>
+      <button id="btnFriends">👥 Friends</button>
+      <button id="btnLogout" class="ghost" title="Log out">⏻</button>
+    </header>
+    <div class="stage-wrap">
+      <canvas id="stage" width="960" height="540"></canvas>
+      <div id="toast" class="toast hidden"></div>
+      <div id="playerMenu" class="player-menu hidden"></div>
+    </div>
+    <footer class="chatbar">
+      <div class="emotes" id="emotes"></div>
+      <form id="chatForm"><input id="chatInput" placeholder="Say something nice…" maxlength="140" autocomplete="off"><button>Send</button></form>
+    </footer>
+    <div id="chatLog" class="chat-log"></div>
+  </section>
+
+  <!-- Modal shell -->
+  <div id="modal" class="modal hidden">
+    <div class="modal-card">
+      <button class="close" id="modalClose" aria-label="Close">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <script src="catalog.js"></script>
+  <script src="avatar.js"></script>
+  <script src="rooms.js"></script>
+  <script src="game.js"></script>
+  <script src="client.js"></script>
+</body>
+</html>

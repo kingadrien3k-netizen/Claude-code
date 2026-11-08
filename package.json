@@ -1,0 +1,14 @@
+{
+  "name": "avaterra",
+  "version": "1.0.0",
+  "description": "An original multiplayer 2D avatar hangout: dress up, chat, emote, play mini-games and earn coins.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "test": "node test/smoke.js"
+  },
+  "license": "MIT",
+  "dependencies": {
+    "ws": "^8.18.0"
+  }
+}
