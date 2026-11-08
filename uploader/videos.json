@@ -1,0 +1,39 @@
+{
+  "rainy-window": {
+    "match": "rainy-window",
+    "title": "Cozy Rain on the Window 🌧️ 1 Hour of Calm Night Rain Sounds for Sleep & Study",
+    "description": "Settle in by the window. Gentle rain, soft distant thunder, a warm lamp, and a sleeping cat on the sill.\n\nNo music, no talking — just rain, for as long as you need it.\nPerfect for sleep, studying, reading, focus, or calming down after a long day.\n\n🌧️ Rain on glass · ⛈️ Distant thunder · 💡 Warm lamp light · 🐈‍⬛ Sleeping cat\n\nWhich room should we open next? Tell us in the comments.\n\n#rainsounds #sleepsounds #cozy",
+    "tags": [
+      "rain sounds",
+      "rain sounds for sleeping",
+      "rain on window",
+      "cozy rain",
+      "rain ambience",
+      "sleep sounds",
+      "study ambience",
+      "relaxing rain",
+      "thunderstorm sounds",
+      "asmr rain",
+      "night rain",
+      "hushfall"
+    ],
+    "categoryId": "10",
+    "privacy": "public",
+    "madeForKids": false,
+    "thumbnail": "thumbnails/rainy-window.jpg",
+    "research": {
+      "queries": [
+        "rain sounds for sleeping",
+        "rain on window ambience",
+        "cozy rain night ambience",
+        "rain sounds 8 hours",
+        "rain and thunder for sleep"
+      ],
+      "competitors": [],
+      "days": 180,
+      "per_query": 25,
+      "per_channel": 25,
+      "min_minutes": 30
+    }
+  }
+}
