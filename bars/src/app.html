@@ -1368,7 +1368,7 @@ const CRAFT = `What makes it good:
 - Sauce over story. It does NOT need a storyline or to make perfect sense. Bars can jump topic like a real freestyle as long as every one drips: swagger, slick wordplay, cocky punchlines, catchy cadence, attitude.
 - Vibe of the artist's hits (their slang, their energy, their topics). No boring everyday chores. Confidence, not fake millionaire stuff.
 - Every bar earns its spot: quotable, slick, hard. No filler and no clichés.
-- Rhymes: each couplet (bars 1-2, 3-4, and so on) ends on words with the same stressed vowel sound, mostly two- or three-syllable multis, with internal rhymes inside the bars. Never pick a word just because it rhymes.
+- Rhymes are the top priority. Every couplet (bars 1-2, 3-4, and so on) ends on a real rhyme: same vowel AND same ending sound (night / ride, cold / soul), not just a similar vowel. Most couplets should be multis where the last two or three syllables match (on me / lonely, ride slow / my soul, the money / so funny). Every bar also needs an internal rhyme. No lazy rhymes like the same word twice or "night / time".
 - The verses never repeat a word, a phrase or an end word (small words like I, the, my are fine). Only the hook repeats.
 - Keep bars about the same length so it's rappable.`;
 const EXAMPLE = `Quality bar: an original example of the sauce level (swagger, multis, slick lines). Don't reuse any of it:
@@ -1422,13 +1422,16 @@ function rhymeBank(mood) {
 }
 const SENSE_RULES = "";
 const RHYME_RULES = "";
+function tailDepth(a, b) {
+  const A = a.tv || [], B = b.tv || []; let m = 0;
+  while (m < 5 && m < A.length && m < B.length && vm(A[A.length - 1 - m].v, B[B.length - 1 - m].v)) m++;
+  return m;
+}
 function endsRhyme(a, b) {
   const x = a.end && a.end.I, y = b.end && b.end.I;
-  if (!x || !y) return false;
-  if (a.end.w === b.end.w) return false;
-  if (x.fam === y.fam || x.tail === y.tail) return true;
-  if (x.tv[0] === y.tv[0]) return true; // same stressed vowel: a slant rhyme that works in rap
-  return matchLen(x.v, y.v) >= 2;
+  if (!x || !y || a.end.w === b.end.w) return false;
+  if (x.tail === y.tail || x.fam === y.fam) return true;   // perfect, or same vowels and same ending sound
+  return tailDepth(a, b) >= 2;                               // multisyllable vowel match across the bar ends
 }
 function rhymeCheck(text) {
   const A = analyse(text);
@@ -1447,9 +1450,15 @@ function rhymeCheck(text) {
     for (let k = 0; k + 2 < ws.length; k++) { const ph = ws.slice(k, k + 3).join(" "); phrases.set(ph, (phrases.get(ph) || 0) + 1); }
   });
   const repeats = [...[...seen].filter(([, n]) => n > 1).map(([w]) => w), ...[...phrases].filter(([, n]) => n > 1).map(([p]) => `"${p}"`)];
-  const misses = []; let pairs = 0;
-  sections.forEach(sec => { for (let k = 0; k + 1 < sec.length; k += 2) { pairs++; if (!endsRhyme(sec[k], sec[k + 1])) misses.push([sec[k], sec[k + 1]]); } });
-  return { A, pairs, misses, repeats };
+  const misses = [], singles = []; let pairs = 0, multis = 0;
+  sections.forEach(sec => { for (let k = 0; k + 1 < sec.length; k += 2) {
+    pairs++; const a = sec[k], b = sec[k + 1];
+    if (!endsRhyme(a, b)) misses.push([a, b]);
+    else if (tailDepth(a, b) >= 2) multis++; else singles.push([a, b]);
+  } });
+  // bars with no rhyme inside the line
+  const flat = A.bars.filter(b => b.words.length > 3 && !b.words.slice(0, -1).some(t => t.color));
+  return { A, pairs, misses, singles, multis, flat, repeats };
 }
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
@@ -1464,7 +1473,7 @@ const STYLE_CARDS = {
 - Wordplay-heavy punchlines delivered calm, like he's just telling you: slick double meanings and similes that land at the end of the bar.
 - Street wisdom mixed with vulnerability: real-talk advice, loyalty, hustle, love and trust, said honest and a little hurt.
 - Southern slang and drawl. Stretch the long vowel at the end of bars so the rhymes ring out when sung.
-- Rhyme scheme: couplets on long open vowels (oh, ay, ee, I), plenty of slant rhymes that work when crooned, an internal rhyme setting up each punchline. Mid-tempo, about 9 to 12 syllables a bar.
+- Rhyme scheme: tight couplets on long open vowels (oh, ay, ee, I) that ring out when crooned, mostly two-syllable multis, with an internal rhyme setting up each punchline. Mid-tempo, about 9 to 12 syllables a bar.
 - Hooks are sung, simple and catchy, built around one repeated phrase.`,
 };
 const styleCard = artist => STYLE_CARDS[(artist || "").toLowerCase().replace(/\s+/g, " ").trim()] || "";
@@ -1522,7 +1531,7 @@ function renderSong(text) {
   const lineHTML = l => bars.has(l.i) ? bars.get(l.i).tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}${t.m ? " m" : ""}">${esc(t.t)}</span>` : esc(t.t)).join("") : esc(l.raw);
   $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") + (story ? `<p class="rmeta" style="margin:-4px 0 14px">${esc(story)}</p>` : "") +
     `<div class="song">${A.L.map(l => !l.raw.trim() ? "" : SECTION.test(l.raw) ? `<div class="sec">${esc(l.raw.trim().replace(/^\[|\]$/g, ""))}</div>` : `<div class="ly">${lineHTML(l)}</div>`).join("")}</div>` +
-    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme · <b>${st.check.repeats.length}</b> repeats in the verses${st.check.repeats.length ? ` (${esc(st.check.repeats.slice(0, 6).join(", "))})` : ""}. Same color = same rhyme sound.</p>` : "");
+    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme · <b>${st.check.multis}</b> multis · <b>${st.check.repeats.length}</b> repeats in the verses${st.check.repeats.length ? ` (${esc(st.check.repeats.slice(0, 6).join(", "))})` : ""}. Same color = same rhyme sound.</p>` : "");
 }
 function setBusy(b) {
   st.busy = b; setAvail();
@@ -1536,7 +1545,10 @@ function fixPrompt(song, misses, repeats) {
     const sug = r && !r.missing ? [...r.perfect.slice(0, 6).map(e => e.w), ...r.multis.slice(0, 5).map(x => x.e.w)].join(", ") : "";
     return `- "${a.raw.trim()}" / "${b.raw.trim()}" don't rhyme${sug ? ` (rhymes for "${a.end.t}": ${sug})` : ""}`;
   }).join("\n");
-  const problems = [list, repeats.length ? `- Repeated in the verses: ${repeats.join(", ")}` : ""].filter(Boolean).join("\n");
+  const c = st.check || { singles: [], flat: [] };
+  const singleList = c.singles.slice(0, 8).map(([a, b]) => `- "${a.raw.trim()}" / "${b.raw.trim()}" only rhyme on one syllable: make it a 2 or 3 syllable multi`).join("\n");
+  const flatList = c.flat.slice(0, 8).map(b => `- "${b.raw.trim()}" has no internal rhyme: add one`).join("\n");
+  const problems = [list, singleList, flatList, repeats.length ? `- Repeated in the verses: ${repeats.join(", ")}` : ""].filter(Boolean).join("\n");
   return `You're a tough producer and ghostwriter. Make this draft saucier and harder.
 
 DRAFT:
@@ -1553,10 +1565,10 @@ ${NO_COPY(st.artist)}
 
 Return only the finished song. ${FORMAT}`;
 }
-async function runSong(prompt, isFix) {
+async function runSong(prompt, isFix, pass = 0) {
   st.ctl = new AbortController(); if (!isFix) { st.lastPrompt = prompt; note(""); } st.check = null; setBusy(true);
   const t0 = Date.now(); let started = false;
-  const label = isFix ? "Producer pass: rewriting weak bars, tightening rhymes…" : `Writing a draft in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
+  const label = pass === 2 ? "Rhymes still weak in spots. One more pass on just those bars…" : isFix ? "Producer pass: rewriting weak bars, tightening rhymes…" : `Writing a draft in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
   if (isFix) $("#songOut").insertAdjacentHTML("afterbegin", `<p class="status" id="wait">${label}</p>`); else $("#songOut").innerHTML = `<p class="status" id="wait">${label}</p>`;
   const tick = setInterval(() => { const w = $("#wait"); if (!started && w) w.textContent = label.replace(/&#?\w+;/g, "") + " " + Math.round((Date.now() - t0) / 1000) + "s"; }, 1000);
   if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1567,7 +1579,11 @@ async function runSong(prompt, isFix) {
     if (r.truncated) note("The song got cut off. Try a shorter song shape.");
     if (!isFix && !r.truncated) {
       clearInterval(tick); setBusy(false);
-      return runSong(fixPrompt(r.text, st.check.misses, st.check.repeats), true);
+      return runSong(fixPrompt(r.text, st.check.misses, st.check.repeats), true, 1);
+    }
+    if (pass === 1 && !r.truncated && st.check.misses.length + st.check.singles.length > st.check.pairs * .25) {
+      clearInterval(tick); setBusy(false);
+      return runSong(fixPrompt(r.text, st.check.misses, st.check.repeats), true, 2);
     }
     saveSong();
   } catch (e) {
