@@ -1363,15 +1363,36 @@ const PASTED = "your pasted song";
 const NO_COPY = who => who === PASTED
   ? "- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, including the reference song."
   : `- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, especially ${who}'s: no lines, hooks, ad-libs, catchphrases or song titles from their songs, and don't say ${who}'s name in the song.`;
-const KEEP_IT_REAL = `How it has to sound:
-- Like a real rapper on a real record, not a poem, not a motivational speech, not a greeting card. Talk the way people from the hood and working-class neighborhoods actually talk: slang, contractions, attitude, humor, confidence even when it hurts.
-- Real, not regular. No boring day-to-day stuff like bus rides, groceries, bills or a job shift unless the listener asked for it. Write about what the artist's hits are about: the streets, losing people, friends locked up or gone, opps, betrayal, trust issues, love that went wrong, paranoia, mama stressing, survival, coming up from nothing. High stakes, raw feeling, told from inside it.
-- Pick one or two situations and go deep with specific moments and details. Don't explain feelings in flat sentences; show them.
-- No fake flexing. Any shine has to be earned and set against where they came from.
-- Every bar has to be quotable: a punchline, a twist, a cold image or a line that hurts. No filler, no clichés, no forced rhymes, no rhyming-dictionary words nobody says.
-- No repeating in the verses. Across Verse 1 and Verse 2 together, never use the same word twice (small words like I, the, and, my are fine), never repeat a phrase or a line, and never end two bars on the same word. Only the hook repeats. No stacked ad-libs.
-- Ride the pocket: keep bars a similar length so they're rappable, and land the rhyme on the last word.
-`;
+const CRAFT = `What makes it good:
+- It sounds like a real record from that artist, not a poem or a speech: real slang, contractions, attitude.
+- One story. Plan it in the STORY line. Verse 1 sets it up with a specific moment, Verse 2 shows what came after, and the hook says the feeling plainly. Every bar follows from the one before, so someone could retell what happened.
+- Subject: what that artist's hits are about (streets, loss, loyalty, betrayal, love gone wrong, paranoia, mama, coming up from nothing). High stakes, raw feeling. No boring everyday chores and no fake flexing.
+- Every bar earns its spot: a cold image, a punchline, a twist or a line that hurts. No filler, no clichés, nothing that only sounds cool.
+- Rhymes: each couplet (bars 1-2, 3-4, and so on) ends on words with the same stressed vowel sound, mostly two- or three-syllable multis, with internal rhymes inside the bars. Never pick a word just because it rhymes.
+- The verses never repeat a word, a phrase or an end word (small words like I, the, my are fine). Only the hook repeats.
+- Keep bars about the same length so it's rappable.`;
+const EXAMPLE = `Quality bar: an original example of how tight it should be (one story, multis, a punchline at the end). Don't reuse any of it:
+Mama said, "Don't trust 'em," I ain't listen, now I'm learnin'
+Gave my last to my dawg, watched the bridge I built burnin'
+Same one I put on, now he duckin' when he see me
+We was splittin' one plate, now he act like he don't need me
+I ain't even mad, I'm just tired of the lyin'
+Three years of loyalty, he traded for a little shine
+Now my circle small, it's just me and my reflection
+Every scar that he left me was a lesson, not a weapon`;
+const KEEP_IT_REAL = CRAFT;
+const langRule = () => $("#lang").value === "clean" ? "Language: clean, no profanity." : "Language: explicit. Curse the way real people talk, but never use slurs.";
+const FORMAT = `Format exactly like this, with nothing before or after:
+STORY: one sentence saying what happens in this song
+STYLE: 2 or 3 sentences naming the artist's techniques this song uses
+TITLE: the song title
+[Section name]
+bar
+bar
+(more sections)
+---
+STYLE NOTES
+- 3 to 5 bullets saying where in the song each technique shows up`;
 const SEEDS = {
   heartbroken: ["heart", "lie", "gone", "alone", "trust", "cold", "pain", "night", "love", "phone"],
   hungry: ["money", "broke", "starving", "hustle", "pressure", "block", "struggle", "risk", "real", "mama"],
@@ -1400,17 +1421,8 @@ function rhymeBank(mood) {
   }
   return out.join("\n");
 }
-const SENSE_RULES = `It has to make sense. This matters as much as the rhymes:
-- Plan first: decide one situation and what happens in it (who, what went down, how the narrator feels about it), and write that in the STORY line.
-- Every bar follows from the bar before it and moves that story forward. Someone reading only the lyrics should be able to retell what happened.
-- Verse 1 sets up what happened. Verse 2 goes deeper or shows what came after. The hook sums up the feeling in plain words.
-- Never use a word just because it rhymes. If a rhyme doesn't fit the story, find another rhyme. Rhymes from the bank are options, not requirements.
-- No random images, no mixed-up metaphors, no lines that only sound cool. Every line has to mean something a real person would say.`;
-const RHYME_RULES = `How it has to rhyme. This is not optional:
-- Write in couplets: bars 1 and 2 of every section end on words that rhyme, then bars 3 and 4, and so on. The two end words must share the same stressed vowel sound and ending (pain / rain, cold / fold, pocket / lock it).
-- Go for multisyllable rhymes at the end of most couplets: match two or three syllables of vowel sound (problem / got 'em, pressure / dresser, family / can't be).
-- Put at least one internal rhyme in most bars: a word mid-bar that rhymes with the end word or with a word in the next bar.
-- Keep the same vowel sound going across a couplet so it sounds tight when rapped out loud.`;
+const SENSE_RULES = "";
+const RHYME_RULES = "";
 function endsRhyme(a, b) {
   const x = a.end && a.end.I, y = b.end && b.end.I;
   if (!x || !y) return false;
@@ -1452,46 +1464,32 @@ function songPrompt(artist, mood) {
   const fp = fingerprint(raw);
   const ref = fp ? raw.slice(0, 4000) : "";
   const named = artist !== PASTED;
-  return `You are a songwriter. Write a brand-new, original rap song ${named ? `in ${artist}'s style` : "in the style of the reference song below"}.
+  return `Write a brand-new, original rap song ${named ? `in ${artist}'s style` : "in the style of the reference song below"}.
 
-${named ? `First work out what defines ${artist}'s hits: ` : "First study the reference song: "}the flow and cadence, syllables per bar, rhyme schemes and multisyllable rhymes, how melodic or rapped the delivery is, how the hook is built, the themes, the imagery and the slang. Then write the song with those same techniques so it sounds like it came from the same artist.
+First think about what defines ${named ? `${artist}'s biggest hits` : "the reference song"}: flow and cadence, syllables per bar, rhyme patterns, how melodic or rapped the delivery is, how the hook is built, the themes, the slang. Then write a song that sounds like it came off the same album.
 ${ref ? `
-REFERENCE SONG the listener pasted. Study it for style only. Do not reuse any of its lines, phrases, hooks, names, ad-libs or distinctive word combinations, and don't repeat any slurs it contains:
+REFERENCE SONG (study the style only; never reuse its lines, phrases, names, ad-libs or slurs):
 <<<
 ${ref}
 >>>
 Bar Lab measured it: ${JSON.stringify(fp)}. Match these numbers.
 ` : ""}
-Mood: ${mood || "pick the mood ${artist} is best known for"}
-${story ? `Make it about the listener's life, in first person as them: ${story}` : `Write about the subjects ${named ? `${artist}'s hits are known for` : "the reference song deals with"}, in first person, so it hits like a real record from that world.`}
+Mood: ${mood || `the mood ${named ? artist : "the reference song"} is best known for`}
+${story ? `It's about the listener's life, in first person as them: ${story}` : `It's about the subjects ${named ? `${artist}'s hits are known for` : "the reference song deals with"}, in first person.`}
 ${details ? `Work in these real details: ${details}\n` : ""}Song shape: ${SHAPES[$("#shape").value]}
+${langRule()}
 
-${SENSE_RULES}
+${CRAFT}
 
-${RHYME_RULES}
+${EXAMPLE}
 
-RHYME BANK, grouped by sound from Bar Lab's pronunciation dictionary. Build couplets from these or from your own words with the same vowel sounds:
+Rhyme ideas from Bar Lab's dictionary, grouped by sound. Use them only where they fit the story:
 ${rhymeBank(mood)}
-Language: ${$("#lang").value === "clean" ? "clean, no profanity" : "explicit. Curse the way real people talk when they're pressed, but never use slurs"}
 
-${KEEP_IT_REAL}
-
-Rules:
 ${NO_COPY(artist)}
-- One bar per line. Specific images beat general statements. The hook must be short, catchy and easy to repeat.
 ${named && !ref ? `- If you don't know this artist, begin the STYLE line with "Unknown artist:" and write in a style that fits the mood.` : ""}
 
-Format exactly like this, with nothing before or after:
-STORY: one sentence saying what happens in this song
-STYLE: 2 or 3 sentences naming the techniques ${named ? `from ${artist}'s hits` : "from the reference song"} that this song uses
-TITLE: the song title
-[Section name]
-bar
-bar
-(more sections)
----
-STYLE NOTES
-- 3 to 5 bullets saying where in the song each technique shows up (for example "Hook: melodic, repeated end rhyme").`;
+${FORMAT}`;
 }
 
 function splitSong(text) {
@@ -1525,26 +1523,30 @@ function setBusy(b) {
 function fixPrompt(song, misses, repeats) {
   const list = misses.map(([a, b]) => {
     const r = a.end && a.end.ent ? findRhymes(a.end.w) : null;
-    const sug = r && !r.missing ? [...r.perfect.slice(0, 6).map(e => e.w), ...r.combos.slice(0, 3).map(c => c.w), ...r.multis.slice(0, 4).map(x => x.e.w)].join(", ") : "";
-    return `- "${a.raw.trim()}" / "${b.raw.trim()}"${sug ? `\n  words that rhyme with "${a.end.t}": ${sug}` : ""}`;
+    const sug = r && !r.missing ? [...r.perfect.slice(0, 6).map(e => e.w), ...r.multis.slice(0, 5).map(x => x.e.w)].join(", ") : "";
+    return `- "${a.raw.trim()}" / "${b.raw.trim()}" don't rhyme${sug ? ` (rhymes for "${a.end.t}": ${sug})` : ""}`;
   }).join("\n");
-  return `Here is a rap song:
+  const problems = [list, repeats.length ? `- Repeated in the verses: ${repeats.join(", ")}` : ""].filter(Boolean).join("\n");
+  return `You're a tough producer and ghostwriter. Turn this draft into a hit without changing what it's about.
 
+DRAFT:
 ${song}
 
-${misses.length ? `These couplets don't rhyme. Rewrite them so the two end words rhyme on the same vowel sound, ideally a multisyllable rhyme. Keep what the bars say and keep the story making sense. Don't drop in a word just because it rhymes:
-${list}
-` : ""}${repeats.length ? `These words or phrases are repeated in the verses: ${repeats.join(", ")}. Keep one use of each and change the others to something different that fits the bar and still rhymes where it needs to. Leave the hooks as they are.
-` : ""}
-Don't change any other bar.
-${KEEP_IT_REAL}
+Do this:
+1. Read it like a listener. Silently score every bar from 1 to 10 on three things: it makes sense in the story, it hits hard, it rhymes tight. Rewrite every bar under 8 until it's an 8 or better, and keep the bars that already hit.
+2. Make sure the story is easy to follow from start to finish, and that the last bars of Verse 2 land the strongest punchline in the song.
+${problems ? `3. Fix these problems Bar Lab's rhyme checker found:\n${problems}\n` : ""}Keep the same story, the same sections, and both hooks word for word the same.
+
+${CRAFT}
+${langRule()}
 ${NO_COPY(st.artist)}
-Return the whole song in the same format: STORY: line, STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES.`;
+
+Return only the finished song. ${FORMAT}`;
 }
 async function runSong(prompt, isFix) {
   st.ctl = new AbortController(); if (!isFix) { st.lastPrompt = prompt; note(""); } st.check = null; setBusy(true);
   const t0 = Date.now(); let started = false;
-  const label = isFix ? "Fixing rhymes and repeated words…" : `Writing your song in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
+  const label = isFix ? "Producer pass: rewriting weak bars, tightening rhymes…" : `Writing a draft in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
   if (isFix) $("#songOut").insertAdjacentHTML("afterbegin", `<p class="status" id="wait">${label}</p>`); else $("#songOut").innerHTML = `<p class="status" id="wait">${label}</p>`;
   const tick = setInterval(() => { const w = $("#wait"); if (!started && w) w.textContent = label.replace(/&#?\w+;/g, "") + " " + Math.round((Date.now() - t0) / 1000) + "s"; }, 1000);
   if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1553,12 +1555,8 @@ async function runSong(prompt, isFix) {
     st.song = r.text;
     st.check = rhymeCheck(splitSong(r.text).lines.join("\n")); renderSong(r.text);
     if (r.truncated) note("The song got cut off. Try a shorter song shape.");
-    if (!isFix && !r.truncated && (st.check.misses.length || st.check.repeats.length)) {
+    if (!isFix && !r.truncated) {
       clearInterval(tick); setBusy(false);
-      const parts = [];
-      if (st.check.misses.length) parts.push(`${st.check.misses.length} couplet${st.check.misses.length > 1 ? "s" : ""} didn't rhyme`);
-      if (st.check.repeats.length) parts.push(`${st.check.repeats.length} word${st.check.repeats.length > 1 ? "s were" : " was"} repeated`);
-      note(`${parts.join(" and ")}. Fixing it now…`);
       return runSong(fixPrompt(r.text, st.check.misses, st.check.repeats), true);
     }
     saveSong();
@@ -1587,11 +1585,11 @@ ${st.song}
 Revise it. The listener's request: ${ask}
 
 Keep everything they didn't ask to change, and keep the same style.
-${KEEP_IT_REAL}
+${CRAFT}
+${langRule()}
 ${NO_COPY(st.artist)}
-${SENSE_RULES}
-${RHYME_RULES}
-Use the same format: STORY: line, STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES with 3 to 5 bullets.`);
+
+${FORMAT}`, true);
 });
 $("#toPadBtn").onclick = () => {
   const { lines } = splitSong(st.song);
