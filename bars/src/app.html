@@ -1369,7 +1369,7 @@ const KEEP_IT_REAL = `How it has to sound:
 - Pick one or two situations and go deep with specific moments and details. Don't explain feelings in flat sentences; show them.
 - No fake flexing. Any shine has to be earned and set against where they came from.
 - Every bar has to be quotable: a punchline, a twist, a cold image or a line that hurts. No filler, no clichés, no forced rhymes, no rhyming-dictionary words nobody says.
-- No repeated words. Outside of the hook coming back at the end, don't use the same word twice anywhere in the song (small words like I, the, and, my are fine). Never end two bars on the same word. No stacked ad-libs.
+- No repeating in the verses. Across Verse 1 and Verse 2 together, never use the same word twice (small words like I, the, and, my are fine), never repeat a phrase or a line, and never end two bars on the same word. Only the hook repeats. No stacked ad-libs.
 - Ride the pocket: keep bars a similar length so they're rappable, and land the rhyme on the last word.
 `;
 const SEEDS = {
@@ -1422,16 +1422,20 @@ function endsRhyme(a, b) {
 function rhymeCheck(text) {
   const A = analyse(text);
   // group bars into sections using the original lines
-  const sections = []; let cur = [];
+  const sections = []; let cur = []; let label = "";
   const barByLine = new Map(A.bars.map(b => [b.i, b]));
-  A.L.forEach(l => { if (SECTION.test(l.raw)) { if (cur.length) sections.push(cur); cur = []; } else if (barByLine.has(l.i)) cur.push(barByLine.get(l.i)); });
-  if (cur.length) sections.push(cur);
-  // repeated words: skip the final section when it repeats the first hook
-  const secs = sections.slice();
-  if (secs.length > 1 && secs[secs.length - 1].map(b => b.raw.trim()).join("\n") === secs[0].map(b => b.raw.trim()).join("\n")) secs.pop();
-  const seen = new Map();
-  secs.flat().forEach(b => b.words.forEach(t => { if (t.w.length > 3 && !STOP.has(t.w)) { const k = t.ent ? t.ent.w : t.w; seen.set(k, (seen.get(k) || 0) + 1); } }));
-  const repeats = [...seen].filter(([, n]) => n > 1).map(([w]) => w);
+  A.L.forEach(l => { if (SECTION.test(l.raw)) { if (cur.length) { cur.label = label; sections.push(cur); } cur = []; label = l.raw; } else if (barByLine.has(l.i)) cur.push(barByLine.get(l.i)); });
+  if (cur.length) { cur.label = label; sections.push(cur); }
+  // repeated words and phrases across the verses (the hook is allowed to repeat)
+  const verses = sections.filter(sec => /verse/i.test(sec.label || ""));
+  const vbars = (verses.length ? verses : sections).flat();
+  const seen = new Map(), phrases = new Map();
+  vbars.forEach(b => {
+    const ws = b.words.map(t => t.ent ? t.ent.w : t.w);
+    ws.forEach(w => { if (w.length >= 3 && !STOP.has(w)) seen.set(w, (seen.get(w) || 0) + 1); });
+    for (let k = 0; k + 2 < ws.length; k++) { const ph = ws.slice(k, k + 3).join(" "); phrases.set(ph, (phrases.get(ph) || 0) + 1); }
+  });
+  const repeats = [...[...seen].filter(([, n]) => n > 1).map(([w]) => w), ...[...phrases].filter(([, n]) => n > 1).map(([p]) => `"${p}"`)];
   const misses = []; let pairs = 0;
   sections.forEach(sec => { for (let k = 0; k + 1 < sec.length; k += 2) { pairs++; if (!endsRhyme(sec[k], sec[k + 1])) misses.push([sec[k], sec[k + 1]]); } });
   return { A, pairs, misses, repeats };
@@ -1510,7 +1514,7 @@ function renderSong(text) {
   const lineHTML = l => bars.has(l.i) ? bars.get(l.i).tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}${t.m ? " m" : ""}">${esc(t.t)}</span>` : esc(t.t)).join("") : esc(l.raw);
   $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") + (story ? `<p class="rmeta" style="margin:-4px 0 14px">${esc(story)}</p>` : "") +
     `<div class="song">${A.L.map(l => !l.raw.trim() ? "" : SECTION.test(l.raw) ? `<div class="sec">${esc(l.raw.trim().replace(/^\[|\]$/g, ""))}</div>` : `<div class="ly">${lineHTML(l)}</div>`).join("")}</div>` +
-    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme · <b>${st.check.repeats.length}</b> repeated words${st.check.repeats.length ? ` (${esc(st.check.repeats.slice(0, 6).join(", "))})` : ""}. Same color = same rhyme sound.</p>` : "");
+    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme · <b>${st.check.repeats.length}</b> repeats in the verses${st.check.repeats.length ? ` (${esc(st.check.repeats.slice(0, 6).join(", "))})` : ""}. Same color = same rhyme sound.</p>` : "");
 }
 function setBusy(b) {
   st.busy = b; setAvail();
@@ -1530,7 +1534,7 @@ ${song}
 
 ${misses.length ? `These couplets don't rhyme. Rewrite them so the two end words rhyme on the same vowel sound, ideally a multisyllable rhyme. Keep what the bars say and keep the story making sense. Don't drop in a word just because it rhymes:
 ${list}
-` : ""}${repeats.length ? `These words are used more than once: ${repeats.join(", ")}. Keep one use of each and swap the others for a different word that fits the bar and still rhymes where it needs to. The final hook stays an exact copy of the first hook.
+` : ""}${repeats.length ? `These words or phrases are repeated in the verses: ${repeats.join(", ")}. Keep one use of each and change the others to something different that fits the bar and still rhymes where it needs to. Leave the hooks as they are.
 ` : ""}
 Don't change any other bar.
 ${KEEP_IT_REAL}
