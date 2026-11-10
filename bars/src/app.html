@@ -1400,6 +1400,12 @@ function rhymeBank(mood) {
   }
   return out.join("\n");
 }
+const SENSE_RULES = `It has to make sense. This matters as much as the rhymes:
+- Plan first: decide one situation and what happens in it (who, what went down, how the narrator feels about it), and write that in the STORY line.
+- Every bar follows from the bar before it and moves that story forward. Someone reading only the lyrics should be able to retell what happened.
+- Verse 1 sets up what happened. Verse 2 goes deeper or shows what came after. The hook sums up the feeling in plain words.
+- Never use a word just because it rhymes. If a rhyme doesn't fit the story, find another rhyme. Rhymes from the bank are options, not requirements.
+- No random images, no mixed-up metaphors, no lines that only sound cool. Every line has to mean something a real person would say.`;
 const RHYME_RULES = `How it has to rhyme. This is not optional:
 - Write in couplets: bars 1 and 2 of every section end on words that rhyme, then bars 3 and 4, and so on. The two end words must share the same stressed vowel sound and ending (pain / rain, cold / fold, pocket / lock it).
 - Go for multisyllable rhymes at the end of most couplets: match two or three syllables of vowel sound (problem / got 'em, pressure / dresser, family / can't be).
@@ -1450,6 +1456,8 @@ Mood: ${mood || "pick the mood ${artist} is best known for"}
 ${story ? `Make it about the listener's life, in first person as them: ${story}` : `Write about the subjects ${named ? `${artist}'s hits are known for` : "the reference song deals with"}, in first person, so it hits like a real record from that world.`}
 ${details ? `Work in these real details: ${details}\n` : ""}Song shape: ${SHAPES[$("#shape").value]}
 
+${SENSE_RULES}
+
 ${RHYME_RULES}
 
 RHYME BANK, grouped by sound from Bar Lab's pronunciation dictionary. Build couplets from these or from your own words with the same vowel sounds:
@@ -1464,6 +1472,7 @@ ${NO_COPY(artist)}
 ${named && !ref ? `- If you don't know this artist, begin the STYLE line with "Unknown artist:" and write in a style that fits the mood.` : ""}
 
 Format exactly like this, with nothing before or after:
+STORY: one sentence saying what happens in this song
 STYLE: 2 or 3 sentences naming the techniques ${named ? `from ${artist}'s hits` : "from the reference song"} that this song uses
 TITLE: the song title
 [Section name]
@@ -1477,23 +1486,23 @@ STYLE NOTES
 
 function splitSong(text) {
   const [body, notes = ""] = text.split(/\n\s*---+\s*\n/);
-  let title = "", style = ""; const lines = [];
+  let title = "", style = "", story = ""; const lines = [];
   body.split("\n").forEach(l => {
-    const t = l.match(/^\s*TITLE:\s*(.*)$/i), s = l.match(/^\s*STYLE:\s*(.*)$/i);
-    if (t) title = t[1].trim(); else if (s) style = s[1].trim(); else lines.push(l);
+    const t = l.match(/^\s*TITLE:\s*(.*)$/i), s = l.match(/^\s*STYLE:\s*(.*)$/i), g = l.match(/^\s*STORY:\s*(.*)$/i);
+    if (t) title = t[1].trim(); else if (s) style = s[1].trim(); else if (g) story = g[1].trim(); else lines.push(l);
   });
   while (lines.length && !lines[0].trim()) lines.shift();
-  return { title, style, lines, notes: notes.replace(/^\s*STYLE NOTES\s*/i, "").split("\n").map(l => l.replace(/^\s*[-*•]\s*/, "").trim()).filter(Boolean) };
+  return { title, style, story, lines, notes: notes.replace(/^\s*STYLE NOTES\s*/i, "").split("\n").map(l => l.replace(/^\s*[-*•]\s*/, "").trim()).filter(Boolean) };
 }
 function renderSong(text) {
-  const { title, style, lines, notes } = splitSong(text);
+  const { title, style, story, lines, notes } = splitSong(text);
   if (style) {
     $("#styleWho").textContent = st.artist;
     $("#styleOut").innerHTML = `<div class="sty"><p class="sum">${esc(style)}</p>${notes.length ? `<div><div class="sub">Where it shows up in your song</div><ol>${notes.map(n => `<li>${esc(n)}</li>`).join("")}</ol></div>` : ""}</div>`;
   }
   const A = analyse(lines.join("\n")); const bars = new Map(A.bars.map(b => [b.i, b]));
   const lineHTML = l => bars.has(l.i) ? bars.get(l.i).tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}${t.m ? " m" : ""}">${esc(t.t)}</span>` : esc(t.t)).join("") : esc(l.raw);
-  $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") +
+  $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") + (story ? `<p class="rmeta" style="margin:-4px 0 14px">${esc(story)}</p>` : "") +
     `<div class="song">${A.L.map(l => !l.raw.trim() ? "" : SECTION.test(l.raw) ? `<div class="sec">${esc(l.raw.trim().replace(/^\[|\]$/g, ""))}</div>` : `<div class="ly">${lineHTML(l)}</div>`).join("")}</div>` +
     (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme. Same color = same rhyme sound.</p>` : "");
 }
@@ -1513,13 +1522,13 @@ function fixPrompt(song, misses) {
 
 ${song}
 
-These couplets don't rhyme. Rewrite them so the two end words rhyme on the same vowel sound, ideally a multisyllable rhyme, and keep the meaning and the style:
+These couplets don't rhyme. Rewrite them so the two end words rhyme on the same vowel sound, ideally a multisyllable rhyme. Keep what the bars say and keep the story making sense. Don't drop in a word just because it rhymes:
 ${list}
 
 Don't change any other bar.
 ${KEEP_IT_REAL}
 ${NO_COPY(st.artist)}
-Return the whole song in the same format: STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES.`;
+Return the whole song in the same format: STORY: line, STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES.`;
 }
 async function runSong(prompt, isFix) {
   st.ctl = new AbortController(); if (!isFix) { st.lastPrompt = prompt; note(""); } st.check = null; setBusy(true);
@@ -1566,8 +1575,9 @@ Revise it. The listener's request: ${ask}
 Keep everything they didn't ask to change, and keep the same style.
 ${KEEP_IT_REAL}
 ${NO_COPY(st.artist)}
+${SENSE_RULES}
 ${RHYME_RULES}
-Use the same format: STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES with 3 to 5 bullets.`);
+Use the same format: STORY: line, STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES with 3 to 5 bullets.`);
 });
 $("#toPadBtn").onclick = () => {
   const { lines } = splitSong(st.song);
