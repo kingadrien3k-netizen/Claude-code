@@ -217,6 +217,42 @@ input.mini { width: 100%; border: 1px solid var(--line); border-radius: 8px; bac
 .device .ex { font-size: 15px; font-weight: 600; padding-left: 10px; border-left: 3px solid var(--margin); margin: 0 0 10px; white-space: pre-line; }
 .device .try { font-size: 13px; font-family: var(--mono); color: var(--accent); }
 
+/* studio */
+.studio { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr); gap: 18px; align-items: start; }
+@media (max-width: 920px) { .studio { grid-template-columns: minmax(0, 1fr); } }
+.fl { display: block; font-weight: 600; font-size: 14px; margin: 14px 0 6px; }
+.fl:first-of-type { margin-top: 0; }
+.opt { font-weight: 400; color: var(--muted); font-size: 12px; font-family: var(--mono); margin-left: 4px; }
+textarea.tall { min-height: 120px; }
+details.paste { margin: 14px 0 4px; border: 1px dashed var(--line); border-radius: 8px; padding: 10px 12px; }
+details.paste summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+details.paste[open] summary { margin-bottom: 10px; }
+.fp { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 13px; color: var(--muted); }
+.fp b { color: var(--ink); font-family: var(--mono); font-weight: 600; }
+.chip[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.two .fl { margin: 0; }
+.two select { display: block; width: 100%; margin-top: 6px; border: 1px solid var(--line); background: var(--paper); border-radius: 8px; padding: 8px 10px; font-weight: 400; }
+.btn.big { width: 100%; padding: 12px; font-size: 16px; margin-top: 16px; }
+.btn:disabled { opacity: .5; cursor: not-allowed; }
+.fine { font-size: 12px; color: var(--muted); margin: 10px 0 0; }
+.notice { font-size: 14px; padding: 10px 12px; border-radius: 8px; background: var(--accent-soft); margin-bottom: 14px; }
+.sty { display: grid; gap: 12px; }
+.sty .sum { font-size: 15px; margin: 0; }
+.sty dl { display: grid; grid-template-columns: 104px minmax(0, 1fr); gap: 8px 12px; margin: 0; font-size: 14px; }
+.sty dt { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding-top: 2px; }
+.sty dd { margin: 0; min-width: 0; }
+.sty ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; }
+.song-title { font-family: var(--display); font-size: clamp(30px, 4vw, 42px); line-height: 1.05; margin: 4px 0 10px; text-wrap: balance; }
+.song { font-size: 17px; line-height: 1.6; }
+.song .sec { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--margin); margin: 18px 0 4px; font-weight: 600; }
+.song .sec:first-child { margin-top: 0; }
+.song .ly { overflow-wrap: anywhere; }
+.notes { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); }
+.notes ul { margin: 6px 0 0; padding-left: 20px; font-size: 14px; display: grid; gap: 4px; }
+.status { font-size: 14px; color: var(--muted); }
+.saved { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+
 /* transport strip */
 .strip {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--strip); color: var(--strip-ink);
@@ -252,14 +288,80 @@ input.mini { width: 100%; border: 1px solid var(--line); border-radius: 8px; bac
   <header class="top">
     <div class="brand">
       <h1>BAR<span>LAB</span></h1>
-      <p>Find multisyllable rhymes, see your rhyme scheme in color, rap over a beat, and drill until it's second nature.</p>
+      <p>Study your favorite rapper's style, write songs about your life with it, then sharpen every bar and rap it over a beat.</p>
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" id="t-studio" aria-selected="false" data-view="studio">Studio</button>
       <button role="tab" id="t-write" aria-selected="true" data-view="write">Write</button>
       <button role="tab" id="t-flow" aria-selected="false" data-view="flow">Flow</button>
       <button role="tab" id="t-drills" aria-selected="false" data-view="drills">Drills</button>
     </nav>
   </header>
+
+  <!-- STUDIO -->
+  <section class="view" id="v-studio" hidden>
+    <div class="studio">
+      <div class="col">
+        <div class="card">
+          <div class="card-head"><h2>Your rapper</h2><span class="eyebrow">step 1</span></div>
+          <label class="fl" for="artist">Who do you want to study?</label>
+          <input class="mini" id="artist" type="text" autocomplete="off" placeholder="Your favorite rapper's name">
+          <label class="fl" for="artistDesc">How would you describe their style? <span class="opt">optional</span></label>
+          <textarea class="mini" id="artistDesc" placeholder="e.g. calm cold delivery, storytelling, crazy internal rhymes, talks about growing up broke"></textarea>
+          <details class="paste" id="pasteBox">
+            <summary>Paste their lyrics to measure them <span class="opt">optional</span></summary>
+            <textarea class="mini tall" id="artistLyrics" placeholder="Paste a verse or two, one bar per line. Bar Lab measures the rhyme scheme, syllables and density right here. Only those numbers go to Claude, never the lyrics."></textarea>
+            <div class="fp" id="fp"></div>
+          </details>
+          <button class="btn primary big" id="studyBtn">Study their style</button>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Your story</h2><span class="eyebrow">step 2</span></div>
+          <label class="fl" for="story">What's going on in your life that you want this song to be about?</label>
+          <textarea class="mini tall" id="story" placeholder="e.g. Working doubles at the warehouse and making beats at night. My family thinks I should quit music. I know I'm close."></textarea>
+          <label class="fl" for="details">Real details to put in it <span class="opt">optional</span></label>
+          <input class="mini" id="details" type="text" autocomplete="off" placeholder="your city, a street, a person, a car, a time of day">
+          <div class="fl">Mood</div>
+          <div class="chips" id="moods"></div>
+          <div class="two" style="margin-top:14px">
+            <label class="fl" for="shape">Song shape
+              <select id="shape">
+                <option value="full">Full song</option>
+                <option value="radio">Two verses + hook</option>
+                <option value="sixteen">One 16-bar verse</option>
+                <option value="hook">Hook + short verse</option>
+              </select></label>
+            <label class="fl" for="lang">Language
+              <select id="lang"><option value="clean">Clean</option><option value="explicit">Explicit OK</option></select></label>
+          </div>
+          <button class="btn primary big" id="writeBtn">Write my song</button>
+          <p class="fine">Bar Lab writes original lyrics that use the rapper's techniques. It won't copy their actual bars, hooks or ad-libs.</p>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-head"><h2>Style profile</h2><span class="eyebrow" id="styleWho">not studied yet</span></div>
+          <div id="styleOut"><p class="empty">Type a rapper's name and press Study. You'll get a breakdown of their flow, rhyme patterns, delivery, themes and the techniques that make them sound like them.</p></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Lyric sheet</h2>
+            <div class="row">
+              <button class="btn small" id="stopBtn" hidden>Stop</button>
+              <button class="btn small" id="againBtn" hidden>Try another</button>
+              <button class="btn small primary" id="toPadBtn" hidden>Send to pad</button>
+            </div>
+          </div>
+          <div id="studioNote"></div>
+          <div id="songOut"><p class="empty">Your song shows up here, written about your story in your rapper's style. Send it to the pad to see the rhyme breakdown and your Bar Score, then rap it over the beat in Flow.</p></div>
+          <form class="search" id="reviseForm" style="margin-top:16px" hidden>
+            <input id="reviseIn" type="text" autocomplete="off" placeholder="Change something: “make the hook darker”, “more about my mom”" aria-label="What to change">
+            <button class="btn" type="submit">Revise</button>
+          </form>
+          <div id="savedWrap" hidden><div class="sub" style="margin-top:16px">Saved songs</div><div class="saved" id="saved"></div></div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <!-- WRITE -->
   <section class="view" id="v-write">
@@ -704,10 +806,11 @@ const CLICHES = ["on my grind", "top of the game", "count my money", "haters gon
   "came from nothing", "all eyes on me", "ballin' like", "fresh to death", "dope as hell"];
 
 let analysis = null;
+const SECTION = /^\s*(\[[^\]]*\]|\([^)]*\)|(intro|outro|hook|chorus|bridge|verse\s*\d*|pre-?hook)\s*:?)\s*$/i;
 function analyse(text) {
   const lines = text.split("\n");
   const L = lines.map((raw, i) => ({ raw, i, tk: tokens(raw) }));
-  const bars = L.filter(l => l.tk.some(t => t.w));
+  const bars = L.filter(l => l.tk.some(t => t.w) && !SECTION.test(l.raw));
   bars.forEach((b, n) => { b.n = n; b.words = b.tk.filter(t => t.w); b.syl = b.words.reduce((a, t) => a + t.syl, 0); b.end = b.words[b.words.length - 1]; });
 
   // rhyme families
@@ -1166,10 +1269,228 @@ const DEVICES = [
 ];
 $("#devices").innerHTML = DEVICES.map(d => `<div class="card device"><h3>${esc(d[0])}</h3><p class="how">${esc(d[1])}</p><p class="ex">${esc(d[2])}</p><div class="try">Try: ${esc(d[3])}</div></div>`).join("");
 
+/* ================= studio ================= */
+let sampleFn;            // undefined while connecting, null when unavailable
+const st = { profile: null, profileFor: "", song: "", ctl: null, busy: false, lastPrompt: "" };
+const MOODS = ["Hungry", "Heartbroken", "Grateful", "Angry", "Hopeful", "Reflective", "Flexing", "Motivated", "Lonely", "Celebrating"];
+let moods = new Set(store.get("moods", ["Hungry"]));
+$("#moods").innerHTML = MOODS.map(m => `<button class="chip" type="button" aria-pressed="${moods.has(m)}" data-mood="${m}">${m}</button>`).join("");
+$("#moods").addEventListener("click", e => {
+  const b = e.target.closest("[data-mood]"); if (!b) return;
+  moods.has(b.dataset.mood) ? moods.delete(b.dataset.mood) : moods.add(b.dataset.mood);
+  b.setAttribute("aria-pressed", moods.has(b.dataset.mood)); store.set("moods", [...moods]);
+});
+// remember the form for this viewer
+["artist", "artistDesc", "story", "details", "shape", "lang"].forEach(id => {
+  const el = $("#" + id); const v = store.get("f." + id, null); if (v !== null) el.value = v;
+  el.addEventListener("input", () => store.set("f." + id, el.value)); el.addEventListener("change", () => store.set("f." + id, el.value));
+});
+
+function soundName(I) { return I.tv.map(v => v === "@" ? "uh" : v.toLowerCase()).join("-"); }
+function fingerprint(text) {
+  const A = analyse(text); if (A.bars.length < 4) return null;
+  const ends = new Map();
+  A.bars.forEach(b => { if (b.end && b.end.I) { const k = soundName(b.end.I); ends.set(k, (ends.get(k) || 0) + 1); } });
+  const pc = v => Math.round(v * 100);
+  return {
+    barsMeasured: A.bars.length, avgSyllablesPerBar: Math.round(A.mean * 10) / 10,
+    rhymeDensityPct: pc(A.sc.density), barsWithMultisPct: pc(A.sc.multis), longestMultiSyllables: A.deep,
+    internalRhymes: A.internal, vocabularyVarietyPct: pc(A.sc.vocab),
+    favoriteEndRhymeSounds: [...ends].sort((a, b) => b[1] - a[1]).slice(0, 5).map(x => x[0]),
+    rhymeScheme: A.bars.slice(0, 16).map(b => b.letter).join(""),
+  };
+}
+let fpT;
+$("#artistLyrics").addEventListener("input", () => { clearTimeout(fpT); fpT = setTimeout(showFp, 250); });
+function showFp() {
+  const f = fingerprint($("#artistLyrics").value);
+  $("#fp").innerHTML = !f ? ($("#artistLyrics").value.trim() ? "Paste at least 4 bars to measure." : "") :
+    `<span><b>${f.avgSyllablesPerBar}</b> syllables/bar</span><span><b>${f.rhymeDensityPct}%</b> rhyme density</span><span><b>${f.barsWithMultisPct}%</b> bars with multis</span>` +
+    `<span><b>${f.internalRhymes}</b> internal rhymes</span><span>scheme <b>${esc(f.rhymeScheme)}</b></span>`;
+}
+
+const ERR = {
+  rate_limited: "You've hit a usage limit for now. Try again in a little while.",
+  refused: "Claude wouldn't write that one. Change the request and try again.",
+  session_expired: "Your session expired. Sign in to claude.ai again, then retry.",
+  invalid_json: "The style profile came back garbled. Press Study again.",
+  prompt_too_large: "That's too much text. Shorten your story or the style description.",
+};
+const HIDE = new Set(["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"]);
+function note(msg) { $("#studioNote").innerHTML = msg ? `<div class="notice">${msg}</div>` : ""; }
+function setAvail() {
+  const ok = !!sampleFn;
+  $("#studyBtn").disabled = $("#writeBtn").disabled = !ok || st.busy;
+  if (sampleFn === null) note("Writing songs needs Claude, which runs when you open Bar Lab on claude.ai and allow it. The rhyme engine, pad, beats and drills all still work here.");
+}
+function failed(e) {
+  if (HIDE.has(e.code)) { sampleFn = null; setAvail(); return; }
+  if (e.code !== "cancelled") note(ERR[e.code] || "Something went wrong reaching Claude. Try again.");
+}
+(async () => {
+  try { sampleFn = window.claude && window.claude.use ? await window.claude.use("sample") : null; } catch (e) { sampleFn = null; }
+  setAvail();
+})();
+$("#studyBtn").disabled = $("#writeBtn").disabled = true;
+
+function renderProfile(p) {
+  const list = a => Array.isArray(a) ? a.filter(Boolean).map(String) : [];
+  $("#styleWho").textContent = p.artist || st.profileFor;
+  const rows = [["Flow", p.flow], ["Rhymes", p.rhyme], ["Delivery", p.delivery], ["Bar density", p.syllablesPerBar], ["Vocabulary", p.vocabulary], ["Structure", p.structure],
+    ["Themes", list(p.themes).join(" · ")], ["Devices", list(p.devices).join(" · ")]].filter(r => r[1]);
+  $("#styleOut").innerHTML = `<div class="sty">${p.known === false ? `<div class="notice">Claude doesn't know this rapper well, so this profile comes from your description${st.fp ? " and the lyrics you measured" : ""}.</div>` : ""}
+    ${p.summary ? `<p class="sum">${esc(String(p.summary))}</p>` : ""}
+    <dl>${rows.map(r => `<dt>${r[0]}</dt><dd>${esc(String(r[1]))}</dd>`).join("")}</dl>
+    ${list(p.techniques).length ? `<div><div class="sub">How to sound like this</div><ol>${list(p.techniques).map(t => `<li>${esc(t)}</li>`).join("")}</ol></div>` : ""}</div>`;
+}
+
+const NO_COPY = (who) => `- Every line must be original. Do not quote, paraphrase, interpolate or reference any existing song lyrics${who ? `, especially ${who}'s` : ""}: no lyrics, hooks, ad-libs, catchphrases or song titles, and don't mention ${who || "the artist"} by name.`;
+async function study() {
+  const name = $("#artist").value.trim(), desc = $("#artistDesc").value.trim();
+  st.fp = fingerprint($("#artistLyrics").value);
+  if (!name && !desc && !st.fp) { note("Type a rapper's name, or describe the style you want."); $("#artist").focus(); return false; }
+  st.busy = true; setAvail(); note("");
+  $("#styleWho").textContent = "studying…";
+  $("#styleOut").innerHTML = `<p class="status">Studying ${esc(name || "that style")}…</p>`;
+  const prompt = `You are a hip-hop writing coach helping a fan learn the craft from an artist they love.
+Describe the rapping STYLE of ${name ? `"${name}"` : "the artist described below"} as technique that a writer can practice and imitate.
+${desc ? `The fan describes the style as: ${desc}\n` : ""}${st.fp ? `Measurements Bar Lab took from lyrics the fan pasted (rhyme sounds use simplified vowel names): ${JSON.stringify(st.fp)}\nUse these numbers in your answer where they apply.\n` : ""}
+Rules:
+- Describe technique only. Do not quote or paraphrase any lyrics, hooks, ad-libs, catchphrases or song titles.
+- If you don't confidently recognize the artist, set "known" to false and build the profile only from the fan's description and measurements.
+- Keep each string under 30 words. Write plainly, for a beginner.
+
+Reply with only this JSON object:
+{"known": true, "artist": "name as commonly written", "summary": "two sentences on what makes them distinct", "flow": "", "rhyme": "rhyme schemes, multis, internal rhyme habits", "delivery": "voice, energy, pace", "syllablesPerBar": "a typical range like 10-14", "vocabulary": "", "structure": "how their songs and verses are usually built", "themes": ["3-5 themes"], "devices": ["3-5 devices"], "techniques": ["4-6 short instructions a writer can follow to sound like this"]}`;
+  try {
+    const p = await sampleFn.json(prompt, { cache: { gcTime: 3600000 } });
+    if (!p || typeof p !== "object") throw { code: "invalid_json" };
+    st.profile = p; st.profileFor = name; renderProfile(p); store.set("profile", { p, name });
+    return true;
+  } catch (e) {
+    $("#styleOut").innerHTML = ""; $("#styleWho").textContent = "not studied yet"; failed(e); return false;
+  } finally { st.busy = false; setAvail(); }
+}
+$("#studyBtn").onclick = study;
+
+const SHAPES = {
+  full: "[Intro] 2-4 bars, [Verse 1] 16 bars, [Hook] 8 bars, [Verse 2] 16 bars, [Hook] repeated in full, [Bridge] 4 bars, [Outro] 2-4 bars",
+  radio: "[Verse 1] 16 bars, [Hook] 8 bars, [Verse 2] 12 bars, [Hook] repeated in full",
+  sixteen: "[Verse] 16 bars, no hook",
+  hook: "[Hook] 8 bars, [Verse] 8 bars",
+};
+function songPrompt() {
+  const who = st.profile && st.profile.artist || st.profileFor;
+  return `Write an original rap song for the person below, in the style this profile describes.
+
+STYLE PROFILE: ${JSON.stringify(st.profile)}
+${st.fp ? `MEASURED FROM LYRICS THEY LOVE: ${JSON.stringify(st.fp)}\n` : ""}
+ABOUT THEM (the song is about their life, so they can relate to every line):
+What it's about: ${$("#story").value.trim()}
+${$("#details").value.trim() ? `Real details to use: ${$("#details").value.trim()}\n` : ""}Mood: ${[...moods].join(", ") || "your call"}
+Song shape: ${SHAPES[$("#shape").value]}
+Language: ${$("#lang").value === "clean" ? "clean, no profanity" : "explicit language is fine where it fits, no slurs"}
+
+Rules:
+${NO_COPY(who)}
+- Imitate technique only: the flow, syllables per bar, rhyme schemes, multisyllable patterns, internal rhymes, devices, tone and song structure from the profile.
+- One bar per line. Write in first person as them, using their real details. Specific images beat general statements.
+- Make the hook short, catchy and easy to repeat.
+
+Format exactly like this, with nothing before or after:
+TITLE: the song title
+[Section name]
+bar
+bar
+(more sections)
+---
+STYLE NOTES
+- 3 to 5 bullets naming which techniques from the profile you used and where (for example "Verse 1, bars 5-8: stacked three-syllable multis").`;
+}
+
+function splitSong(text) {
+  const [body, notes = ""] = text.split(/\n\s*---+\s*\n/);
+  let title = ""; const lines = [];
+  body.split("\n").forEach(l => { const m = l.match(/^\s*TITLE:\s*(.*)$/i); if (m) title = m[1].trim(); else lines.push(l); });
+  return { title, lines, notes: notes.replace(/^\s*STYLE NOTES\s*/i, "").split("\n").map(l => l.replace(/^\s*[-*•]\s*/, "").trim()).filter(Boolean) };
+}
+function renderSong(text) {
+  const { title, lines, notes } = splitSong(text);
+  $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") +
+    `<div class="song">${lines.map(l => !l.trim() ? "" : /^\s*\[[^\]]*\]\s*$/.test(l) ? `<div class="sec">${esc(l.trim().slice(1, -1))}</div>` : `<div class="ly">${esc(l)}</div>`).join("")}</div>` +
+    (notes.length ? `<div class="notes"><div class="sub">Style notes</div><ul>${notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "");
+}
+function setBusy(b) {
+  st.busy = b; setAvail();
+  $("#stopBtn").hidden = !b;
+  const has = !!st.song && !b;
+  $("#toPadBtn").hidden = $("#againBtn").hidden = $("#reviseForm").hidden = !has;
+}
+async function runSong(prompt) {
+  st.ctl = new AbortController(); st.lastPrompt = prompt; note(""); setBusy(true);
+  $("#songOut").innerHTML = `<p class="status">Writing your song… Claude plans the bars first, so this can take up to a minute.</p>`;
+  try {
+    const r = await sampleFn(prompt, { signal: st.ctl.signal, cache: false, onText: ({ text }) => renderSong(text) });
+    st.song = r.text; renderSong(r.text);
+    if (r.truncated) note("The song got cut off. Try a shorter song shape.");
+    saveSong();
+  } catch (e) {
+    if (e.text) { st.song = e.text; renderSong(e.text); } else if (e.code !== "cancelled") $("#songOut").innerHTML = "";
+    failed(e);
+  } finally { setBusy(false); }
+}
+$("#writeBtn").onclick = async () => {
+  if (!$("#story").value.trim()) { note("Tell it what's going on in your life first. That's what makes the song yours."); $("#story").focus(); return; }
+  const name = $("#artist").value.trim();
+  if (!st.profile || st.profileFor !== name) { if (!(await study())) return; }
+  runSong(songPrompt());
+};
+$("#againBtn").onclick = () => runSong(st.lastPrompt);
+$("#stopBtn").onclick = () => st.ctl && st.ctl.abort();
+$("#reviseForm").addEventListener("submit", e => {
+  e.preventDefault(); const ask = $("#reviseIn").value.trim(); if (!ask || st.busy || !sampleFn) return;
+  const who = st.profile && st.profile.artist || st.profileFor;
+  $("#reviseIn").value = "";
+  runSong(`Here is a rap song you wrote for someone, in the style of this profile: ${JSON.stringify(st.profile)}
+
+SONG:
+${st.song}
+
+Revise it. Their request: ${ask}
+
+Keep everything they didn't ask to change. Same rules as before:
+${NO_COPY(who)}
+- One bar per line, first person, real details.
+Use the same format: TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES with 3 to 5 bullets.`);
+});
+$("#toPadBtn").onclick = () => {
+  const { lines } = splitSong(st.song);
+  pad.value = lines.join("\n").replace(/^\n+|\n+$/g, ""); pad.dispatchEvent(new Event("input"));
+  clearTimeout(padT); refresh(); setView("write"); window.scrollTo(0, 0); toast("Song is on the pad");
+};
+
+let songs = store.get("songs", []);
+function saveSong() {
+  const { title } = splitSong(st.song);
+  songs = [{ title: title || "Untitled", artist: (st.profile && st.profile.artist) || st.profileFor, text: st.song, at: Date.now() }, ...songs].slice(0, 12);
+  store.set("songs", songs); renderSaved();
+}
+function renderSaved() {
+  $("#savedWrap").hidden = !songs.length;
+  $("#saved").innerHTML = songs.map((s, i) => `<button class="chip" data-song="${i}">${esc(s.title)}${s.artist ? `<sup>${esc(s.artist)}</sup>` : ""}</button>`).join("");
+}
+$("#saved").addEventListener("click", e => {
+  const b = e.target.closest("[data-song]"); if (!b || st.busy) return;
+  st.song = songs[+b.dataset.song].text; renderSong(st.song); setBusy(false);
+});
+renderSaved();
+{ const sp = store.get("profile", null); if (sp && sp.p) { st.profile = sp.p; st.profileFor = sp.name; renderProfile(sp.p); } }
+showFp();
+
 /* ================= boot ================= */
 refresh();
 search("pocket");
 nextDrop(); nextFlip();
-setView(store.get("view", "write"));
+setView(store.get("view", "studio"));
 setDrill(store.get("drill", "drop"));
 </script>
