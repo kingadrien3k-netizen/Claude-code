@@ -312,11 +312,14 @@ details.paste[open] summary { margin-bottom: 10px; }
         <div class="card">
           <div class="card-head"><h2>Make a song</h2></div>
           <form id="makeForm">
-            <label class="fl" for="artist">Rapper</label>
+            <label class="fl" for="artist">Rapper <span class="opt">or paste a song below</span></label>
             <input class="mini big-in" id="artist" type="text" autocomplete="off" placeholder="e.g. Polo G" enterkeyhint="next">
             <label class="fl" for="mood">Mood</label>
             <input class="mini big-in" id="mood" type="text" autocomplete="off" placeholder="e.g. heartbroken, hungry, grateful" enterkeyhint="go">
             <div class="chips" id="moods" style="margin-top:8px"></div>
+            <label class="fl" for="artistLyrics">Paste a song you like <span class="opt">optional</span></label>
+            <textarea class="mini" id="artistLyrics" placeholder="Paste lyrics here and the bot studies the flow, rhymes and vibe, then writes you a new song like it."></textarea>
+            <div class="fp" id="fp"></div>
             <button class="btn primary big" id="writeBtn" type="submit">Write my song</button>
           </form>
           <details class="paste" id="pasteBox">
@@ -336,11 +339,8 @@ details.paste[open] summary { margin-bottom: 10px; }
               <label class="fl" for="lang">Language
                 <select id="lang"><option value="explicit" selected>Explicit</option><option value="clean">Clean</option></select></label>
             </div>
-            <label class="fl" for="artistLyrics">Paste lyrics to measure their style <span class="opt">for rappers Claude doesn't know</span></label>
-            <textarea class="mini" id="artistLyrics" placeholder="A verse, one bar per line. Bar Lab measures the rhyme scheme, syllables and density here. Only those numbers go to Claude, never the lyrics."></textarea>
-            <div class="fp" id="fp"></div>
           </details>
-          <p class="fine">Every song keeps it real: everyday working-class life, real numbers, no fake flexing, no filler bars. It's written fresh in the rapper's style and never copies their actual lyrics.</p>
+          <p class="fine">Every song keeps it real: everyday working-class life, real numbers, no fake flexing, no filler bars. It's written fresh and never reuses lines from the rapper or the song you paste.</p>
         </div>
         <div class="card">
           <div class="card-head"><h2>Their style</h2><span class="eyebrow" id="styleWho">waiting</span></div>
@@ -1287,7 +1287,7 @@ $("#moods").addEventListener("click", e => {
 });
 // remember the form for this viewer
 try { if (localStorage.getItem("barlab.f.lang") === '"clean"' && !localStorage.getItem("barlab.langv2")) localStorage.removeItem("barlab.f.lang"); localStorage.setItem("barlab.langv2", "1"); } catch (e) {}
-["artist", "mood", "story", "details", "shape", "lang"].forEach(id => {
+["artist", "mood", "artistLyrics", "story", "details", "shape", "lang"].forEach(id => {
   const el = $("#" + id); const v = store.get("f." + id, null); if (v !== null) el.value = v;
   el.addEventListener("input", () => { store.set("f." + id, el.value); if (id === "mood") syncChips(); });
   el.addEventListener("change", () => store.set("f." + id, el.value));
@@ -1311,8 +1311,21 @@ function fingerprint(text) {
 }
 let fpT;
 $("#artistLyrics").addEventListener("input", () => { clearTimeout(fpT); fpT = setTimeout(showFp, 250); });
+function describeFp(f) {
+  const out = [];
+  const sy = f.avgSyllablesPerBar;
+  out.push(`About ${Math.round(sy)} syllables a bar: ${sy < 10 ? "slow and spaced out, lots of room to breathe" : sy < 14 ? "laid-back triplet flow, not packed" : sy < 18 ? "busy sixteenth-note flow" : "double-time speed"}.`);
+  out.push(f.rhymeDensityPct < 35 ? "Loose rhymes, mostly slant rhymes on the vowel sound, so it plays more melodic than technical." : f.rhymeDensityPct < 55 ? "Steady rhyming with a good amount of rhymes inside the lines." : "Dense rhyming: almost every content word rhymes with something nearby.");
+  out.push(`${f.barsWithMultisPct}% of bars carry a multisyllable rhyme${f.longestMultiSyllables >= 3 ? `, up to ${f.longestMultiSyllables} syllables deep` : ""}, with ${f.internalRhymes} internal rhymes.`);
+  if (f.favoriteEndRhymeSounds.length) out.push(`Favorite ending sounds: ${f.favoriteEndRhymeSounds.slice(0, 3).map(x => `“${x}”`).join(", ")}.`);
+  return out;
+}
 function showFp() {
   const f = fingerprint($("#artistLyrics").value);
+  if (f && !st.busy && !st.song) {
+    $("#styleWho").textContent = "pasted song";
+    $("#styleOut").innerHTML = `<div class="sty"><div><div class="sub">What the bot hears in your paste</div><ol>${describeFp(f).map(x => `<li>${esc(x)}</li>`).join("")}</ol></div></div>`;
+  }
   $("#fp").innerHTML = !f ? ($("#artistLyrics").value.trim() ? "Paste at least 4 bars to measure." : "") :
     `<span><b>${f.avgSyllablesPerBar}</b> syllables/bar</span><span><b>${f.rhymeDensityPct}%</b> rhyme density</span><span><b>${f.barsWithMultisPct}%</b> bars with multis</span>` +
     `<span><b>${f.internalRhymes}</b> internal rhymes</span><span>scheme <b>${esc(f.rhymeScheme)}</b></span>`;
@@ -1340,7 +1353,10 @@ function failed(e) {
 })();
 $("#writeBtn").disabled = true;
 
-const NO_COPY = who => `- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, especially ${who}'s: no lines, hooks, ad-libs, catchphrases or song titles from their songs, and don't say ${who}'s name in the song.`;
+const PASTED = "your pasted song";
+const NO_COPY = who => who === PASTED
+  ? "- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, including the reference song."
+  : `- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, especially ${who}'s: no lines, hooks, ad-libs, catchphrases or song titles from their songs, and don't say ${who}'s name in the song.`;
 const KEEP_IT_REAL = `Keep it real. This is the most important part:
 - The world of the song is everyday working-class and lower-middle-class life: rent due before the check clears, overtime and double shifts, a car that barely starts, the bus at 6am, overdraft fees, stretching groceries, a landlord calling, a mom working too hard, a little brother to look after, friends who went the wrong way, staying out of trouble, being tired and doing it anyway, small wins that mean a lot.
 - No fake flexing. No Lambos, jets, mansions, millions, designer labels, bottles, or stacks of cash as if the narrator has them. Money talk uses real numbers people live with (forty in the tank, a two-week check, two hundred short on rent). Dreaming about more is fine if it's clearly a dream they're working toward.
@@ -1355,11 +1371,20 @@ const SHAPES = {
 };
 function songPrompt(artist, mood) {
   const story = $("#story").value.trim(), details = $("#details").value.trim();
-  const fp = fingerprint($("#artistLyrics").value);
-  return `You are a songwriter who has studied ${artist}'s biggest hit songs closely. Write a brand-new, original rap song in ${artist}'s style.
+  const raw = $("#artistLyrics").value.trim();
+  const fp = fingerprint(raw);
+  const ref = fp ? raw.slice(0, 4000) : "";
+  const named = artist !== PASTED;
+  return `You are a songwriter. Write a brand-new, original rap song ${named ? `in ${artist}'s style` : "in the style of the reference song below"}.
 
-First work out what defines ${artist}'s hits: the flow and cadence, syllables per bar, rhyme schemes and multisyllable rhymes, how melodic or rapped the delivery is, how the hooks are built, the themes, the imagery and the slang. Then write the song with those same techniques so it sounds like it belongs on one of their albums.
-${fp ? `\nBar Lab measured lyrics the listener pasted from this artist: ${JSON.stringify(fp)}. Match these numbers.\n` : ""}
+${named ? `First work out what defines ${artist}'s hits: ` : "First study the reference song: "}the flow and cadence, syllables per bar, rhyme schemes and multisyllable rhymes, how melodic or rapped the delivery is, how the hook is built, the themes, the imagery and the slang. Then write the song with those same techniques so it sounds like it came from the same artist.
+${ref ? `
+REFERENCE SONG the listener pasted. Study it for style only. Do not reuse any of its lines, phrases, hooks, names, ad-libs or distinctive word combinations, and don't repeat any slurs it contains:
+<<<
+${ref}
+>>>
+Bar Lab measured it: ${JSON.stringify(fp)}. Match these numbers.
+` : ""}
 Mood: ${mood || "pick the mood ${artist} is best known for"}
 ${story ? `Make it about the listener's life, in first person as them: ${story}` : "Write it about real, everyday experiences that fit the mood, so a regular listener feels like it's about them."}
 ${details ? `Work in these real details: ${details}\n` : ""}Song shape: ${SHAPES[$("#shape").value]}
@@ -1370,10 +1395,10 @@ ${KEEP_IT_REAL}
 Rules:
 ${NO_COPY(artist)}
 - One bar per line. Specific images beat general statements. The hook must be short, catchy and easy to repeat.
-- If you don't know this artist, begin the STYLE line with "Unknown artist:" and write in a style that fits the mood.
+${named && !ref ? `- If you don't know this artist, begin the STYLE line with "Unknown artist:" and write in a style that fits the mood.` : ""}
 
 Format exactly like this, with nothing before or after:
-STYLE: 2 or 3 sentences naming the techniques from ${artist}'s hits that this song uses
+STYLE: 2 or 3 sentences naming the techniques ${named ? `from ${artist}'s hits` : "from the reference song"} that this song uses
 TITLE: the song title
 [Section name]
 bar
@@ -1411,7 +1436,7 @@ function setBusy(b) {
 }
 async function runSong(prompt) {
   st.ctl = new AbortController(); st.lastPrompt = prompt; note(""); setBusy(true);
-  $("#songOut").innerHTML = `<p class="status">Studying ${esc(st.artist)}'s hits and writing your song… this can take up to a minute.</p>`;
+  $("#songOut").innerHTML = `<p class="status">Studying ${esc(st.artist === PASTED ? "your pasted song" : st.artist + "'s hits")} and writing yours… this can take up to a minute.</p>`;
   if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "center" });
   try {
     const r = await sampleFn(prompt, { signal: st.ctl.signal, cache: false, onText: ({ text }) => renderSong(text) });
@@ -1425,8 +1450,9 @@ async function runSong(prompt) {
 }
 $("#makeForm").addEventListener("submit", e => {
   e.preventDefault(); if (st.busy || !sampleFn) return;
-  const artist = $("#artist").value.trim();
-  if (!artist) { note("Type a rapper's name first."); $("#artist").focus(); return; }
+  let artist = $("#artist").value.trim();
+  if (!artist && fingerprint($("#artistLyrics").value)) artist = PASTED;
+  if (!artist) { note("Type a rapper's name, or paste a song you like."); $("#artist").focus(); return; }
   st.artist = artist;
   runSong(songPrompt(artist, $("#mood").value.trim()));
 });
@@ -1435,13 +1461,13 @@ $("#stopBtn").onclick = () => st.ctl && st.ctl.abort();
 $("#reviseForm").addEventListener("submit", e => {
   e.preventDefault(); const ask = $("#reviseIn").value.trim(); if (!ask || st.busy || !sampleFn) return;
   $("#reviseIn").value = "";
-  runSong(`Here is a rap song you wrote in ${st.artist}'s style:
+  runSong(`Here is a rap song you wrote in the style of ${st.artist}:
 
 ${st.song}
 
 Revise it. The listener's request: ${ask}
 
-Keep everything they didn't ask to change, and keep it in ${st.artist}'s style.
+Keep everything they didn't ask to change, and keep the same style.
 ${KEEP_IT_REAL}
 ${NO_COPY(st.artist)}
 Use the same format: STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES with 3 to 5 bullets.`);
