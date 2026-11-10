@@ -60,6 +60,15 @@
   --h5: rgba(255, 146, 36, .36); --h6: rgba(166, 104, 255, .38); --h7: rgba(0, 196, 196, .32); --h8: rgba(255, 72, 72, .34);
   color-scheme: dark;
 }
+/* Bar Lab is dark-only: the same dark palette wins whatever theme the viewer picked. */
+:root, :root[data-theme="light"] {
+  --paper: #0f111c; --panel: #161929; --ink: #e8eaf6; --muted: #9298b8; --line: #272c45;
+  --rule: #222842; --margin: #b9443c; --accent: #8c9dff; --accent-ink: #0f111c; --accent-soft: #1f2645;
+  --good: #4cc982; --warn: #e3a54a; --bad: #ef6b6b; --strip: #080a12; --strip-ink: #eef0fa; --strip-muted: #8a90b0;
+  --h1: rgba(255, 210, 0, .34); --h2: rgba(255, 90, 168, .34); --h3: rgba(46, 214, 112, .32); --h4: rgba(64, 164, 255, .36);
+  --h5: rgba(255, 146, 36, .36); --h6: rgba(166, 104, 255, .38); --h7: rgba(0, 196, 196, .32); --h8: rgba(255, 72, 72, .34);
+  color-scheme: dark;
+}
 * { box-sizing: border-box; }
 [hidden] { display: none !important; }
 body {
