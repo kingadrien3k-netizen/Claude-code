@@ -336,7 +336,7 @@ details.paste[open] summary { margin-bottom: 10px; }
             <div class="two" style="margin-top:14px">
               <label class="fl" for="shape">Song shape
                 <select id="shape">
-                  <option value="radio" selected>Two verses + hook</option>
+                  <option value="radio" selected>Hook, Verse 1, Verse 2, Hook</option>
                   <option value="full">Full song</option>
                   <option value="sixteen">One 16-bar verse</option>
                   <option value="hook">Hook + short verse</option>
@@ -1432,7 +1432,7 @@ function rhymeCheck(text) {
 }
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
-  radio: "[Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 12 bars, [Hook] repeated in full",
+  radio: "exactly these four sections in this order: [Hook] 8 bars, [Verse 1] 16 bars, [Verse 2] 16 bars, [Hook] the same 8 bars repeated word for word. No intro, no outro, no hook between the verses",
   sixteen: "[Verse] 16 bars, no hook",
   hook: "[Hook] 8 bars, [Verse] 8 bars",
 };
