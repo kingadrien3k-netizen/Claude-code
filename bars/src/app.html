@@ -1369,7 +1369,7 @@ const KEEP_IT_REAL = `How it has to sound:
 - Pick one or two situations and go deep with specific moments and details. Don't explain feelings in flat sentences; show them.
 - No fake flexing. Any shine has to be earned and set against where they came from.
 - Every bar has to be quotable: a punchline, a twist, a cold image or a line that hurts. No filler, no clichés, no forced rhymes, no rhyming-dictionary words nobody says.
-- No word spam. No repeating the same word over and over, no stacked ad-libs. Only the hook repeats.
+- No repeated words. Outside of the hook coming back at the end, don't use the same word twice anywhere in the song (small words like I, the, and, my are fine). Never end two bars on the same word. No stacked ad-libs.
 - Ride the pocket: keep bars a similar length so they're rappable, and land the rhyme on the last word.
 `;
 const SEEDS = {
@@ -1426,9 +1426,15 @@ function rhymeCheck(text) {
   const barByLine = new Map(A.bars.map(b => [b.i, b]));
   A.L.forEach(l => { if (SECTION.test(l.raw)) { if (cur.length) sections.push(cur); cur = []; } else if (barByLine.has(l.i)) cur.push(barByLine.get(l.i)); });
   if (cur.length) sections.push(cur);
+  // repeated words: skip the final section when it repeats the first hook
+  const secs = sections.slice();
+  if (secs.length > 1 && secs[secs.length - 1].map(b => b.raw.trim()).join("\n") === secs[0].map(b => b.raw.trim()).join("\n")) secs.pop();
+  const seen = new Map();
+  secs.flat().forEach(b => b.words.forEach(t => { if (t.w.length > 3 && !STOP.has(t.w)) { const k = t.ent ? t.ent.w : t.w; seen.set(k, (seen.get(k) || 0) + 1); } }));
+  const repeats = [...seen].filter(([, n]) => n > 1).map(([w]) => w);
   const misses = []; let pairs = 0;
   sections.forEach(sec => { for (let k = 0; k + 1 < sec.length; k += 2) { pairs++; if (!endsRhyme(sec[k], sec[k + 1])) misses.push([sec[k], sec[k + 1]]); } });
-  return { A, pairs, misses };
+  return { A, pairs, misses, repeats };
 }
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
@@ -1504,7 +1510,7 @@ function renderSong(text) {
   const lineHTML = l => bars.has(l.i) ? bars.get(l.i).tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}${t.m ? " m" : ""}">${esc(t.t)}</span>` : esc(t.t)).join("") : esc(l.raw);
   $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") + (story ? `<p class="rmeta" style="margin:-4px 0 14px">${esc(story)}</p>` : "") +
     `<div class="song">${A.L.map(l => !l.raw.trim() ? "" : SECTION.test(l.raw) ? `<div class="sec">${esc(l.raw.trim().replace(/^\[|\]$/g, ""))}</div>` : `<div class="ly">${lineHTML(l)}</div>`).join("")}</div>` +
-    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme. Same color = same rhyme sound.</p>` : "");
+    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme · <b>${st.check.repeats.length}</b> repeated words${st.check.repeats.length ? ` (${esc(st.check.repeats.slice(0, 6).join(", "))})` : ""}. Same color = same rhyme sound.</p>` : "");
 }
 function setBusy(b) {
   st.busy = b; setAvail();
@@ -1512,7 +1518,7 @@ function setBusy(b) {
   const has = !!st.song && !b;
   $("#toPadBtn").hidden = $("#againBtn").hidden = $("#reviseForm").hidden = !has;
 }
-function fixPrompt(song, misses) {
+function fixPrompt(song, misses, repeats) {
   const list = misses.map(([a, b]) => {
     const r = a.end && a.end.ent ? findRhymes(a.end.w) : null;
     const sug = r && !r.missing ? [...r.perfect.slice(0, 6).map(e => e.w), ...r.combos.slice(0, 3).map(c => c.w), ...r.multis.slice(0, 4).map(x => x.e.w)].join(", ") : "";
@@ -1522,9 +1528,10 @@ function fixPrompt(song, misses) {
 
 ${song}
 
-These couplets don't rhyme. Rewrite them so the two end words rhyme on the same vowel sound, ideally a multisyllable rhyme. Keep what the bars say and keep the story making sense. Don't drop in a word just because it rhymes:
+${misses.length ? `These couplets don't rhyme. Rewrite them so the two end words rhyme on the same vowel sound, ideally a multisyllable rhyme. Keep what the bars say and keep the story making sense. Don't drop in a word just because it rhymes:
 ${list}
-
+` : ""}${repeats.length ? `These words are used more than once: ${repeats.join(", ")}. Keep one use of each and swap the others for a different word that fits the bar and still rhymes where it needs to. The final hook stays an exact copy of the first hook.
+` : ""}
 Don't change any other bar.
 ${KEEP_IT_REAL}
 ${NO_COPY(st.artist)}
@@ -1533,7 +1540,7 @@ Return the whole song in the same format: STORY: line, STYLE: line, TITLE: line,
 async function runSong(prompt, isFix) {
   st.ctl = new AbortController(); if (!isFix) { st.lastPrompt = prompt; note(""); } st.check = null; setBusy(true);
   const t0 = Date.now(); let started = false;
-  const label = isFix ? "Fixing the bars that didn't rhyme…" : `Writing your song in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
+  const label = isFix ? "Fixing rhymes and repeated words…" : `Writing your song in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
   if (isFix) $("#songOut").insertAdjacentHTML("afterbegin", `<p class="status" id="wait">${label}</p>`); else $("#songOut").innerHTML = `<p class="status" id="wait">${label}</p>`;
   const tick = setInterval(() => { const w = $("#wait"); if (!started && w) w.textContent = label.replace(/&#?\w+;/g, "") + " " + Math.round((Date.now() - t0) / 1000) + "s"; }, 1000);
   if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1542,10 +1549,13 @@ async function runSong(prompt, isFix) {
     st.song = r.text;
     st.check = rhymeCheck(splitSong(r.text).lines.join("\n")); renderSong(r.text);
     if (r.truncated) note("The song got cut off. Try a shorter song shape.");
-    if (!isFix && !r.truncated && st.check.misses.length >= 1) {
+    if (!isFix && !r.truncated && (st.check.misses.length || st.check.repeats.length)) {
       clearInterval(tick); setBusy(false);
-      note(`${st.check.misses.length} couplets didn't rhyme. Tightening them now…`);
-      return runSong(fixPrompt(r.text, st.check.misses), true);
+      const parts = [];
+      if (st.check.misses.length) parts.push(`${st.check.misses.length} couplet${st.check.misses.length > 1 ? "s" : ""} didn't rhyme`);
+      if (st.check.repeats.length) parts.push(`${st.check.repeats.length} word${st.check.repeats.length > 1 ? "s were" : " was"} repeated`);
+      note(`${parts.join(" and ")}. Fixing it now…`);
+      return runSong(fixPrompt(r.text, st.check.misses, st.check.repeats), true);
     }
     saveSong();
   } catch (e) {
