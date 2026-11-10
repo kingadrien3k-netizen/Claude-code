@@ -60,10 +60,10 @@ an "on fire" streak bonus, a second defender once you hit 10 points, and a saved
 
 A writing gym for lyrical rap. Open `bars/index.html` in any browser, no install.
 
-- **Studio**: name your favorite rapper (optionally describe them or paste lyrics to measure their
-  rhyme scheme and density locally), get a style profile, then tell it your story and get an original
-  song in that style. Revise it, save it, or send it to the pad. Song writing uses Claude, so it works
-  when the page is opened on claude.ai; it writes original lines and never copies the artist's bars
+- **Studio**: type a rapper and a mood, hit Write, and get an original song in that rapper's style
+  (flow, rhyme patterns, delivery, hooks and themes from their hits), with a note on which techniques
+  it used. Optionally add your own story and details. Revise it, save it, or send it to the pad.
+  Song writing uses Claude, so it works when the page is opened on claude.ai; it never copies real lyrics
 - **Rhyme Engine**: rhymes by sound from a 26,000-word phonetic dictionary: perfect rhymes,
   multisyllable vowel matches, two-word phrase rhymes ("pocket" → "lock it", "rock it") and slant rhymes
 - **The Pad + Breakdown**: write one bar per line; rhyme families are highlighted in color,

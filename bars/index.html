@@ -231,7 +231,7 @@ input.mini { width: 100%; border: 1px solid var(--line); border-radius: 8px; bac
 textarea.tall { min-height: 120px; }
 details.paste { margin: 14px 0 4px; border: 1px dashed var(--line); border-radius: 8px; padding: 10px 12px; }
 details.paste summary { cursor: pointer; font-weight: 600; font-size: 14px; }
-#studyForm .mini { font-size: 18px; }
+.big-in { font-size: 18px !important; }
 details.paste .fl:first-of-type { margin-top: 0; }
 details.paste[open] summary { margin-bottom: 10px; }
 .fp { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 13px; color: var(--muted); }
@@ -295,7 +295,7 @@ details.paste[open] summary { margin-bottom: 10px; }
   <header class="top">
     <div class="brand">
       <h1>BAR<span>LAB</span></h1>
-      <p>Study your favorite rapper's style, write songs about your life with it, then sharpen every bar and rap it over a beat.</p>
+      <p>Type your favorite rapper and a mood, get an original song in their style, then sharpen the bars and rap it over a beat.</p>
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button role="tab" id="t-studio" aria-selected="false" data-view="studio">Studio</button>
@@ -310,49 +310,44 @@ details.paste[open] summary { margin-bottom: 10px; }
     <div class="studio">
       <div class="col">
         <div class="card">
-          <div class="card-head"><h2>Your rapper</h2><span class="eyebrow">step 1</span></div>
-          <form class="search" id="studyForm">
-            <input class="mini" id="artist" type="text" autocomplete="off" placeholder="Type a rapper's name" aria-label="Rapper's name" enterkeyhint="go">
-            <button class="btn primary" id="studyBtn" type="submit">Study</button>
+          <div class="card-head"><h2>Make a song</h2></div>
+          <form id="makeForm">
+            <label class="fl" for="artist">Rapper</label>
+            <input class="mini big-in" id="artist" type="text" autocomplete="off" placeholder="e.g. Polo G" enterkeyhint="next">
+            <label class="fl" for="mood">Mood</label>
+            <input class="mini big-in" id="mood" type="text" autocomplete="off" placeholder="e.g. heartbroken, hungry, grateful" enterkeyhint="go">
+            <div class="chips" id="moods" style="margin-top:8px"></div>
+            <button class="btn primary big" id="writeBtn" type="submit">Write my song</button>
           </form>
-          <p class="fine">Type their name and hit Enter. Claude studies their flow, rhymes and delivery for you.</p>
           <details class="paste" id="pasteBox">
-            <summary>Add more <span class="opt">optional</span></summary>
-            <label class="fl" for="artistDesc">Describe their style in your words</label>
-            <textarea class="mini" id="artistDesc" placeholder="e.g. calm cold delivery, storytelling, crazy internal rhymes"></textarea>
-            <label class="fl" for="artistLyrics">Paste some of their lyrics to measure them</label>
-            <textarea class="mini tall" id="artistLyrics" placeholder="A verse or two, one bar per line. Bar Lab measures the rhyme scheme, syllables and density right here. Only those numbers go to Claude, never the lyrics."></textarea>
+            <summary>Make it about you <span class="opt">optional</span></summary>
+            <label class="fl" for="story">What's going on in your life?</label>
+            <textarea class="mini" id="story" placeholder="e.g. Working doubles and making music at night. My family thinks I should quit."></textarea>
+            <label class="fl" for="details">Real details to put in it</label>
+            <input class="mini" id="details" type="text" autocomplete="off" placeholder="your city, a street, a person, a time of day">
+            <div class="two" style="margin-top:14px">
+              <label class="fl" for="shape">Song shape
+                <select id="shape">
+                  <option value="full">Full song</option>
+                  <option value="radio">Two verses + hook</option>
+                  <option value="sixteen">One 16-bar verse</option>
+                  <option value="hook">Hook + short verse</option>
+                </select></label>
+              <label class="fl" for="lang">Language
+                <select id="lang"><option value="clean">Clean</option><option value="explicit">Explicit OK</option></select></label>
+            </div>
+            <label class="fl" for="artistLyrics">Paste lyrics to measure their style <span class="opt">for rappers Claude doesn't know</span></label>
+            <textarea class="mini" id="artistLyrics" placeholder="A verse, one bar per line. Bar Lab measures the rhyme scheme, syllables and density here. Only those numbers go to Claude, never the lyrics."></textarea>
             <div class="fp" id="fp"></div>
           </details>
+          <p class="fine">The song is written fresh in the rapper's style: their flow, rhyme patterns, delivery and themes. It never copies their actual lyrics.</p>
         </div>
         <div class="card">
-          <div class="card-head"><h2>Your story</h2><span class="eyebrow">step 2</span></div>
-          <label class="fl" for="story">What's going on in your life that you want this song to be about?</label>
-          <textarea class="mini tall" id="story" placeholder="e.g. Working doubles at the warehouse and making beats at night. My family thinks I should quit music. I know I'm close."></textarea>
-          <label class="fl" for="details">Real details to put in it <span class="opt">optional</span></label>
-          <input class="mini" id="details" type="text" autocomplete="off" placeholder="your city, a street, a person, a car, a time of day">
-          <div class="fl">Mood</div>
-          <div class="chips" id="moods"></div>
-          <div class="two" style="margin-top:14px">
-            <label class="fl" for="shape">Song shape
-              <select id="shape">
-                <option value="full">Full song</option>
-                <option value="radio">Two verses + hook</option>
-                <option value="sixteen">One 16-bar verse</option>
-                <option value="hook">Hook + short verse</option>
-              </select></label>
-            <label class="fl" for="lang">Language
-              <select id="lang"><option value="clean">Clean</option><option value="explicit">Explicit OK</option></select></label>
-          </div>
-          <button class="btn primary big" id="writeBtn">Write my song</button>
-          <p class="fine">Bar Lab writes original lyrics that use the rapper's techniques. It won't copy their actual bars, hooks or ad-libs.</p>
+          <div class="card-head"><h2>Their style</h2><span class="eyebrow" id="styleWho">waiting</span></div>
+          <div id="styleOut"><p class="empty">After you hit Write, this shows what Claude pulled from the rapper's hit songs: the flow, rhymes and delivery your song uses.</p></div>
         </div>
       </div>
       <div class="col">
-        <div class="card">
-          <div class="card-head"><h2>Style profile</h2><span class="eyebrow" id="styleWho">not studied yet</span></div>
-          <div id="styleOut"><p class="empty">Type a rapper's name and press Study. You'll get a breakdown of their flow, rhyme patterns, delivery, themes and the techniques that make them sound like them.</p></div>
-        </div>
         <div class="card">
           <div class="card-head"><h2>Lyric sheet</h2>
             <div class="row">
@@ -362,7 +357,7 @@ details.paste[open] summary { margin-bottom: 10px; }
             </div>
           </div>
           <div id="studioNote"></div>
-          <div id="songOut"><p class="empty">Your song shows up here, written about your story in your rapper's style. Send it to the pad to see the rhyme breakdown and your Bar Score, then rap it over the beat in Flow.</p></div>
+          <div id="songOut"><p class="empty">Type a rapper and a mood, then hit Write. Your song shows up here. Send it to the pad to see the rhyme breakdown, then rap it over the beat in Flow.</p></div>
           <form class="search" id="reviseForm" style="margin-top:16px" hidden>
             <input id="reviseIn" type="text" autocomplete="off" placeholder="Change something: “make the hook darker”, “more about my mom”" aria-label="What to change">
             <button class="btn" type="submit">Revise</button>
@@ -1281,20 +1276,23 @@ $("#devices").innerHTML = DEVICES.map(d => `<div class="card device"><h3>${esc(d
 
 /* ================= studio ================= */
 let sampleFn;            // undefined while connecting, null when unavailable
-const st = { profile: null, profileFor: "", song: "", ctl: null, busy: false, lastPrompt: "" };
-const MOODS = ["Hungry", "Heartbroken", "Grateful", "Angry", "Hopeful", "Reflective", "Flexing", "Motivated", "Lonely", "Celebrating"];
-let moods = new Set(store.get("moods", ["Hungry"]));
-$("#moods").innerHTML = MOODS.map(m => `<button class="chip" type="button" aria-pressed="${moods.has(m)}" data-mood="${m}">${m}</button>`).join("");
+const st = { song: "", artist: "", ctl: null, busy: false, lastPrompt: "" };
+const MOODS = ["Heartbroken", "Hungry", "Grateful", "Angry", "Hopeful", "Reflective", "Flexing", "Motivated", "Lonely", "Celebrating"];
+$("#moods").innerHTML = MOODS.map(m => `<button class="chip" type="button" data-mood="${m}">${m}</button>`).join("");
+const syncChips = () => $$("#moods .chip").forEach(c => c.setAttribute("aria-pressed", $("#mood").value.trim().toLowerCase() === c.dataset.mood.toLowerCase()));
 $("#moods").addEventListener("click", e => {
   const b = e.target.closest("[data-mood]"); if (!b) return;
-  moods.has(b.dataset.mood) ? moods.delete(b.dataset.mood) : moods.add(b.dataset.mood);
-  b.setAttribute("aria-pressed", moods.has(b.dataset.mood)); store.set("moods", [...moods]);
+  $("#mood").value = b.getAttribute("aria-pressed") === "true" ? "" : b.dataset.mood.toLowerCase();
+  $("#mood").dispatchEvent(new Event("input")); syncChips();
 });
 // remember the form for this viewer
-["artist", "artistDesc", "story", "details", "shape", "lang"].forEach(id => {
+["artist", "mood", "story", "details", "shape", "lang"].forEach(id => {
   const el = $("#" + id); const v = store.get("f." + id, null); if (v !== null) el.value = v;
-  el.addEventListener("input", () => store.set("f." + id, el.value)); el.addEventListener("change", () => store.set("f." + id, el.value));
+  el.addEventListener("input", () => { store.set("f." + id, el.value); if (id === "mood") syncChips(); });
+  el.addEventListener("change", () => store.set("f." + id, el.value));
 });
+syncChips();
+$("#artist").addEventListener("keydown", e => { if (e.key === "Enter" && !$("#mood").value.trim()) { e.preventDefault(); $("#mood").focus(); } });
 
 function soundName(I) { return I.tv.map(v => v === "@" ? "uh" : v.toLowerCase()).join("-"); }
 function fingerprint(text) {
@@ -1323,14 +1321,12 @@ const ERR = {
   rate_limited: "You've hit a usage limit for now. Try again in a little while.",
   refused: "Claude wouldn't write that one. Change the request and try again.",
   session_expired: "Your session expired. Sign in to claude.ai again, then retry.",
-  invalid_json: "The style profile came back garbled. Press Study again.",
-  prompt_too_large: "That's too much text. Shorten your story or the style description.",
+  prompt_too_large: "That's too much text. Shorten your story.",
 };
 const HIDE = new Set(["not_granted", "sampling_disabled", "not_declared", "capability_disabled", "capability_removed"]);
 function note(msg) { $("#studioNote").innerHTML = msg ? `<div class="notice">${msg}</div>` : ""; }
 function setAvail() {
-  const ok = !!sampleFn;
-  $("#studyBtn").disabled = $("#writeBtn").disabled = !ok || st.busy;
+  $("#writeBtn").disabled = !sampleFn || st.busy;
   if (sampleFn === null) note("Writing songs needs Claude, which runs when you open Bar Lab on claude.ai and allow it. The rhyme engine, pad, beats and drills all still work here.");
 }
 function failed(e) {
@@ -1341,73 +1337,34 @@ function failed(e) {
   try { sampleFn = window.claude && window.claude.use ? await window.claude.use("sample") : null; } catch (e) { sampleFn = null; }
   setAvail();
 })();
-$("#studyBtn").disabled = $("#writeBtn").disabled = true;
+$("#writeBtn").disabled = true;
 
-function renderProfile(p) {
-  const list = a => Array.isArray(a) ? a.filter(Boolean).map(String) : [];
-  $("#styleWho").textContent = p.artist || st.profileFor;
-  const rows = [["Flow", p.flow], ["Rhymes", p.rhyme], ["Delivery", p.delivery], ["Bar density", p.syllablesPerBar], ["Vocabulary", p.vocabulary], ["Structure", p.structure],
-    ["Themes", list(p.themes).join(" · ")], ["Devices", list(p.devices).join(" · ")]].filter(r => r[1]);
-  $("#styleOut").innerHTML = `<div class="sty">${p.known === false ? `<div class="notice">Claude doesn't know this rapper well, so this profile comes from your description${st.fp ? " and the lyrics you measured" : ""}.</div>` : ""}
-    ${p.summary ? `<p class="sum">${esc(String(p.summary))}</p>` : ""}
-    <dl>${rows.map(r => `<dt>${r[0]}</dt><dd>${esc(String(r[1]))}</dd>`).join("")}</dl>
-    ${list(p.techniques).length ? `<div><div class="sub">How to sound like this</div><ol>${list(p.techniques).map(t => `<li>${esc(t)}</li>`).join("")}</ol></div>` : ""}</div>`;
-}
-
-const NO_COPY = (who) => `- Every line must be original. Do not quote, paraphrase, interpolate or reference any existing song lyrics${who ? `, especially ${who}'s` : ""}: no lyrics, hooks, ad-libs, catchphrases or song titles, and don't mention ${who || "the artist"} by name.`;
-async function study() {
-  const name = $("#artist").value.trim(), desc = $("#artistDesc").value.trim();
-  st.fp = fingerprint($("#artistLyrics").value);
-  if (!name && !desc && !st.fp) { note("Type a rapper's name, or describe the style you want."); $("#artist").focus(); return false; }
-  st.busy = true; setAvail(); note("");
-  $("#styleWho").textContent = "studying…";
-  $("#styleOut").innerHTML = `<p class="status">Studying ${esc(name || "that style")}…</p>`;
-  const prompt = `You are a hip-hop writing coach helping a fan learn the craft from an artist they love.
-Describe the rapping STYLE of ${name ? `"${name}"` : "the artist described below"} as technique that a writer can practice and imitate.
-${desc ? `The fan describes the style as: ${desc}\n` : ""}${st.fp ? `Measurements Bar Lab took from lyrics the fan pasted (rhyme sounds use simplified vowel names): ${JSON.stringify(st.fp)}\nUse these numbers in your answer where they apply.\n` : ""}
-Rules:
-- Describe technique only. Do not quote or paraphrase any lyrics, hooks, ad-libs, catchphrases or song titles.
-- If you don't confidently recognize the artist, set "known" to false and build the profile only from the fan's description and measurements.
-- Keep each string under 30 words. Write plainly, for a beginner.
-
-Reply with only this JSON object:
-{"known": true, "artist": "name as commonly written", "summary": "two sentences on what makes them distinct", "flow": "", "rhyme": "rhyme schemes, multis, internal rhyme habits", "delivery": "voice, energy, pace", "syllablesPerBar": "a typical range like 10-14", "vocabulary": "", "structure": "how their songs and verses are usually built", "themes": ["3-5 themes"], "devices": ["3-5 devices"], "techniques": ["4-6 short instructions a writer can follow to sound like this"]}`;
-  try {
-    const p = await sampleFn.json(prompt, { cache: { gcTime: 3600000 } });
-    if (!p || typeof p !== "object") throw { code: "invalid_json" };
-    st.profile = p; st.profileFor = name; renderProfile(p); store.set("profile", { p, name });
-    return true;
-  } catch (e) {
-    $("#styleOut").innerHTML = ""; $("#styleWho").textContent = "not studied yet"; failed(e); return false;
-  } finally { st.busy = false; setAvail(); }
-}
-$("#studyForm").addEventListener("submit", e => { e.preventDefault(); if (!st.busy && sampleFn) study(); });
-
+const NO_COPY = who => `- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, especially ${who}'s: no lines, hooks, ad-libs, catchphrases or song titles from their songs, and don't say ${who}'s name in the song.`;
 const SHAPES = {
-  full: "[Intro] 2-4 bars, [Verse 1] 16 bars, [Hook] 8 bars, [Verse 2] 16 bars, [Hook] repeated in full, [Bridge] 4 bars, [Outro] 2-4 bars",
-  radio: "[Verse 1] 16 bars, [Hook] 8 bars, [Verse 2] 12 bars, [Hook] repeated in full",
+  full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
+  radio: "[Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 12 bars, [Hook] repeated in full",
   sixteen: "[Verse] 16 bars, no hook",
   hook: "[Hook] 8 bars, [Verse] 8 bars",
 };
-function songPrompt() {
-  const who = st.profile && st.profile.artist || st.profileFor;
-  return `Write an original rap song for the person below, in the style this profile describes.
+function songPrompt(artist, mood) {
+  const story = $("#story").value.trim(), details = $("#details").value.trim();
+  const fp = fingerprint($("#artistLyrics").value);
+  return `You are a songwriter who has studied ${artist}'s biggest hit songs closely. Write a brand-new, original rap song in ${artist}'s style.
 
-STYLE PROFILE: ${JSON.stringify(st.profile)}
-${st.fp ? `MEASURED FROM LYRICS THEY LOVE: ${JSON.stringify(st.fp)}\n` : ""}
-ABOUT THEM (the song is about their life, so they can relate to every line):
-What it's about: ${$("#story").value.trim()}
-${$("#details").value.trim() ? `Real details to use: ${$("#details").value.trim()}\n` : ""}Mood: ${[...moods].join(", ") || "your call"}
-Song shape: ${SHAPES[$("#shape").value]}
+First work out what defines ${artist}'s hits: the flow and cadence, syllables per bar, rhyme schemes and multisyllable rhymes, how melodic or rapped the delivery is, how the hooks are built, the themes, the imagery and the slang. Then write the song with those same techniques so it sounds like it belongs on one of their albums.
+${fp ? `\nBar Lab measured lyrics the listener pasted from this artist: ${JSON.stringify(fp)}. Match these numbers.\n` : ""}
+Mood: ${mood || "pick the mood ${artist} is best known for"}
+${story ? `Make it about the listener's life, in first person as them: ${story}` : "Write it about real, everyday experiences that fit the mood, so a regular listener feels like it's about them."}
+${details ? `Work in these real details: ${details}\n` : ""}Song shape: ${SHAPES[$("#shape").value]}
 Language: ${$("#lang").value === "clean" ? "clean, no profanity" : "explicit language is fine where it fits, no slurs"}
 
 Rules:
-${NO_COPY(who)}
-- Imitate technique only: the flow, syllables per bar, rhyme schemes, multisyllable patterns, internal rhymes, devices, tone and song structure from the profile.
-- One bar per line. Write in first person as them, using their real details. Specific images beat general statements.
-- Make the hook short, catchy and easy to repeat.
+${NO_COPY(artist)}
+- One bar per line. Specific images beat general statements. The hook must be short, catchy and easy to repeat.
+- If you don't know this artist, begin the STYLE line with "Unknown artist:" and write in a style that fits the mood.
 
 Format exactly like this, with nothing before or after:
+STYLE: 2 or 3 sentences naming the techniques from ${artist}'s hits that this song uses
 TITLE: the song title
 [Section name]
 bar
@@ -1415,20 +1372,27 @@ bar
 (more sections)
 ---
 STYLE NOTES
-- 3 to 5 bullets naming which techniques from the profile you used and where (for example "Verse 1, bars 5-8: stacked three-syllable multis").`;
+- 3 to 5 bullets saying where in the song each technique shows up (for example "Hook: melodic, repeated end rhyme").`;
 }
 
 function splitSong(text) {
   const [body, notes = ""] = text.split(/\n\s*---+\s*\n/);
-  let title = ""; const lines = [];
-  body.split("\n").forEach(l => { const m = l.match(/^\s*TITLE:\s*(.*)$/i); if (m) title = m[1].trim(); else lines.push(l); });
-  return { title, lines, notes: notes.replace(/^\s*STYLE NOTES\s*/i, "").split("\n").map(l => l.replace(/^\s*[-*•]\s*/, "").trim()).filter(Boolean) };
+  let title = "", style = ""; const lines = [];
+  body.split("\n").forEach(l => {
+    const t = l.match(/^\s*TITLE:\s*(.*)$/i), s = l.match(/^\s*STYLE:\s*(.*)$/i);
+    if (t) title = t[1].trim(); else if (s) style = s[1].trim(); else lines.push(l);
+  });
+  while (lines.length && !lines[0].trim()) lines.shift();
+  return { title, style, lines, notes: notes.replace(/^\s*STYLE NOTES\s*/i, "").split("\n").map(l => l.replace(/^\s*[-*•]\s*/, "").trim()).filter(Boolean) };
 }
 function renderSong(text) {
-  const { title, lines, notes } = splitSong(text);
+  const { title, style, lines, notes } = splitSong(text);
+  if (style) {
+    $("#styleWho").textContent = st.artist;
+    $("#styleOut").innerHTML = `<div class="sty"><p class="sum">${esc(style)}</p>${notes.length ? `<div><div class="sub">Where it shows up in your song</div><ol>${notes.map(n => `<li>${esc(n)}</li>`).join("")}</ol></div>` : ""}</div>`;
+  }
   $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") +
-    `<div class="song">${lines.map(l => !l.trim() ? "" : /^\s*\[[^\]]*\]\s*$/.test(l) ? `<div class="sec">${esc(l.trim().slice(1, -1))}</div>` : `<div class="ly">${esc(l)}</div>`).join("")}</div>` +
-    (notes.length ? `<div class="notes"><div class="sub">Style notes</div><ul>${notes.map(n => `<li>${esc(n)}</li>`).join("")}</ul></div>` : "");
+    `<div class="song">${lines.map(l => !l.trim() ? "" : /^\s*\[[^\]]*\]\s*$/.test(l) ? `<div class="sec">${esc(l.trim().slice(1, -1))}</div>` : `<div class="ly">${esc(l)}</div>`).join("")}</div>`;
 }
 function setBusy(b) {
   st.busy = b; setAvail();
@@ -1438,7 +1402,8 @@ function setBusy(b) {
 }
 async function runSong(prompt) {
   st.ctl = new AbortController(); st.lastPrompt = prompt; note(""); setBusy(true);
-  $("#songOut").innerHTML = `<p class="status">Writing your song… Claude plans the bars first, so this can take up to a minute.</p>`;
+  $("#songOut").innerHTML = `<p class="status">Studying ${esc(st.artist)}'s hits and writing your song… this can take up to a minute.</p>`;
+  if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "center" });
   try {
     const r = await sampleFn(prompt, { signal: st.ctl.signal, cache: false, onText: ({ text }) => renderSong(text) });
     st.song = r.text; renderSong(r.text);
@@ -1449,29 +1414,27 @@ async function runSong(prompt) {
     failed(e);
   } finally { setBusy(false); }
 }
-$("#writeBtn").onclick = async () => {
-  if (!$("#story").value.trim()) { note("Tell it what's going on in your life first. That's what makes the song yours."); $("#story").focus(); return; }
-  const name = $("#artist").value.trim();
-  if (!st.profile || st.profileFor !== name) { if (!(await study())) return; }
-  runSong(songPrompt());
-};
+$("#makeForm").addEventListener("submit", e => {
+  e.preventDefault(); if (st.busy || !sampleFn) return;
+  const artist = $("#artist").value.trim();
+  if (!artist) { note("Type a rapper's name first."); $("#artist").focus(); return; }
+  st.artist = artist;
+  runSong(songPrompt(artist, $("#mood").value.trim()));
+});
 $("#againBtn").onclick = () => runSong(st.lastPrompt);
 $("#stopBtn").onclick = () => st.ctl && st.ctl.abort();
 $("#reviseForm").addEventListener("submit", e => {
   e.preventDefault(); const ask = $("#reviseIn").value.trim(); if (!ask || st.busy || !sampleFn) return;
-  const who = st.profile && st.profile.artist || st.profileFor;
   $("#reviseIn").value = "";
-  runSong(`Here is a rap song you wrote for someone, in the style of this profile: ${JSON.stringify(st.profile)}
+  runSong(`Here is a rap song you wrote in ${st.artist}'s style:
 
-SONG:
 ${st.song}
 
-Revise it. Their request: ${ask}
+Revise it. The listener's request: ${ask}
 
-Keep everything they didn't ask to change. Same rules as before:
-${NO_COPY(who)}
-- One bar per line, first person, real details.
-Use the same format: TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES with 3 to 5 bullets.`);
+Keep everything they didn't ask to change, and keep it in ${st.artist}'s style.
+${NO_COPY(st.artist)}
+Use the same format: STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES with 3 to 5 bullets.`);
 });
 $("#toPadBtn").onclick = () => {
   const { lines } = splitSong(st.song);
@@ -1482,7 +1445,7 @@ $("#toPadBtn").onclick = () => {
 let songs = store.get("songs", []);
 function saveSong() {
   const { title } = splitSong(st.song);
-  songs = [{ title: title || "Untitled", artist: (st.profile && st.profile.artist) || st.profileFor, text: st.song, at: Date.now() }, ...songs].slice(0, 12);
+  songs = [{ title: title || "Untitled", artist: st.artist, text: st.song, at: Date.now() }, ...songs].slice(0, 12);
   store.set("songs", songs); renderSaved();
 }
 function renderSaved() {
@@ -1491,10 +1454,9 @@ function renderSaved() {
 }
 $("#saved").addEventListener("click", e => {
   const b = e.target.closest("[data-song]"); if (!b || st.busy) return;
-  st.song = songs[+b.dataset.song].text; renderSong(st.song); setBusy(false);
+  const sg = songs[+b.dataset.song]; st.song = sg.text; st.artist = sg.artist || ""; renderSong(st.song); setBusy(false);
 });
 renderSaved();
-{ const sp = store.get("profile", null); if (sp && sp.p) { st.profile = sp.p; st.profileFor = sp.name; renderProfile(sp.p); } }
 showFp();
 
 /* ================= boot ================= */
