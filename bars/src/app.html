@@ -1480,7 +1480,18 @@ function rhymeCheck(text) {
   } });
   // bars with no rhyme inside the line
   const flat = A.bars.filter(b => b.words.length > 3 && !b.words.slice(0, -1).some(t => t.color));
-  return { A, pairs, misses, singles, multis, flat, repeats };
+  const vb = vbars.length ? vbars : A.bars;
+  const inner = b => b.words.slice(0, -1).filter(t => t.color).length;
+  const style = {
+    syl: vb.length ? Math.round(vb.reduce((a, b) => a + b.syl, 0) / vb.length * 10) / 10 : 0,
+    internal: vb.length ? Math.round(vb.reduce((a, b) => a + inner(b), 0) / vb.length * 10) / 10 : 0,
+    multiPct: vb.length ? Math.round(vb.filter(b => b.multi >= 2).length / vb.length * 100) : 0,
+  };
+  const T = styleTargets(st.artist);
+  const shortBars = T ? vb.filter(b => b.syl < T.syl[0] - 1) : [];
+  const longBars = T ? vb.filter(b => b.syl > T.syl[1] + 2) : [];
+  const thin = T ? vb.filter(b => inner(b) < 2) : [];
+  return { A, pairs, misses, singles, multis, flat, repeats, style, shortBars, longBars, thin };
 }
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
@@ -1498,6 +1509,10 @@ const STYLE_CARDS = {
 - Wordplay-heavy punchlines delivered calm, landing at the end of the bar.
 - Hooks are sung, simple and catchy, built around one repeated phrase.`,
 };
+// measured targets (from Bar Lab's analysis of the artist's album)
+const STYLE_TARGETS = { "jay montana": { name: "Jay Montana", syl: [14, 17], sylMedian: 16, internal: 2.3, multiPct: 39 } };
+const styleKey = artist => (artist || "").toLowerCase().replace(/\s+/g, " ").trim();
+const styleTargets = artist => STYLE_TARGETS[styleKey(artist)] || null;
 const styleCard = artist => STYLE_CARDS[(artist || "").toLowerCase().replace(/\s+/g, " ").trim()] || "";
 function songPrompt(artist, mood) {
   const story = $("#story").value.trim(), details = $("#details").value.trim();
@@ -1555,7 +1570,10 @@ function renderSong(text) {
   const lineHTML = l => `<span class="txt">${bars.has(l.i) ? bars.get(l.i).tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}${t.m ? " m" : ""}">${esc(t.t)}</span>` : esc(t.t)).join("") : esc(l.raw)}</span><button class="fav" data-line="${esc(l.raw.trim())}" aria-pressed="${favs.includes(l.raw.trim())}" aria-label="Save this line" title="Save this line">♥</button>`;
   $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") + (story ? `<p class="rmeta" style="margin:-4px 0 14px">${esc(story)}</p>` : "") +
     `<div class="song${colorsOn ? "" : " plain"}">${A.L.map(l => !l.raw.trim() ? "" : SECTION.test(l.raw) ? `<div class="sec">${esc(l.raw.trim().replace(/^\[|\]$/g, ""))}</div>` : `<div class="ly">${lineHTML(l)}</div>`).join("")}</div>` +
-    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme · <b>${st.check.multis}</b> multis · <b>${st.check.repeats.length}</b> repeats in the verses${st.check.repeats.length ? ` (${esc(st.check.repeats.slice(0, 6).join(", "))})` : ""}. Same color = same rhyme sound.</p>` : "");
+    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme · <b>${st.check.multis}</b> multis · <b>${st.check.repeats.length}</b> repeats in the verses${st.check.repeats.length ? ` (${esc(st.check.repeats.slice(0, 6).join(", "))})` : ""}. Same color = same rhyme sound.</p>${(() => { const T = styleTargets(st.artist); if (!T || !st.check.style) return ""; const S = st.check.style;
+      const pct = (v, t) => Math.max(0, Math.round(100 - Math.abs(v - t) / t * 100));
+      const score = Math.round((pct(S.syl, T.sylMedian) + pct(S.internal, T.internal) + pct(S.multiPct || 1, T.multiPct)) / 3);
+      return `<p class="rmeta"><b>${esc(T.name)} match: ${score}%</b> · ${S.syl} syllables/bar (his ${T.sylMedian}) · ${S.internal} inside rhymes/bar (his ${T.internal}) · ${S.multiPct}% multis (his ${T.multiPct}%)</p>`; })()}` : "");
 }
 function setBusy(b) {
   st.busy = b; setAvail();
@@ -1572,7 +1590,13 @@ function fixPrompt(song, misses, repeats) {
   const c = st.check || { singles: [], flat: [] };
   const singleList = c.singles.slice(0, 8).map(([a, b]) => `- "${a.raw.trim()}" / "${b.raw.trim()}" only rhyme on one syllable: make it a 2 or 3 syllable multi`).join("\n");
   const flatList = c.flat.slice(0, 8).map(b => `- "${b.raw.trim()}" has no internal rhyme: add one`).join("\n");
-  const problems = [list, singleList, flatList, repeats.length ? `- Repeated in the verses: ${repeats.join(", ")}` : ""].filter(Boolean).join("\n");
+  const T = styleTargets(st.artist);
+  const tgt = !T ? [] : [
+    ...(c.shortBars || []).slice(0, 10).map(b => `- "${b.raw.trim()}" is only ${b.syl} syllables: stretch it to ${T.syl[0]}-${T.syl[1]} like ${T.name}, with a run-on, conversational flow`),
+    ...(c.longBars || []).slice(0, 5).map(b => `- "${b.raw.trim()}" is ${b.syl} syllables: trim it to ${T.syl[0]}-${T.syl[1]}`),
+    ...(c.thin || []).slice(0, 10).map(b => `- "${b.raw.trim()}" needs at least 2 rhyming words inside the bar (${T.name} stacks about ${T.internal} per bar)`),
+  ];
+  const problems = [list, singleList, T ? "" : flatList, tgt.join("\n"), repeats.length ? `- Repeated in the verses: ${repeats.join(", ")}` : ""].filter(Boolean).join("\n");
   return `You're a tough producer and ghostwriter. Make this draft saucier and harder.
 
 DRAFT:
@@ -1581,7 +1605,7 @@ ${song}
 Do this:
 1. Read it like a listener. Silently score every bar from 1 to 10 on three things: it makes sense, it has sauce (swagger, slick, quotable), it rhymes tight. Rewrite every bar under 8 until it's an 8 or better, and keep the bars that already hit. Replace any bar that's nonsense or off-topic with one that makes sense.
 2. Make the hook catchier, and end Verse 2 on the coldest line in the song.
-${problems ? `3. Fix these problems Bar Lab's rhyme checker found:\n${problems}\n` : ""}Keep the same vibe, the same sections, and both hooks word for word the same.
+${T ? `3. Make it sound as close to ${T.name} as possible without copying any of his real lyrics: verse bars around ${T.sylMedian} syllables, about ${T.internal} rhyming words inside each bar, and a two-syllable multi in about ${T.multiPct}% of bars.\n` : ""}${problems ? `${T ? 4 : 3}. Fix these problems Bar Lab's checker found:\n${problems}\n` : ""}Keep the same vibe, the same sections, and both hooks word for word the same.
 
 ${CRAFT}
 ${favBlock()}
