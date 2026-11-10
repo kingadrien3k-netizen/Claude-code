@@ -340,7 +340,7 @@ details.paste[open] summary { margin-bottom: 10px; }
             <textarea class="mini" id="artistLyrics" placeholder="A verse, one bar per line. Bar Lab measures the rhyme scheme, syllables and density here. Only those numbers go to Claude, never the lyrics."></textarea>
             <div class="fp" id="fp"></div>
           </details>
-          <p class="fine">The song is written fresh in the rapper's style: their flow, rhyme patterns, delivery and themes. It never copies their actual lyrics.</p>
+          <p class="fine">Every song keeps it real: everyday working-class life, real numbers, no fake flexing, no filler bars. It's written fresh in the rapper's style and never copies their actual lyrics.</p>
         </div>
         <div class="card">
           <div class="card-head"><h2>Their style</h2><span class="eyebrow" id="styleWho">waiting</span></div>
@@ -1340,6 +1340,11 @@ function failed(e) {
 $("#writeBtn").disabled = true;
 
 const NO_COPY = who => `- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, especially ${who}'s: no lines, hooks, ad-libs, catchphrases or song titles from their songs, and don't say ${who}'s name in the song.`;
+const KEEP_IT_REAL = `Keep it real. This is the most important part:
+- The world of the song is everyday working-class and lower-middle-class life: rent due before the check clears, overtime and double shifts, a car that barely starts, the bus at 6am, overdraft fees, stretching groceries, a landlord calling, a mom working too hard, a little brother to look after, friends who went the wrong way, staying out of trouble, being tired and doing it anyway, small wins that mean a lot.
+- No fake flexing. No Lambos, jets, mansions, millions, designer labels, bottles, or stacks of cash as if the narrator has them. Money talk uses real numbers people live with (forty in the tank, a two-week check, two hundred short on rent). Dreaming about more is fine if it's clearly a dream they're working toward.
+- No clichés and no filler. Nothing like "on my grind", "top of the game", "chasing the bag", "haters", "started from the bottom". Every bar has to hit: a specific image, a true feeling, a punchline, or a rhyme that lands. If a line could be cut without losing anything, rewrite it.
+- Honest beats tough. Show the pressure, the pride, the fear and the love the way real people feel them. Don't preach and don't glamorize the street.`;
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
   radio: "[Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 12 bars, [Hook] repeated in full",
@@ -1357,6 +1362,8 @@ Mood: ${mood || "pick the mood ${artist} is best known for"}
 ${story ? `Make it about the listener's life, in first person as them: ${story}` : "Write it about real, everyday experiences that fit the mood, so a regular listener feels like it's about them."}
 ${details ? `Work in these real details: ${details}\n` : ""}Song shape: ${SHAPES[$("#shape").value]}
 Language: ${$("#lang").value === "clean" ? "clean, no profanity" : "explicit language is fine where it fits, no slurs"}
+
+${KEEP_IT_REAL}
 
 Rules:
 ${NO_COPY(artist)}
@@ -1433,6 +1440,7 @@ ${st.song}
 Revise it. The listener's request: ${ask}
 
 Keep everything they didn't ask to change, and keep it in ${st.artist}'s style.
+${KEEP_IT_REAL}
 ${NO_COPY(st.artist)}
 Use the same format: STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES with 3 to 5 bullets.`);
 });
