@@ -331,8 +331,8 @@ details.paste[open] summary { margin-bottom: 10px; }
             <div class="two" style="margin-top:14px">
               <label class="fl" for="shape">Song shape
                 <select id="shape">
+                  <option value="radio" selected>Two verses + hook</option>
                   <option value="full">Full song</option>
-                  <option value="radio">Two verses + hook</option>
                   <option value="sixteen">One 16-bar verse</option>
                   <option value="hook">Hook + short verse</option>
                 </select></label>
@@ -1286,6 +1286,7 @@ $("#moods").addEventListener("click", e => {
   $("#mood").dispatchEvent(new Event("input")); syncChips();
 });
 // remember the form for this viewer
+try { if (!localStorage.getItem("barlab.shapev2")) { localStorage.removeItem("barlab.f.shape"); localStorage.setItem("barlab.shapev2", "1"); } } catch (e) {}
 try { if (localStorage.getItem("barlab.f.lang") === '"clean"' && !localStorage.getItem("barlab.langv2")) localStorage.removeItem("barlab.f.lang"); localStorage.setItem("barlab.langv2", "1"); } catch (e) {}
 ["artist", "mood", "artistLyrics", "story", "details", "shape", "lang"].forEach(id => {
   const el = $("#" + id); const v = store.get("f." + id, null); if (v !== null) el.value = v;
@@ -1345,7 +1346,7 @@ function setAvail() {
 }
 function failed(e) {
   if (HIDE.has(e.code)) { sampleFn = null; setAvail(); return; }
-  if (e.code !== "cancelled") note(ERR[e.code] || "Something went wrong reaching Claude. Try again.");
+  if (e.code !== "cancelled") note((ERR[e.code] || "Something went wrong reaching Claude. Try again.") + ` <span class="opt">(${esc(String(e.code || "error"))})</span>`);
 }
 (async () => {
   try { sampleFn = window.claude && window.claude.use ? await window.claude.use("sample") : null; } catch (e) { sampleFn = null; }
@@ -1364,7 +1365,7 @@ const KEEP_IT_REAL = `How it has to sound:
 - Every bar has to be quotable: a punchline, a twist, a cold image or a line that hurts. No filler, no clichés, no forced rhymes, no rhyming-dictionary words nobody says.
 - No word spam. No repeating the same word over and over, no stacked ad-libs. Only the hook repeats.
 - Ride the pocket: keep bars a similar length so they're rappable, and land the rhyme on the last word.
-- Before you answer, read every bar back and rewrite any that's weak, corny or forced.`;
+`;
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
   radio: "[Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 12 bars, [Hook] repeated in full",
@@ -1438,17 +1439,20 @@ function setBusy(b) {
 }
 async function runSong(prompt) {
   st.ctl = new AbortController(); st.lastPrompt = prompt; note(""); setBusy(true);
-  $("#songOut").innerHTML = `<p class="status">Studying ${esc(st.artist === PASTED ? "your pasted song" : st.artist + "'s hits")} and writing yours… this can take up to a minute.</p>`;
+  const t0 = Date.now(); let started = false;
+  const label = `Writing your song in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
+  $("#songOut").innerHTML = `<p class="status" id="wait">${label}</p>`;
+  const tick = setInterval(() => { const w = $("#wait"); if (!started && w) w.textContent = label.replace(/&#?\w+;/g, "") + " " + Math.round((Date.now() - t0) / 1000) + "s"; }, 1000);
   if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "center" });
   try {
-    const r = await sampleFn(prompt, { signal: st.ctl.signal, cache: false, modelTier: "complex", onText: ({ text }) => renderSong(text) });
+    const r = await sampleFn(prompt, { signal: st.ctl.signal, cache: false, effort: "low", onText: ({ text }) => { started = true; renderSong(text); } });
     st.song = r.text; renderSong(r.text);
     if (r.truncated) note("The song got cut off. Try a shorter song shape.");
     saveSong();
   } catch (e) {
     if (e.text) { st.song = e.text; renderSong(e.text); } else if (e.code !== "cancelled") $("#songOut").innerHTML = "";
     failed(e);
-  } finally { setBusy(false); }
+  } finally { clearInterval(tick); setBusy(false); }
 }
 $("#makeForm").addEventListener("submit", e => {
   e.preventDefault(); if (st.busy || !sampleFn) return;
