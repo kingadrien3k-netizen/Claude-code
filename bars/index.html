@@ -1307,7 +1307,7 @@ $("#devices").innerHTML = DEVICES.map(d => `<div class="card device"><h3>${esc(d
 /* ================= studio ================= */
 let sampleFn;            // undefined while connecting, null when unavailable
 const st = { song: "", artist: "", ctl: null, busy: false, lastPrompt: "" };
-const MOODS = ["Heartbroken", "Hungry", "Grateful", "Angry", "Hopeful", "Reflective", "Flexing", "Motivated", "Lonely", "Celebrating"];
+const MOODS = ["Hustling", "Heartbroken", "Hungry", "Grateful", "Angry", "Hopeful", "Reflective", "Flexing", "Motivated", "Lonely", "Celebrating"];
 $("#moods").innerHTML = MOODS.map(m => `<button class="chip" type="button" data-mood="${m}">${m}</button>`).join("");
 const syncChips = () => $$("#moods .chip").forEach(c => c.setAttribute("aria-pressed", $("#mood").value.trim().toLowerCase() === c.dataset.mood.toLowerCase()));
 $("#moods").addEventListener("click", e => {
@@ -1391,7 +1391,8 @@ const NO_COPY = who => who === PASTED
 const CRAFT = `What makes it good:
 - It sounds like a real record from that artist, not a poem or a speech: real slang, contractions, attitude.
 - Sauce over story. It does NOT need a storyline or to make perfect sense. Bars can jump topic like a real freestyle as long as every one drips: swagger, slick wordplay, cocky punchlines, catchy cadence, attitude.
-- Vibe of the artist's hits (their slang, their energy, their topics). No boring everyday chores. Confidence, not fake millionaire stuff.
+- Vibe of the artist's hits (their slang, their energy, their topics). No boring everyday chores.
+- Hustler mentality all through it: getting it out the mud, flipping a little into a lot, staying down till you come up, never folding, counting up while they sleep, watching your circle. Money talk is tied to the grind and where they came from, not fake rich fantasies.
 - Every bar earns its spot: quotable, slick, hard. No filler and no clichés.
 - Rhymes are the top priority. Every couplet (bars 1-2, 3-4, and so on) ends on a real rhyme: same vowel AND same ending sound (night / ride, cold / soul), not just a similar vowel. Most couplets should be multis where the last two or three syllables match (on me / lonely, ride slow / my soul, the money / so funny). Every bar also needs an internal rhyme. No lazy rhymes like the same word twice or "night / time".
 - The verses never repeat a word, a phrase or an end word (small words like I, the, my are fine). Only the hook repeats.
@@ -1406,7 +1407,7 @@ I don't chase, I replace, that's a lesson for you
 Ex keep callin', let it ring, I'm busy
 Got a new main thing and she don't even miss me`;
 const KEEP_IT_REAL = CRAFT;
-const langRule = () => $("#lang").value === "clean" ? "Language: clean, no profanity." : "Language: explicit. Curse the way real people talk, but never use slurs.";
+const langRule = () => $("#lang").value === "clean" ? "Language: clean, no profanity." : "Language: explicit, like a real Southern street record. Cuss freely and naturally (shit, fuck, bitch and the rest) the way the artist would, but never use slurs.";
 const FORMAT = `Format exactly like this, with nothing before or after:
 STYLE: 2 or 3 sentences naming the artist's techniques this song uses
 TITLE: the song title
@@ -1418,6 +1419,7 @@ bar
 STYLE NOTES
 - 3 to 5 bullets saying where in the song each technique shows up`;
 const SEEDS = {
+  hustling: ["money", "hustle", "flip", "grind", "count", "mud", "paper", "block", "stack", "fold"],
   heartbroken: ["heart", "lie", "gone", "alone", "trust", "cold", "pain", "night", "love", "phone"],
   hungry: ["money", "broke", "starving", "hustle", "pressure", "block", "struggle", "risk", "real", "mama"],
   angry: ["fight", "fake", "snake", "pressure", "war", "blood", "cross", "mad", "problem", "shot"],
@@ -1496,7 +1498,7 @@ const STYLE_CARDS = {
 - Melodic, soulful sing-rap: bluesy, crooned phrasing that floats over the beat instead of barking. Smooth, never shouted.
 - Beats in the Mobile tradition: light, sunny, country-sounding acoustic guitar. Write with that laid-back, swaying bounce in mind.
 - Wordplay-heavy punchlines delivered calm, like he's just telling you: slick double meanings and similes that land at the end of the bar.
-- Street wisdom mixed with vulnerability: real-talk advice, loyalty, hustle, love and trust, said honest and a little hurt.
+- Hustler at heart: getting money from nothing, staying down, flipping it, moving smart and quiet, loyalty to the ones who were there. Mixed with vulnerability about love, trust and pain, said honest and a little hurt.
 - Southern slang and drawl. Stretch the long vowel at the end of bars so the rhymes ring out when sung.
 - Rhyme scheme: tight couplets on long open vowels (oh, ay, ee, I) that ring out when crooned, mostly two-syllable multis, with an internal rhyme setting up each punchline. Mid-tempo, about 9 to 12 syllables a bar.
 - Hooks are sung, simple and catchy, built around one repeated phrase.`,
