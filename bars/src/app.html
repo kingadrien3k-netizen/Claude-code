@@ -226,6 +226,8 @@ input.mini { width: 100%; border: 1px solid var(--line); border-radius: 8px; bac
 textarea.tall { min-height: 120px; }
 details.paste { margin: 14px 0 4px; border: 1px dashed var(--line); border-radius: 8px; padding: 10px 12px; }
 details.paste summary { cursor: pointer; font-weight: 600; font-size: 14px; }
+#studyForm .mini { font-size: 18px; }
+details.paste .fl:first-of-type { margin-top: 0; }
 details.paste[open] summary { margin-bottom: 10px; }
 .fp { display: flex; flex-wrap: wrap; gap: 6px 16px; margin-top: 10px; font-size: 13px; color: var(--muted); }
 .fp b { color: var(--ink); font-family: var(--mono); font-weight: 600; }
@@ -304,16 +306,19 @@ details.paste[open] summary { margin-bottom: 10px; }
       <div class="col">
         <div class="card">
           <div class="card-head"><h2>Your rapper</h2><span class="eyebrow">step 1</span></div>
-          <label class="fl" for="artist">Who do you want to study?</label>
-          <input class="mini" id="artist" type="text" autocomplete="off" placeholder="Your favorite rapper's name">
-          <label class="fl" for="artistDesc">How would you describe their style? <span class="opt">optional</span></label>
-          <textarea class="mini" id="artistDesc" placeholder="e.g. calm cold delivery, storytelling, crazy internal rhymes, talks about growing up broke"></textarea>
+          <form class="search" id="studyForm">
+            <input class="mini" id="artist" type="text" autocomplete="off" placeholder="Type a rapper's name" aria-label="Rapper's name" enterkeyhint="go">
+            <button class="btn primary" id="studyBtn" type="submit">Study</button>
+          </form>
+          <p class="fine">Type their name and hit Enter. Claude studies their flow, rhymes and delivery for you.</p>
           <details class="paste" id="pasteBox">
-            <summary>Paste their lyrics to measure them <span class="opt">optional</span></summary>
-            <textarea class="mini tall" id="artistLyrics" placeholder="Paste a verse or two, one bar per line. Bar Lab measures the rhyme scheme, syllables and density right here. Only those numbers go to Claude, never the lyrics."></textarea>
+            <summary>Add more <span class="opt">optional</span></summary>
+            <label class="fl" for="artistDesc">Describe their style in your words</label>
+            <textarea class="mini" id="artistDesc" placeholder="e.g. calm cold delivery, storytelling, crazy internal rhymes"></textarea>
+            <label class="fl" for="artistLyrics">Paste some of their lyrics to measure them</label>
+            <textarea class="mini tall" id="artistLyrics" placeholder="A verse or two, one bar per line. Bar Lab measures the rhyme scheme, syllables and density right here. Only those numbers go to Claude, never the lyrics."></textarea>
             <div class="fp" id="fp"></div>
           </details>
-          <button class="btn primary big" id="studyBtn">Study their style</button>
         </div>
         <div class="card">
           <div class="card-head"><h2>Your story</h2><span class="eyebrow">step 2</span></div>
@@ -1371,7 +1376,7 @@ Reply with only this JSON object:
     $("#styleOut").innerHTML = ""; $("#styleWho").textContent = "not studied yet"; failed(e); return false;
   } finally { st.busy = false; setAvail(); }
 }
-$("#studyBtn").onclick = study;
+$("#studyForm").addEventListener("submit", e => { e.preventDefault(); if (!st.busy && sampleFn) study(); });
 
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Verse 1] 16 bars, [Hook] 8 bars, [Verse 2] 16 bars, [Hook] repeated in full, [Bridge] 4 bars, [Outro] 2-4 bars",
