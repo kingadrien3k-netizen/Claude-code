@@ -53,3 +53,20 @@ browser — no install, no build step.
 
 90-second games, 14-second shot clock, 2s and 3s, rebounds off misses, steals, blocks,
 an "on fire" streak bonus, a second defender once you hit 10 points, and a saved best score.
+
+---
+
+# Bar Lab (`bars/`)
+
+A writing gym for lyrical rap. Open `bars/index.html` in any browser, no install.
+
+- **Rhyme Engine**: rhymes by sound from a 26,000-word phonetic dictionary: perfect rhymes,
+  multisyllable vowel matches, two-word phrase rhymes ("pocket" → "lock it", "rock it") and slant rhymes
+- **The Pad + Breakdown**: write one bar per line; rhyme families are highlighted in color,
+  multisyllable rhymes are underlined, with rhyme-scheme letters and syllables per bar
+- **Bar Coach**: a 0–100 score from rhyme density, multis, end rhymes, vocabulary and rhythm,
+  plus specific fixes (unanswered end words, clichés, repeated rhymes, bars that will rush)
+- **Flow**: built-in synthesized beats (boom bap, trap, lo-fi) with a teleprompter that moves one line per bar
+- **Drills**: Word Drop freestyle, a 45-second Rhyme Race, Flip It double-entendre cards and a devices reference
+
+Edit `bars/src/app.html`, then rebuild with `pip install cmudict wordfreq && python3 bars/build.py`.

@@ -1,0 +1,1175 @@
+<title>Bar Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anton&family=IBM+Plex+Mono:wght@400;600&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Layout: a ruled composition notebook. The pad and its highlighter breakdown sit on the left,
+   the rhyme engine and bar coach on the right, and the beat is docked at the bottom like a mixer strip. */
+:root {
+  --paper: #f5f6fb;
+  --panel: #ffffff;
+  --ink: #15172b;
+  --muted: #596081;
+  --line: #dde2f0;
+  --rule: #cdd6ee;
+  --margin: #de5248;
+  --accent: #2941d1;
+  --accent-ink: #ffffff;
+  --accent-soft: #e6eafc;
+  --good: #1d8a4b;
+  --warn: #a8620a;
+  --bad: #c23b3b;
+  --strip: #1b1e33;
+  --strip-ink: #eef0fa;
+  --strip-muted: #9aa0c2;
+  --h1: rgba(255, 210, 0, .55);
+  --h2: rgba(255, 90, 168, .42);
+  --h3: rgba(46, 214, 112, .45);
+  --h4: rgba(64, 164, 255, .45);
+  --h5: rgba(255, 146, 36, .5);
+  --h6: rgba(166, 104, 255, .42);
+  --h7: rgba(0, 196, 196, .42);
+  --h8: rgba(255, 72, 72, .38);
+  --display: "Anton", Impact, "Arial Narrow", sans-serif;
+  --body: "IBM Plex Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Menlo, Consolas, monospace;
+  --lh: 32px;
+  --radius: 10px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #0f111c; --panel: #161929; --ink: #e8eaf6; --muted: #9298b8; --line: #272c45;
+    --rule: #222842; --margin: #b9443c; --accent: #8c9dff; --accent-ink: #0f111c; --accent-soft: #1f2645;
+    --good: #4cc982; --warn: #e3a54a; --bad: #ef6b6b; --strip: #080a12; --strip-ink: #eef0fa; --strip-muted: #8a90b0;
+    --h1: rgba(255, 210, 0, .34); --h2: rgba(255, 90, 168, .34); --h3: rgba(46, 214, 112, .32); --h4: rgba(64, 164, 255, .36);
+    --h5: rgba(255, 146, 36, .36); --h6: rgba(166, 104, 255, .38); --h7: rgba(0, 196, 196, .32); --h8: rgba(255, 72, 72, .34);
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0f111c; --panel: #161929; --ink: #e8eaf6; --muted: #9298b8; --line: #272c45;
+  --rule: #222842; --margin: #b9443c; --accent: #8c9dff; --accent-ink: #0f111c; --accent-soft: #1f2645;
+  --good: #4cc982; --warn: #e3a54a; --bad: #ef6b6b; --strip: #080a12; --strip-ink: #eef0fa; --strip-muted: #8a90b0;
+  --h1: rgba(255, 210, 0, .34); --h2: rgba(255, 90, 168, .34); --h3: rgba(46, 214, 112, .32); --h4: rgba(64, 164, 255, .36);
+  --h5: rgba(255, 146, 36, .36); --h6: rgba(166, 104, 255, .38); --h7: rgba(0, 196, 196, .32); --h8: rgba(255, 72, 72, .34);
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  background: var(--paper); color: var(--ink); font-family: var(--body); font-size: 15px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 0 calc(96px + env(safe-area-inset-bottom, 0px));
+}
+.wrap { max-width: 1240px; margin: 0 auto; }
+button, input, select, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* header */
+header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: space-between; gap: 12px 24px; padding-block: 20px 14px; }
+.brand { display: flex; align-items: baseline; gap: 14px; flex-wrap: wrap; min-width: 0; }
+.brand h1 { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 7vw, 64px); line-height: .9; margin: 0; letter-spacing: .01em; }
+.brand h1 span { color: var(--accent); }
+.brand p { margin: 0; color: var(--muted); max-width: 42ch; text-wrap: balance; }
+nav.tabs { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; }
+nav.tabs button { border: 0; background: none; padding: 8px 18px; border-radius: 999px; font-weight: 600; color: var(--muted); }
+nav.tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); }
+
+/* cards */
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 16px; min-width: 0; }
+.card h2 { font-family: var(--display); font-weight: 400; font-size: 24px; letter-spacing: .02em; margin: 0; line-height: 1.1; }
+.card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.eyebrow { font-family: var(--mono); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+.btn { border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 6px 12px; font-weight: 500; font-size: 14px; }
+.btn:hover { border-color: var(--accent); }
+.btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); font-weight: 600; }
+.btn.small { padding: 3px 9px; font-size: 13px; }
+.row { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
+.muted { color: var(--muted); }
+.view[hidden] { display: none !important; }
+
+/* write layout */
+.write { display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+.col { display: grid; gap: 18px; min-width: 0; }
+@media (max-width: 920px) { .write { grid-template-columns: minmax(0, 1fr); } }
+
+/* notebook pad */
+.pad-wrap { position: relative; border-radius: 8px; border: 1px solid var(--line); overflow: hidden; background: var(--paper); }
+#pad {
+  display: block; width: 100%; min-height: calc(var(--lh) * 11 + 8px); resize: vertical; border: 0; outline: none;
+  font-family: var(--body); font-size: 17px; line-height: var(--lh); padding: 4px 14px var(--lh) 58px;
+  background:
+    linear-gradient(to right, transparent 44px, var(--margin) 44px, var(--margin) 45px, transparent 45px),
+    repeating-linear-gradient(to bottom, transparent 0, transparent calc(var(--lh) - 1px), var(--rule) calc(var(--lh) - 1px), var(--rule) var(--lh));
+  background-position: 0 0, 0 4px; background-attachment: local; color: var(--ink);
+}
+.pad-wrap:focus-within { border-color: var(--accent); }
+.sample-tag { font-size: 12px; font-family: var(--mono); background: var(--accent-soft); color: var(--accent); padding: 2px 8px; border-radius: 999px; }
+
+/* breakdown */
+.legend { font-size: 13px; color: var(--muted); margin: -4px 0 10px; }
+.bd { display: grid; gap: 2px; font-size: 16px; }
+.bl { display: grid; grid-template-columns: 26px 26px minmax(0, 1fr) 34px; gap: 6px; align-items: baseline; padding: 3px 0; border-bottom: 1px dashed var(--line); }
+.bl:last-child { border-bottom: 0; }
+.bl .ln { font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: right; }
+.bl .sch { font-family: var(--mono); font-weight: 600; font-size: 13px; text-align: center; border-radius: 4px; cursor: pointer; border: 0; background: none; padding: 0; color: var(--ink); }
+.bl .sch:hover { background: var(--accent-soft); }
+.bl .tx { min-width: 0; overflow-wrap: anywhere; line-height: 1.75; }
+.bl .sy { font-family: var(--mono); font-size: 12px; color: var(--muted); text-align: right; font-variant-numeric: tabular-nums; }
+.bl .sy.hot { color: var(--warn); font-weight: 600; }
+.w { cursor: pointer; border-radius: 3px; padding: 1px 1px; }
+.w:hover { outline: 1px solid var(--accent); }
+.w.m { text-decoration: underline; text-decoration-thickness: 2px; text-underline-offset: 4px; text-decoration-color: var(--ink); }
+.c1 { background: var(--h1); } .c2 { background: var(--h2); } .c3 { background: var(--h3); } .c4 { background: var(--h4); }
+.c5 { background: var(--h5); } .c6 { background: var(--h6); } .c7 { background: var(--h7); } .c8 { background: var(--h8); }
+.empty { color: var(--muted); font-size: 14px; padding: 8px 0; }
+
+/* rhyme engine */
+.search { display: flex; gap: 8px; }
+.search input { flex: 1; min-width: 0; border: 1px solid var(--line); background: var(--paper); border-radius: 8px; padding: 9px 12px; font-size: 16px; }
+.search input:focus { border-color: var(--accent); outline: none; }
+.rmeta { font-size: 13px; color: var(--muted); margin: 10px 0 2px; }
+.rmeta b { font-family: var(--mono); color: var(--ink); font-weight: 600; }
+.rgroup { margin-top: 12px; }
+.rgroup h3 { font-size: 12px; font-family: var(--mono); letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; font-weight: 600; display: flex; gap: 8px; align-items: baseline; }
+.rgroup h3 small { letter-spacing: 0; text-transform: none; font-family: var(--body); font-weight: 400; }
+.sub { font-size: 12px; color: var(--muted); margin: 6px 0 4px; font-family: var(--mono); }
+.chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.chip { border: 1px solid var(--line); background: var(--paper); border-radius: 6px; padding: 2px 8px; font-size: 14px; line-height: 1.5; }
+.chip:hover { border-color: var(--accent); color: var(--accent); }
+.chip.pf { border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+.chip sup { font-family: var(--mono); font-size: 10px; color: var(--muted); margin-left: 2px; }
+.results { max-height: 520px; overflow-y: auto; padding-right: 4px; }
+.toast { position: fixed; left: 50%; transform: translateX(-50%); bottom: calc(110px + env(safe-area-inset-bottom, 0px)); background: var(--ink); color: var(--paper); padding: 8px 14px; border-radius: 8px; font-size: 14px; z-index: 30; pointer-events: none; }
+
+/* coach */
+.score { display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 16px; align-items: center; margin-bottom: 12px; }
+.score .num { font-family: var(--display); font-size: 64px; line-height: .9; grid-row: span 2; font-variant-numeric: tabular-nums; }
+.score .tier { font-family: var(--display); font-size: 22px; letter-spacing: .03em; }
+.score .tierline { font-size: 13px; color: var(--muted); }
+.meters { display: grid; gap: 8px; margin: 6px 0 14px; }
+.meter { display: grid; grid-template-columns: 116px minmax(0, 1fr) 46px; gap: 10px; align-items: center; font-size: 13px; }
+.meter .bar { height: 8px; background: var(--line); border-radius: 99px; overflow: hidden; }
+.meter .bar i { display: block; height: 100%; background: var(--accent); border-radius: 99px; transition: width .3s; }
+.meter .v { font-family: var(--mono); text-align: right; color: var(--muted); font-variant-numeric: tabular-nums; }
+.tips { list-style: none; padding: 0; margin: 0; display: grid; gap: 8px; }
+.tips li { font-size: 14px; padding: 8px 10px 8px 12px; border-radius: 8px; background: var(--paper); border-left: 3px solid var(--muted); }
+.tips li.good { border-left-color: var(--good); }
+.tips li.warn { border-left-color: var(--warn); }
+.tips li.bad { border-left-color: var(--bad); }
+.tips li b { font-weight: 600; }
+.tips .kw { font-family: var(--mono); font-size: 13px; background: var(--accent-soft); color: var(--accent); padding: 0 4px; border-radius: 4px; cursor: pointer; border: 0; }
+
+/* flow */
+.flow { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 920px) { .flow { grid-template-columns: minmax(0, 1fr); } }
+.prompter { display: grid; gap: 10px; padding: 26px 20px; min-height: 340px; align-content: center; }
+.prompter .pl { font-size: 18px; color: var(--muted); min-height: 1.5em; overflow-wrap: anywhere; }
+.prompter .cur { font-size: clamp(24px, 3.4vw, 36px); font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; min-height: 1.3em; }
+.prompter .cur .w { cursor: default; }
+.beats { display: flex; gap: 10px; margin-top: 8px; }
+.beats i { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line); display: block; }
+.beats i.on { background: var(--accent); border-color: var(--accent); }
+.beats i.snare { border-color: var(--muted); }
+.barinfo { display: flex; gap: 16px; flex-wrap: wrap; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.barinfo b { color: var(--ink); }
+.guide { font-size: 15px; padding: 10px 12px; background: var(--accent-soft); border-radius: 8px; }
+.steps-howto { margin: 0; padding-left: 20px; display: grid; gap: 8px; font-size: 14px; }
+.dens { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 8px; }
+.dens td, .dens th { padding: 6px 4px; border-bottom: 1px solid var(--line); text-align: left; }
+.dens th { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.dens td:first-child { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+/* drills */
+.subtabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.subtabs button { border: 1px solid var(--line); background: var(--panel); border-radius: 8px; padding: 7px 14px; font-weight: 600; color: var(--muted); }
+.subtabs button[aria-selected="true"] { border-color: var(--ink); color: var(--ink); box-shadow: inset 0 -3px 0 var(--accent); }
+.drill { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 18px; align-items: start; }
+@media (max-width: 920px) { .drill { grid-template-columns: minmax(0, 1fr); } }
+.bigword { font-family: var(--display); font-size: clamp(56px, 11vw, 120px); line-height: 1; letter-spacing: .01em; text-transform: uppercase; overflow-wrap: anywhere; margin: 10px 0 6px; }
+.nextword { font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.lifelines { margin-top: 14px; }
+.race-target { font-family: var(--display); font-size: clamp(44px, 8vw, 84px); line-height: 1; text-transform: uppercase; margin: 6px 0; overflow-wrap: anywhere; }
+.timer { font-family: var(--display); font-size: 40px; font-variant-numeric: tabular-nums; }
+.race-log { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.race-log span { font-size: 14px; padding: 2px 8px; border-radius: 6px; background: var(--paper); border: 1px solid var(--line); }
+.race-log span.p3 { border-color: var(--good); color: var(--good); }
+.race-log span.p2 { border-color: var(--accent); color: var(--accent); }
+.race-log span.p1 { border-color: var(--warn); color: var(--warn); }
+.race-log span.p0 { text-decoration: line-through; color: var(--muted); }
+.stat-row { display: flex; gap: 24px; flex-wrap: wrap; }
+.stat-row div { display: grid; }
+.stat-row b { font-family: var(--display); font-size: 34px; font-weight: 400; line-height: 1; font-variant-numeric: tabular-nums; }
+.stat-row span { font-size: 12px; color: var(--muted); font-family: var(--mono); text-transform: uppercase; letter-spacing: .08em; }
+.flip-word { font-family: var(--display); font-size: clamp(48px, 9vw, 96px); line-height: 1; text-transform: uppercase; margin: 4px 0 12px; }
+.meanings { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 10px; }
+.meanings div { padding: 10px 12px; background: var(--paper); border-radius: 8px; border: 1px solid var(--line); font-size: 14px; }
+.meanings div b { display: block; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; color: var(--muted); text-transform: uppercase; font-weight: 600; }
+.example { margin: 14px 0; font-size: 17px; font-weight: 600; padding-left: 12px; border-left: 3px solid var(--margin); }
+textarea.mini { width: 100%; min-height: 84px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); padding: 10px 12px; font-size: 16px; resize: vertical; }
+textarea.mini:focus, input.mini:focus { border-color: var(--accent); outline: none; }
+input.mini { width: 100%; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); padding: 10px 12px; font-size: 18px; }
+.devices { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.device h3 { font-family: var(--display); font-weight: 400; font-size: 22px; margin: 0 0 6px; letter-spacing: .02em; }
+.device .how { font-size: 14px; color: var(--muted); margin: 0 0 10px; }
+.device .ex { font-size: 15px; font-weight: 600; padding-left: 10px; border-left: 3px solid var(--margin); margin: 0 0 10px; white-space: pre-line; }
+.device .try { font-size: 13px; font-family: var(--mono); color: var(--accent); }
+
+/* transport strip */
+.strip {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--strip); color: var(--strip-ink);
+  padding-block: 10px calc(10px + env(safe-area-inset-bottom, 0px));
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px));
+}
+.strip .in { max-width: 1240px; margin: 0 auto; display: flex; gap: 10px 16px; align-items: center; flex-wrap: wrap; }
+.play { width: 52px; height: 52px; border-radius: 50%; border: 0; background: var(--accent); color: var(--accent-ink); display: grid; place-items: center; flex: none; }
+.play svg { width: 22px; height: 22px; }
+.strip label { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--strip-muted); display: grid; gap: 2px; }
+.strip select { background: transparent; color: var(--strip-ink); border: 1px solid #3a3f5f; border-radius: 6px; padding: 4px 6px; font-size: 14px; font-family: var(--body); letter-spacing: 0; text-transform: none; }
+.strip select option { color: #15172b; background: #ffffff; }
+.strip input[type=range] { width: 120px; accent-color: var(--accent); }
+.bpm { font-family: var(--mono); font-size: 14px; color: var(--strip-ink); letter-spacing: 0; }
+.lights { display: grid; grid-template-columns: repeat(16, 1fr); gap: 3px; flex: 1; min-width: 160px; max-width: 420px; }
+.lights i { height: 14px; border-radius: 3px; background: #2c3150; display: block; }
+.lights i:nth-child(4n+1) { background: #3b4166; }
+.lights i.on { background: var(--accent); }
+.barct { font-family: var(--mono); font-size: 13px; color: var(--strip-muted); min-width: 64px; }
+.barct b { color: var(--strip-ink); font-size: 16px; }
+@media (max-width: 560px) {
+  body { padding-block: 0 calc(132px + env(safe-area-inset-bottom, 0px)); }
+  .strip .in { gap: 8px 10px; }
+  .play { width: 46px; height: 46px; }
+  .strip input[type=range] { width: 64px; }
+  .barct { min-width: 0; }
+  .lights { order: 9; flex-basis: 100%; max-width: none; }
+}
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header class="top">
+    <div class="brand">
+      <h1>BAR<span>LAB</span></h1>
+      <p>Find multisyllable rhymes, see your rhyme scheme in color, rap over a beat, and drill until it's second nature.</p>
+    </div>
+    <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" id="t-write" aria-selected="true" data-view="write">Write</button>
+      <button role="tab" id="t-flow" aria-selected="false" data-view="flow">Flow</button>
+      <button role="tab" id="t-drills" aria-selected="false" data-view="drills">Drills</button>
+    </nav>
+  </header>
+
+  <!-- WRITE -->
+  <section class="view" id="v-write">
+    <div class="write">
+      <div class="col">
+        <div class="card">
+          <div class="card-head">
+            <div class="row"><h2>The Pad</h2><span class="sample-tag" id="sampleTag" hidden>Sample verse: write over it</span></div>
+            <div class="row">
+              <span class="eyebrow" id="padCount">0 bars</span>
+              <button class="btn small" id="matchBtn" title="Find rhymes for the end of the line above your cursor">Rhyme the line above</button>
+              <button class="btn small" id="sampleBtn">Sample</button>
+              <button class="btn small" id="clearBtn">Clear</button>
+            </div>
+          </div>
+          <div class="pad-wrap"><textarea id="pad" spellcheck="false" aria-label="Your verse, one bar per line" placeholder="One bar per line…"></textarea></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Breakdown</h2><span class="eyebrow">rhyme scheme · syllables</span></div>
+          <p class="legend">Same color means the same rhyme sound. Underlined words form a multisyllable rhyme with a nearby bar. Tap any word to find its rhymes.</p>
+          <div class="bd" id="bd"></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-head"><h2>Rhyme Engine</h2><span class="eyebrow">26,000 words by sound</span></div>
+          <form class="search" id="rform">
+            <input id="q" type="text" placeholder="word or phrase, e.g. pocket" autocomplete="off" aria-label="Word or phrase to rhyme">
+            <button class="btn primary" type="submit">Find</button>
+          </form>
+          <div class="results" id="rres"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Bar Coach</h2><span class="eyebrow">updates as you write</span></div>
+          <div id="coach"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FLOW -->
+  <section class="view" id="v-flow" hidden>
+    <div class="flow">
+      <div class="card prompter">
+        <div class="barinfo"><span>Bar <b id="fBar">–</b></span><span>Line <b id="fLine">–</b></span><span><b id="fSyl">–</b> syllables</span></div>
+        <div class="pl" id="fPrev"></div>
+        <div class="cur" id="fCur">Press play and rap your pad, one bar per line.</div>
+        <div class="pl" id="fNext"></div>
+        <div class="beats" id="fBeats" aria-hidden="true"><i></i><i class="snare"></i><i></i><i class="snare"></i></div>
+        <div class="guide" id="fGuide">The beat counts you in for one bar, then the prompter moves to the next line on every bar.</div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-head"><h2>Finding the pocket</h2></div>
+          <ol class="steps-howto">
+            <li>Nod on every beat. The snare lands on beats 2 and 4 (the outlined dots).</li>
+            <li>Aim your rhyme words at the snare. Ending a bar on beat 4 is what makes a rhyme hit.</li>
+            <li>Keep each bar's syllable count close to the others. Big jumps make you rush or stall.</li>
+            <li>Start a line a hair before beat 1. Rappers call that a pickup; it pulls the listener in.</li>
+            <li>Record yourself on your phone, then listen back without the lyrics in front of you.</li>
+          </ol>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Syllables per bar</h2></div>
+          <table class="dens">
+            <thead><tr><th>Count</th><th>What it feels like</th></tr></thead>
+            <tbody>
+              <tr><td>6–9</td><td>Laid back, one word per eighth note. Room to breathe and ad-lib.</td></tr>
+              <tr><td>10–13</td><td>Triplet range. Three syllables per beat, the bouncy modern flow.</td></tr>
+              <tr><td>14–17</td><td>Sixteenths. Four per beat. Busy and technical; enunciate.</td></tr>
+              <tr><td>18+</td><td>Double time, or a bar that needs trimming.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- DRILLS -->
+  <section class="view" id="v-drills" hidden>
+    <div class="subtabs" role="tablist" aria-label="Drills">
+      <button role="tab" aria-selected="true" data-drill="drop">Word Drop</button>
+      <button role="tab" aria-selected="false" data-drill="race">Rhyme Race</button>
+      <button role="tab" aria-selected="false" data-drill="flip">Flip It</button>
+      <button role="tab" aria-selected="false" data-drill="devices">Devices</button>
+    </div>
+
+    <div class="drill" data-panel="drop">
+      <div class="card">
+        <div class="card-head"><h2>Word Drop</h2>
+          <div class="row"><label class="eyebrow" for="dropEvery">New word every</label>
+            <select id="dropEvery" class="btn small"><option value="1">1 bar</option><option value="2" selected>2 bars</option><option value="4">4 bars</option></select>
+            <button class="btn small" id="dropSkip">Next word</button>
+          </div>
+        </div>
+        <p class="muted" style="margin:0">Hit play. Freestyle and work the word into your next bar before it changes. The next word shows early so you can plan the rhyme.</p>
+        <div class="bigword" id="dropWord">lantern</div>
+        <div class="nextword">Next: <span id="dropNext">glacier</span></div>
+        <div class="lifelines"><div class="sub">Lifelines that rhyme with it</div><div class="chips" id="dropRhymes"></div></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>How to freestyle</h2></div>
+        <ol class="steps-howto">
+          <li>Don't stop. A weak bar delivered on beat beats a great bar that never comes.</li>
+          <li>Think one bar ahead. While you say this line, pick the word that ends the next.</li>
+          <li>Fill gaps with the room: describe what you see, what you're wearing, the time.</li>
+          <li>Rhyme the drop word, then rhyme off of your own rhyme to chain three or four bars.</li>
+          <li>Do five minutes a day. Freestyle is a muscle, and you build it in reps.</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="drill" data-panel="race" hidden>
+      <div class="card">
+        <div class="card-head"><h2>Rhyme Race</h2><div class="timer" id="raceTimer">0:45</div></div>
+        <div class="eyebrow">Rhyme with</div>
+        <div class="race-target" id="raceTarget">pocket</div>
+        <form id="raceForm" class="search" style="margin-top:12px">
+          <input class="mini" id="raceIn" type="text" autocomplete="off" placeholder="Press Start, then type a rhyme and hit Enter" aria-label="Your rhyme" disabled>
+          <button class="btn primary" type="button" id="raceStart">Start</button>
+        </form>
+        <div class="race-log" id="raceLog"></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Scoring</h2></div>
+        <div class="stat-row" style="margin-bottom:14px"><div><b id="raceScore">0</b><span>this round</span></div><div><b id="raceBest">0</b><span>your best</span></div></div>
+        <ul class="tips">
+          <li class="good"><b>3 points</b> for a perfect rhyme (pocket / rocket).</li>
+          <li><b>2 points</b> for a multisyllable vowel match (pocket / topic).</li>
+          <li class="warn"><b>1 point</b> for a slant rhyme on the same vowel (pocket / logic).</li>
+          <li class="bad"><b>0</b> for repeats, misses and words the dictionary doesn't know.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="drill" data-panel="flip" hidden>
+      <div class="card">
+        <div class="card-head"><h2>Flip It</h2><button class="btn small" id="flipNext">Next word</button></div>
+        <div class="eyebrow">Write one bar where both meanings land</div>
+        <div class="flip-word" id="flipWord">bars</div>
+        <div class="meanings" id="flipMeanings"></div>
+        <p class="example" id="flipEx"></p>
+        <textarea class="mini" id="flipIn" placeholder="Your double entendre…" aria-label="Your bar"></textarea>
+        <div class="row" style="margin-top:8px"><button class="btn primary" id="flipAdd">Add to pad</button><span class="muted" style="font-size:13px">The example bar is just one way to do it.</span></div>
+      </div>
+      <div class="card">
+        <div class="card-head"><h2>Why it works</h2></div>
+        <p style="margin-top:0">A double entendre makes the listener hear the line twice: once the obvious way, then again when the second meaning clicks. That delay is what makes people rewind.</p>
+        <p class="muted">Set up the first meaning early in the bar, then let the context around the key word point at the second one. Save the word itself for the end of the bar so it lands on the snare.</p>
+      </div>
+    </div>
+
+    <div data-panel="devices" hidden>
+      <div class="devices" id="devices"></div>
+    </div>
+  </section>
+</div>
+
+<div class="strip" role="region" aria-label="Beat">
+  <div class="in">
+    <button class="play" id="play" aria-label="Play beat">
+      <svg viewBox="0 0 24 24" id="playIcon"><path d="M7 4.5v15l13-7.5z" fill="currentColor"/></svg>
+    </button>
+    <label>Beat <select id="beatSel"><option value="boom">Boom bap</option><option value="trap">Trap</option><option value="lofi">Lo-fi</option></select></label>
+    <label>Tempo <span class="row" style="gap:6px"><input type="range" id="bpm" min="60" max="160" value="90" aria-label="Tempo in BPM"><span class="bpm" id="bpmVal">90</span></span></label>
+    <div class="lights" id="lights" aria-hidden="true"></div>
+    <div class="barct">Bar <b id="barNum">–</b></div>
+  </div>
+</div>
+<div class="toast" id="toast" hidden></div>
+
+<script id="dict" type="application/json">__DICT__</script>
+<script>
+"use strict";
+/* ================= storage ================= */
+const store = {
+  get(k, d) { try { const v = localStorage.getItem("barlab." + k); return v === null ? d : JSON.parse(v); } catch (e) { return d; } },
+  set(k, v) { try { localStorage.setItem("barlab." + k, JSON.stringify(v)); } catch (e) {} }
+};
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const esc = s => s.replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+
+/* ================= phonetic dictionary ================= */
+const RAW = JSON.parse($("#dict").textContent);
+const SYMS = RAW.syms, CI = {};
+for (let i = 0; i < RAW.alphabet.length; i++) CI[RAW.alphabet[i]] = i;
+const LEX = new Map();
+const ENTRIES = [];
+RAW.words.split("|").forEach((e, rank) => {
+  const k = e.indexOf(":");
+  const w = e.slice(0, k), c = e.slice(k + 1);
+  const ent = { w, rank, ph: [...c].map(ch => SYMS[CI[ch]]) };
+  LEX.set(w, ent); ENTRIES.push(ent);
+});
+const N = ENTRIES.length;
+
+const SCHWA = new Set(["@", "IH", "AH", "UH", "EH"]);
+const isV = p => /\d$/.test(p);
+const strip = p => p.replace(/\d$/, "");
+function looseV(p) {
+  const b = strip(p), s = +p.slice(-1);
+  if (b === "ER") return "ER";
+  if (s === 0 && (b === "AH" || b === "IH" || b === "UH" || b === "EH")) return "@";
+  if (b === "AO") return "AA";
+  return b;
+}
+const vm = (a, b) => a === b || ((a === "@" || b === "@") && SCHWA.has(a) && SCHWA.has(b));
+const variants = v => v === "@" ? ["@", "IH", "AH", "UH", "EH"] : [v];
+function cls(p) {
+  if ("P B T D K G".includes(p) && p.length === 1) return "K";
+  if (["F", "V", "TH", "DH", "S", "Z", "SH", "ZH", "CH", "JH", "HH"].includes(p)) return "F";
+  if (p === "M" || p === "N" || p === "NG") return "N";
+  if (p === "L") return "L";
+  if (p === "R") return "R";
+  return "W";
+}
+
+/* Analyse a phone array: vowels, last stressed vowel, rhyme keys, consonant segments between vowels. */
+function phInfo(ph) {
+  const vi = [];
+  ph.forEach((p, i) => { if (isV(p)) vi.push(i); });
+  if (!vi.length) return null;
+  let ls = -1;
+  for (let k = vi.length - 1; k >= 0; k--) if (ph[vi[k]].endsWith("1")) { ls = k; break; }
+  if (ls < 0) for (let k = vi.length - 1; k >= 0; k--) if (ph[vi[k]].endsWith("2")) { ls = k; break; }
+  if (ls < 0) ls = vi.length - 1;
+  const v = vi.map(i => looseV(ph[i]));
+  // consonant class string of each segment after vowel k
+  const raw = vi.map((i, k) => ph.slice(i + 1, k + 1 < vi.length ? vi[k + 1] : ph.length));
+  const seg = raw.map(r => r.map(cls).join(""));
+  const segRaw = raw.map(r => r.join(" "));
+  const tail = ph.slice(vi[ls]).map(strip).join(" ");
+  const tv = v.slice(ls);
+  const coda = seg[seg.length - 1];
+  const fam = tv.join("-") + ":" + (coda[0] || "");
+  return { v, vi, ls, seg, segRaw, tail, fam, syl: vi.length, tv };
+}
+function info(ent) { if (ent.i === undefined) ent.i = phInfo(ent.ph); return ent.i; }
+
+/* indexes */
+const IDX = { tail: new Map(), fam: new Map(), last2: new Map(), lastv: new Map(), full: new Map(), end: new Map() };
+const push = (m, k, e) => { let a = m.get(k); if (!a) m.set(k, a = []); a.push(e); };
+for (const e of ENTRIES) {
+  const I = info(e); if (!I) continue;
+  push(IDX.tail, I.tail, e);
+  push(IDX.fam, I.fam, e);
+  push(IDX.lastv, I.tv.join("-"), e);
+  if (I.syl >= 2) push(IDX.last2, I.v.slice(-2).join("-"), e);
+  if (e.rank < 7000) {
+    push(IDX.full, I.v.join("-"), e);
+    for (let j = 1; j <= 3 && j <= I.syl; j++) push(IDX.end, j + "|" + I.v.slice(-j).join("-"), e);
+  }
+}
+
+const STOP = new Set(("a an the and or but to of in on at for with from by i me my mine you your yours it its is am are was were be been being that this these those they them their " +
+  "we us our he him his she her hers so if as up just do does did got get i'm it's don't can't im not no all what when then than there who how " +
+  "yeah uh oh ya ayy yo like can will would could should have has had i've i'll i'd you're you've they're we're he's she's that's ain't gon gonna wanna 'em em").split(" "));
+
+const SUFFIX = new Map();
+for (const e of ENTRIES) for (let n = 3; n <= 6 && n < e.w.length; n++) { const k = e.w.slice(-n); if (!SUFFIX.has(k)) SUFFIX.set(k, e); }
+const GUESS = new Map();
+function lookupWord(raw) {
+  let w = raw.toLowerCase().replace(/[’`]/g, "'");
+  const tries = [w, w.replace(/^'+|'+$/g, ""), w.replace(/in'$/, "ing"), w.replace(/'s$/, ""), w.replace(/'/g, "")];
+  for (const t of tries) { const e = LEX.get(t); if (e) return e; }
+  // not in the dictionary: borrow the ending sound of a known word with the same spelling ending ("locket" -> "pocket")
+  const clean = w.replace(/[^a-z]/g, "");
+  if (GUESS.has(clean)) return GUESS.get(clean);
+  let g = null;
+  for (let n = Math.min(6, clean.length - 1); n >= 3 && !g; n--) {
+    const base = SUFFIX.get(clean.slice(-n));
+    if (base) {
+      const bi = info(base);
+      if (bi) {
+        const keepFrom = bi.vi[bi.ls];
+        g = { w: clean, rank: N, guess: true, ph: base.ph.slice(keepFrom) };
+        // pad with neutral syllables so the syllable count follows the spelling
+        const extra = guessSyl(clean) - phInfo(g.ph).syl;
+        if (extra > 0) g.ph = [...Array(extra).fill(0).flatMap(() => ["K", "AH0"]), ...g.ph];
+      }
+    }
+  }
+  GUESS.set(clean, g);
+  return g;
+}
+function guessSyl(w) {
+  const g = w.toLowerCase().replace(/[^a-z]/g, "").replace(/e$/, "").match(/[aeiouy]+/g);
+  return Math.max(1, g ? g.length : 1);
+}
+
+/* combined phones for a phrase */
+function phrasePhones(words) {
+  const out = []; const missing = [];
+  for (const w of words) { const e = lookupWord(w); if (e) out.push(...e.ph); else missing.push(w); }
+  return { ph: out, missing };
+}
+
+/* score how well candidate info C answers target info T: trailing vowel match count + consonant similarity */
+function matchLen(Tv, Cv) {
+  let m = 0;
+  while (m < Tv.length && m < Cv.length && vm(Tv[Tv.length - 1 - m], Cv[Cv.length - 1 - m])) m++;
+  return m;
+}
+function consScore(T, C, m) {
+  let s = 0;
+  for (let k = 0; k < m; k++) {
+    const a = T.seg[T.seg.length - 1 - k], b = C.seg[C.seg.length - 1 - k];
+    if (T.segRaw[T.segRaw.length - 1 - k] === C.segRaw[C.segRaw.length - 1 - k]) s += 3;
+    else if (a === b) s += 2; else if (a && b && a[0] === b[0]) s += 1;
+  }
+  return s;
+}
+
+/* ================= rhyme search ================= */
+function findRhymes(query) {
+  const words = (query.toLowerCase().match(/[a-z'’]+/g) || []);
+  if (!words.length) return null;
+  const { ph, missing } = phrasePhones(words);
+  if (missing.length) return { missing };
+  const T = phInfo(ph);
+  if (!T) return { missing: words };
+  const lastW = words[words.length - 1].replace(/[’']/g, "");
+  const skip = new Set(words.map(w => w.replace(/[’]/g, "'")));
+  const isSelf = w => skip.has(w) || w.endsWith(lastW) || (w.length > 2 && lastW.endsWith(w));
+
+  // perfect
+  const perfectAll = (IDX.tail.get(T.tail) || []).filter(e => !isSelf(e.w));
+  const pset = new Set(perfectAll.map(e => e.w));
+  const perfect = perfectAll.slice(0, 120);
+
+  // multis: match the last N vowel sounds (N = vowels from the stressed one, up to 4)
+  const span = Math.min(4, Math.max(T.v.length - Math.max(0, T.v.length - 4), 0));
+  const Tv = T.v.slice(-span);
+  const multis = [];
+  if (Tv.length >= 2) {
+    const seen = new Set();
+    for (const a of variants(Tv[Tv.length - 2])) for (const b of variants(Tv[Tv.length - 1])) {
+      for (const e of (IDX.last2.get(a + "-" + b) || [])) {
+        if (seen.has(e.w) || pset.has(e.w) || isSelf(e.w)) continue; seen.add(e.w);
+        const C = info(e); const m = matchLen(Tv, C.v);
+        if (m < 2) continue;
+        // the stressed vowel of the target must be inside the match for it to count as a multi
+        const stressPos = T.v.length - T.ls;
+        if (m < Math.min(stressPos, Tv.length) ) continue;
+        multis.push({ e, m, s: m * 10 + consScore(T, C, m) - e.rank / N * 4 });
+      }
+    }
+    multis.sort((x, y) => y.s - x.s);
+  }
+
+  // two-word combos ("pocket" -> "lock it")
+  const combos = [];
+  if (Tv.length >= 2) {
+    const seen = new Set();
+    for (let j = 1; j < Tv.length; j++) {
+      const A = Tv.slice(0, j), B = Tv.slice(j);
+      const w2 = [], w1 = [];
+      const expand = (arr, i, acc, out) => { if (i === arr.length) { out.push(acc.join("-")); return; } for (const v of variants(arr[i])) expand(arr, i + 1, [...acc, v], out); };
+      const bk = [], ak = []; expand(B, 0, [], bk); expand(A, 0, [], ak);
+      for (const k of bk) w2.push(...(IDX.full.get(k) || []));
+      for (const k of ak) w1.push(...(IDX.end.get(j + "|" + k) || []));
+      w2.sort((x, y) => x.rank - y.rank); w1.sort((x, y) => x.rank - y.rank);
+      const W2 = w2.filter(e => e.w.length > 1 || e.w === "a" || e.w === "i").slice(0, 40);
+      const W1 = w1.filter(e => !STOP.has(e.w) && e.w.length > 2 && !isSelf(e.w)).slice(0, 160);
+      for (const a of W1) for (const b of W2) {
+        const key = a.w + " " + b.w; if (seen.has(key) || skip.has(b.w)) continue; seen.add(key);
+        const C = phInfo([...a.ph, ...b.ph]); if (!C) continue;
+        const m = matchLen(Tv, C.v); if (m < Tv.length) continue;
+        const cs = consScore(T, C, m); if (cs < 2 * m) continue;
+        combos.push({ w: key, s: cs * 3 - (a.rank + b.rank * .3) / N * 6 });
+      }
+    }
+    combos.sort((x, y) => y.s - x.s);
+  }
+
+  // slant: same vowel(s) from the stress and same consonant family
+  const slant = (IDX.fam.get(T.fam) || []).filter(e => !pset.has(e.w) && !isSelf(e.w)).slice(0, 60);
+  const sset = new Set(slant.map(e => e.w));
+  const near = slant.length < 24 ? (IDX.lastv.get(T.tv.join("-")) || []).filter(e => !pset.has(e.w) && !sset.has(e.w) && !isSelf(e.w)).slice(0, 40) : [];
+
+  return { T, words, perfect, multis: multis.slice(0, 60), combos: combos.slice(0, 24), slant: slant.concat(near).slice(0, 60) };
+}
+
+/* classify one word against a target (for Rhyme Race) */
+function classify(target, guess) {
+  const te = lookupWord(target), ge = lookupWord(guess);
+  if (!ge || ge.guess) return 0;
+  if (!te || ge.w === te.w || ge.w.endsWith(te.w) || te.w.endsWith(ge.w)) return 0;
+  const T = info(te), G = info(ge);
+  if (!T || !G) return 0;
+  if (T.tail === G.tail) return 3;
+  const m = matchLen(T.v.slice(T.ls), G.v);
+  if (T.v.length - T.ls >= 2 && m >= T.v.length - T.ls) return 2;
+  if (T.fam === G.fam || T.tv[0] === G.v[G.ls]) return 1;
+  return 0;
+}
+
+/* ================= toast ================= */
+let toastT;
+function toast(msg) { const t = $("#toast"); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 1400); }
+
+/* ================= pad ================= */
+const pad = $("#pad");
+const SAMPLE = `Wrote my first bars with a pen from my pocket
+Now the words got weight like a chain on a locket
+Every syllable placed like I'm working a lock pick
+Stacking my rhymes till the stack is a topic
+I don't chase the hype, I just sharpen the craft
+Every bar got a setup, a twist and a laugh
+Late night in the booth with a dim light glowing
+Ten toes in the pocket while the wind keep blowing`;
+pad.value = store.get("pad", SAMPLE);
+const markSample = () => $("#sampleTag").hidden = pad.value.trim() !== SAMPLE.trim();
+
+function insertAtCursor(text) {
+  const s = pad.selectionStart ?? pad.value.length, e = pad.selectionEnd ?? s;
+  const before = pad.value.slice(0, s);
+  const pre = before && !/\s$/.test(before) ? " " : "";
+  pad.setRangeText(pre + text, s, e, "end");
+  pad.dispatchEvent(new Event("input"));
+}
+
+/* tokenise a line, keeping text between words */
+function tokens(line) {
+  const out = []; const re = /[A-Za-z][A-Za-z'’]*/g; let m, last = 0;
+  while ((m = re.exec(line))) {
+    if (m.index > last) out.push({ t: line.slice(last, m.index) });
+    const ent = lookupWord(m[0]);
+    const I = ent ? info(ent) : null;
+    out.push({ t: m[0], w: (ent ? ent.w : m[0].toLowerCase()), ent, I, syl: I ? I.syl : guessSyl(m[0]) });
+    last = m.index + m[0].length;
+  }
+  if (last < line.length) out.push({ t: line.slice(last) });
+  return out;
+}
+
+const CLICHES = ["on my grind", "top of the game", "count my money", "haters gonna hate", "started from the bottom", "real recognize real", "keep it real", "living the dream",
+  "pedal to the metal", "cold as ice", "break the chains", "rise to the top", "in it to win it", "money on my mind", "chasing the bag", "chase the bag", "game recognize game",
+  "hustle hard", "no days off", "day one", "blood sweat and tears", "against all odds", "heart of a lion", "king of the jungle", "sky's the limit", "sky is the limit",
+  "flow so sick", "spit fire", "when it rains it pours", "it is what it is", "on fire", "ride or die", "stack it up", "get this money", "no love for", "trust nobody",
+  "came from nothing", "all eyes on me", "ballin' like", "fresh to death", "dope as hell"];
+
+let analysis = null;
+function analyse(text) {
+  const lines = text.split("\n");
+  const L = lines.map((raw, i) => ({ raw, i, tk: tokens(raw) }));
+  const bars = L.filter(l => l.tk.some(t => t.w));
+  bars.forEach((b, n) => { b.n = n; b.words = b.tk.filter(t => t.w); b.syl = b.words.reduce((a, t) => a + t.syl, 0); b.end = b.words[b.words.length - 1]; });
+
+  // rhyme families
+  const fam = new Map();
+  bars.forEach(b => b.words.forEach((t, wi) => {
+    if (!t.I) return;
+    const isEnd = wi === b.words.length - 1;
+    if (STOP.has(t.w) && !isEnd) return;
+    if (t.I.syl === 1 && t.I.v[0] === "@") return;
+    t.key = t.I.fam; t.isEnd = isEnd; t.bar = b.n;
+    push(fam, t.key, t);
+  }));
+  const colorOf = new Map(); let nextColor = 0;
+  let rhyming = 0, internal = 0, content = 0;
+  bars.forEach(b => b.words.forEach(t => { if (t.key) content++; }));
+  for (const [k, list] of fam) {
+    for (const t of list) {
+      t.hit = list.some(o => o !== t && o.w !== t.w && Math.abs(o.bar - t.bar) <= 3);
+    }
+    const hits = list.filter(t => t.hit);
+    if (hits.length >= 2) {
+      if (!colorOf.has(k)) colorOf.set(k, (nextColor++ % 8) + 1);
+      hits.forEach(t => { t.color = colorOf.get(k); rhyming++; if (!t.isEnd) internal++; });
+    }
+  }
+
+  // multisyllable end rhymes between nearby bars
+  const tailV = b => { const out = []; b.words.forEach((t, wi) => { if (t.I) t.I.v.forEach(v => out.push({ v, wi })); }); return out; };
+  bars.forEach(b => { b.tv = tailV(b); b.multi = 0; });
+  const pairs = [];
+  for (let i = 0; i < bars.length; i++) for (let j = i + 1; j <= i + 2 && j < bars.length; j++) {
+    const A = bars[i].tv, B = bars[j].tv; let m = 0;
+    while (m < 5 && m < A.length && m < B.length && vm(A[A.length - 1 - m].v, B[B.length - 1 - m].v)) m++;
+    const real = A.slice(A.length - m).some(x => x.v !== "@");
+    if (m >= 2 && real) {
+      pairs.push({ i, j, m });
+      for (const [bar, arr] of [[bars[i], A], [bars[j], B]]) {
+        bar.multi = Math.max(bar.multi, m);
+        arr.slice(arr.length - m).forEach(x => bar.words[x.wi].m = true);
+      }
+    }
+  }
+
+  // rhyme scheme letters from the end words
+  const letters = new Map(); let li = 0;
+  bars.forEach((b, n) => {
+    const e = b.end; let k = e && e.I ? e.I.fam : "?" + n;
+    // a multi with the bar above or two above shares its letter
+    const p = pairs.find(p => p.j === n && p.m >= 2);
+    if (p && bars[p.i].letterKey) k = bars[p.i].letterKey;
+    b.letterKey = k;
+    const others = bars.filter((o, on) => on !== n && Math.abs(on - n) <= 3 && (o.end && o.end.I && o.end.I.fam === (e && e.I && e.I.fam)));
+    if (!letters.has(k)) letters.set(k, String.fromCharCode(65 + (li++ % 26)));
+    b.letter = letters.get(k);
+    b.answered = others.length > 0 || pairs.some(p => p.i === n || p.j === n);
+  });
+
+  // clichés and repeats
+  const lower = text.toLowerCase().replace(/[’]/g, "'");
+  const cliches = CLICHES.filter(c => lower.includes(c));
+  const repeats = [];
+  for (let i = 0; i < bars.length; i++) for (let j = i + 1; j <= i + 2 && j < bars.length; j++)
+    if (bars[i].end && bars[j].end && bars[i].end.w === bars[j].end.w) repeats.push([i, j, bars[i].end.w]);
+
+  const contentWords = bars.flatMap(b => b.words.filter(t => !STOP.has(t.w)).map(t => t.w));
+  const vocab = contentWords.length ? new Set(contentWords).size / contentWords.length : 0;
+  const sylls = bars.map(b => b.syl);
+  const mean = sylls.reduce((a, b) => a + b, 0) / (sylls.length || 1);
+  const sd = Math.sqrt(sylls.reduce((a, b) => a + (b - mean) ** 2, 0) / (sylls.length || 1));
+  const multiBars = bars.filter(b => b.multi >= 2).length;
+  const answered = bars.filter(b => b.answered).length;
+
+  const sc = {
+    density: content ? rhyming / content : 0,
+    multis: bars.length ? multiBars / bars.length : 0,
+    ends: bars.length ? answered / bars.length : 0,
+    vocab,
+    rhythm: bars.length > 1 ? Math.max(0, 1 - sd / Math.max(mean, 1) / .45) : 0,
+  };
+  const deep = pairs.length ? Math.max(...pairs.map(p => p.m)) : 0;
+  let score = sc.density / .45 * 28 + sc.multis * 24 + Math.min(1, deep / 3) * 6 + sc.ends * 16 + Math.min(1, vocab / .85) * 14 + sc.rhythm * 12;
+  score -= cliches.length * 5 + repeats.length * 4;
+  if (bars.length < 4) score *= bars.length / 4;
+  score = Math.round(Math.max(0, Math.min(100, score)));
+  return { L, bars, pairs, cliches, repeats, sc, score, mean, internal, rhyming, deep };
+}
+
+function renderBreakdown(A) {
+  const bd = $("#bd");
+  if (!A.bars.length) { bd.innerHTML = '<div class="empty">Write a few bars on the pad and the breakdown shows up here.</div>'; return; }
+  const hot = n => A.bars.length > 2 && Math.abs(n - A.mean) > Math.max(4, A.mean * .3);
+  bd.innerHTML = A.bars.map(b => {
+    const tx = b.tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}${t.m ? " m" : ""}" data-w="${esc(t.t)}">${esc(t.t)}</span>` : esc(t.t)).join("");
+    return `<div class="bl"><span class="ln">${b.n + 1}</span><button class="sch" data-line="${b.n}" title="Rhyme the end of this bar">${b.letter}</button><span class="tx">${tx}</span><span class="sy${hot(b.syl) ? " hot" : ""}" title="syllables">${b.syl}</span></div>`;
+  }).join("");
+}
+
+const TIERS = [[0, "Open Mic", "Get the bars down first. Rhyme the ends of your lines, then build inward."], [40, "Mixtape", "Solid base. Push your end rhymes to two syllables and plant rhymes mid-line."],
+  [60, "Battle Ready", "Your scheme is working. Now chase three-syllable multis and fresher imagery."], [75, "Pen Game", "Dense and controlled. Sharpen the punchlines and wordplay."], [88, "Lyricist", "Elite density. Keep it clear enough that the meaning still lands."]];
+
+function kwBtn(w) { return `<button class="kw" data-q="${esc(w)}">${esc(w)}</button>`; }
+function renderCoach(A) {
+  const el = $("#coach");
+  if (!A.bars.length) { el.innerHTML = '<div class="empty">The coach scores your verse once you have a few bars down.</div>'; return; }
+  const tier = TIERS.filter(t => A.score >= t[0]).pop();
+  const pct = v => Math.round(v * 100);
+  const meters = [["Rhyme density", Math.min(1, A.sc.density / .45), pct(A.sc.density) + "%"], ["Multis", A.sc.multis, A.bars.filter(b => b.multi >= 2).length + "/" + A.bars.length],
+    ["End rhymes", A.sc.ends, pct(A.sc.ends) + "%"], ["Vocabulary", Math.min(1, A.sc.vocab / .85), pct(A.sc.vocab) + "%"], ["Rhythm", A.sc.rhythm, "±" + Math.round((1 - A.sc.rhythm) * .45 * A.mean)]];
+  const tips = [];
+  // praise
+  const best = A.pairs.slice().sort((a, b) => b.m - a.m)[0];
+  if (best && best.m >= 3) tips.push(["good", `<b>Bars ${best.i + 1} and ${best.j + 1}</b> share a ${best.m}-syllable multi. That's the move. Keep chaining it into the next bar.`]);
+  else if (best) tips.push(["good", `<b>Bars ${best.i + 1} and ${best.j + 1}</b> rhyme on 2 syllables. Try stretching it to 3 by matching the vowel before it too.`]);
+  // unanswered end words
+  A.bars.filter(b => !b.answered && b.end && b.end.ent).slice(0, 2).forEach(b => {
+    const r = findRhymes(b.end.w);
+    const sug = r && r.perfect ? r.perfect.slice(0, 4).map(e => kwBtn(e.w)).join(" ") : "";
+    tips.push(["warn", `<b>Bar ${b.n + 1}</b> ends on “${esc(b.end.t)}” and nothing nearby answers it.${sug ? " Words that would: " + sug : ""}`]);
+  });
+  A.repeats.slice(0, 2).forEach(([i, j, w]) => tips.push(["bad", `<b>Bars ${i + 1} and ${j + 1}</b> both end on “${esc(w)}”. Rhyming a word with itself reads as lazy. Swap one: ${kwBtn(w)}`]));
+  A.cliches.slice(0, 2).forEach(c => tips.push(["bad", `“${esc(c)}” has been said a million times. Replace it with the specific picture of what you mean.`]));
+  const hotBars = A.bars.filter(b => A.bars.length > 2 && Math.abs(b.syl - A.mean) > Math.max(4, A.mean * .3));
+  hotBars.slice(0, 1).forEach(b => tips.push(["warn", `<b>Bar ${b.n + 1}</b> has ${b.syl} syllables against your average of ${Math.round(A.mean)}. ${b.syl > A.mean ? "You'll rush it. Trim a few words or split the bar." : "It'll leave dead air. Add a detail or an internal rhyme."}`]));
+  if (A.internal < A.bars.length / 2 && A.bars.length >= 4) tips.push(["warn", `Only ${A.internal} internal rhyme${A.internal === 1 ? "" : "s"}. Plant a word in the middle of a bar that echoes its end word. Lyricists stack rhymes inside the line, not only at the end.`]);
+  if (A.sc.vocab < .7 && A.bars.length >= 4) tips.push(["warn", "A lot of repeated words. Swap a couple for something more specific: a name, a number, a texture, a place."]);
+  if (tips.length < 2) tips.push(["good", "Clean verse. Read it out loud over the Flow tab and listen for any bar where you run out of breath."]);
+
+  el.innerHTML = `<div class="score"><div class="num">${A.score}</div><div class="tier">${tier[1]}</div><div class="tierline">${tier[2]}</div></div>
+    <div class="meters">${meters.map(m => `<div class="meter"><span>${m[0]}</span><span class="bar"><i style="width:${Math.round(m[1] * 100)}%"></i></span><span class="v">${m[2]}</span></div>`).join("")}</div>
+    <ul class="tips">${tips.slice(0, 6).map(t => `<li class="${t[0]}">${t[1]}</li>`).join("")}</ul>`;
+}
+
+function refresh() {
+  analysis = analyse(pad.value);
+  renderBreakdown(analysis); renderCoach(analysis);
+  const syl = analysis.bars.reduce((a, b) => a + b.syl, 0);
+  $("#padCount").textContent = `${analysis.bars.length} bar${analysis.bars.length === 1 ? "" : "s"} · ${syl} syllables`;
+  markSample(); renderPrompter();
+}
+let padT;
+pad.addEventListener("input", () => { store.set("pad", pad.value); clearTimeout(padT); padT = setTimeout(refresh, 180); });
+$("#clearBtn").onclick = () => { pad.value = ""; pad.dispatchEvent(new Event("input")); pad.focus(); };
+$("#sampleBtn").onclick = () => { pad.value = SAMPLE; pad.dispatchEvent(new Event("input")); };
+$("#matchBtn").onclick = () => {
+  const before = pad.value.slice(0, pad.selectionStart).split("\n");
+  let line = before.length >= 2 ? before[before.length - 2] : before[0];
+  if (!line || !line.trim()) line = pad.value.split("\n").filter(l => l.trim()).pop() || "";
+  const ws = line.match(/[A-Za-z][A-Za-z'’]*/g);
+  if (!ws) { toast("Write a bar first"); return; }
+  search(ws.slice(-2).join(" "));
+};
+$("#bd").addEventListener("click", e => {
+  const w = e.target.closest(".w"); if (w) { search(w.dataset.w); return; }
+  const s = e.target.closest(".sch");
+  if (s && analysis) { const b = analysis.bars[+s.dataset.line]; search(b.words.slice(-2).map(t => t.t).join(" ")); }
+});
+$("#coach").addEventListener("click", e => { const k = e.target.closest(".kw"); if (k) search(k.dataset.q); });
+
+/* ================= rhyme engine UI ================= */
+function chip(w, extra = "", sup = "") { return `<button class="chip ${extra}" data-ins="${esc(w)}">${esc(w)}${sup ? `<sup>${sup}</sup>` : ""}</button>`; }
+function search(q) {
+  $("#q").value = q;
+  const out = $("#rres");
+  const r = findRhymes(q);
+  if (!r) { out.innerHTML = ""; return; }
+  if (r.missing) { out.innerHTML = `<p class="rmeta">“${esc(r.missing.join(", "))}” isn't in the dictionary. Try a common spelling, or a word that sounds the same.</p>`; return; }
+  const sounds = r.T.v.slice(r.T.ls).map(v => v === "@" ? "uh" : v.toLowerCase()).join(" · ");
+  const guessed = r.words.filter(w => { const e = lookupWord(w); return e && e.guess; });
+  let h = guessed.length ? `<p class="rmeta">“${esc(guessed.join(", "))}” isn't in the dictionary, so its sound is guessed from the spelling.</p>` : "";
+  h += `<p class="rmeta">Rhyme sound <b>${esc(sounds)}</b> · ${r.T.syl} syllable${r.T.syl > 1 ? "s" : ""}. Tap a word to drop it on the pad.</p>`;
+  if (r.perfect.length) {
+    const by = new Map(); r.perfect.forEach(e => push(by, info(e).syl, e));
+    h += `<div class="rgroup"><h3>Perfect <small>${r.perfect.length}${r.perfect.length >= 120 ? "+" : ""}</small></h3>` +
+      [...by.keys()].sort((a, b) => a - b).map(k => `<div class="sub">${k} syl</div><div class="chips">${by.get(k).map(e => chip(e.w, "pf")).join("")}</div>`).join("") + "</div>";
+  }
+  if (r.combos.length) h += `<div class="rgroup"><h3>Phrase multis <small>two-word endings that match every vowel</small></h3><div class="chips">${r.combos.map(c => chip(c.w)).join("")}</div></div>`;
+  if (r.multis.length) {
+    const by = new Map(); r.multis.forEach(x => push(by, x.m, x));
+    h += `<div class="rgroup"><h3>Multis <small>same vowel sounds, different consonants</small></h3>` +
+      [...by.keys()].sort((a, b) => b - a).map(k => `<div class="sub">${k} vowels match</div><div class="chips">${by.get(k).map(x => chip(x.e.w)).join("")}</div>`).join("") + "</div>";
+  }
+  if (r.slant.length) h += `<div class="rgroup"><h3>Slant <small>close enough to land in a flow</small></h3><div class="chips">${r.slant.map(e => chip(e.w)).join("")}</div></div>`;
+  if (!r.perfect.length && !r.multis.length && !r.slant.length && !r.combos.length) h += `<p class="rmeta">No rhymes found. Try a phrase of two or three words.</p>`;
+  out.innerHTML = h; out.scrollTop = 0;
+}
+$("#rform").addEventListener("submit", e => { e.preventDefault(); search($("#q").value); });
+$("#rres").addEventListener("click", e => { const c = e.target.closest("[data-ins]"); if (c) { insertAtCursor(c.dataset.ins); toast(`Added “${c.dataset.ins}”`); } });
+$("#dropRhymes").addEventListener("click", e => { const c = e.target.closest("[data-ins]"); if (c) toast(c.dataset.ins); });
+
+/* ================= tabs ================= */
+let view = "write";
+function setView(v) {
+  view = v;
+  $$("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v));
+  $$(".view").forEach(s => s.hidden = s.id !== "v-" + v);
+  store.set("view", v);
+  if (v === "flow") renderPrompter();
+}
+$$("nav.tabs button").forEach(b => b.onclick = () => setView(b.dataset.view));
+let drill = "drop";
+function setDrill(d) {
+  drill = d;
+  $$(".subtabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.drill === d));
+  $$("[data-panel]").forEach(p => p.hidden = p.dataset.panel !== d);
+  store.set("drill", d);
+}
+$$(".subtabs button").forEach(b => b.onclick = () => setDrill(b.dataset.drill));
+
+/* ================= beat engine ================= */
+const range = (a, b, s = 1) => { const r = []; for (let i = a; i < b; i += s) r.push(i); return r; };
+const BEATS = {
+  boom: { bpm: 90, steps: 16, swing: .14, k: [0, 7, 10], s: [4, 12], h: range(0, 16, 2), ho: [14], snare: "snare", bass: "kick", pad: .8 },
+  trap: { bpm: 140, steps: 32, swing: 0, k: [0, 11, 16, 22, 27], s: [8, 24], h: range(0, 32, 2), roll: [12, 13, 14, 15, 28, 29, 30, 31], snare: "clap", bass: "808", pad: .6 },
+  lofi: { bpm: 78, steps: 16, swing: .2, k: [0, 9, 10], s: [4, 12], h: range(0, 16, 2), ho: [], snare: "soft", bass: "kick", pad: 1.2 },
+};
+const CHORDS = [[220, 261.63, 329.63, 392], [174.61, 220, 261.63, 329.63], [146.83, 174.61, 220, 261.63], [164.81, 196, 246.94, 293.66]];
+const ROOTS = [55, 43.65, 36.71, 41.2];
+let ctx = null, bus = null, noise = null, playing = false, timer = null;
+let beat = store.get("beat", "boom"); if (!BEATS[beat]) beat = "boom";
+let bpm = store.get("bpm", BEATS[beat].bpm);
+let step = 0, bar = 0, nextTime = 0; const uiQ = [];
+
+function ensureAudio() {
+  if (ctx) return;
+  ctx = new (window.AudioContext || window.webkitAudioContext)();
+  const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -14; comp.ratio.value = 4;
+  bus = ctx.createGain(); bus.gain.value = .75; bus.connect(comp).connect(ctx.destination);
+  noise = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
+  const d = noise.getChannelData(0); for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1;
+}
+function env(g, t, peak, dur, attack = .002) { g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(peak, t + attack); g.gain.exponentialRampToValueAtTime(.0001, t + dur); }
+function kick(t, v = 1) {
+  const o = ctx.createOscillator(), g = ctx.createGain(); o.type = "sine";
+  o.frequency.setValueAtTime(165, t); o.frequency.exponentialRampToValueAtTime(44, t + .11);
+  env(g, t, v, .42); o.connect(g).connect(bus); o.start(t); o.stop(t + .45);
+}
+function b808(t, f, dur) {
+  const o = ctx.createOscillator(), g = ctx.createGain(), ws = ctx.createWaveShaper();
+  const curve = new Float32Array(256); for (let i = 0; i < 256; i++) { const x = i / 128 - 1; curve[i] = Math.tanh(x * 2.2); } ws.curve = curve;
+  o.type = "sine"; o.frequency.setValueAtTime(f * 2.2, t); o.frequency.exponentialRampToValueAtTime(f, t + .06);
+  env(g, t, .9, dur, .004); o.connect(ws).connect(g).connect(bus); o.start(t); o.stop(t + dur + .05);
+}
+function noiseHit(t, type, freq, q, peak, dur) {
+  const s = ctx.createBufferSource(); s.buffer = noise; const f = ctx.createBiquadFilter(); f.type = type; f.frequency.value = freq; if (q) f.Q.value = q;
+  const g = ctx.createGain(); env(g, t, peak, dur); s.connect(f).connect(g).connect(bus); s.start(t); s.stop(t + dur + .02);
+}
+function snare(t, kind) {
+  if (kind === "clap") { [0, .011, .023].forEach((d, i) => noiseHit(t + d, "bandpass", 1300, .9, i === 2 ? .9 : .6, i === 2 ? .2 : .03)); return; }
+  const soft = kind === "soft";
+  noiseHit(t, "highpass", soft ? 1800 : 1400, 0, soft ? .35 : .7, soft ? .16 : .2);
+  const o = ctx.createOscillator(), g = ctx.createGain(); o.type = "triangle"; o.frequency.setValueAtTime(190, t); o.frequency.exponentialRampToValueAtTime(150, t + .08);
+  env(g, t, soft ? .2 : .4, .09); o.connect(g).connect(bus); o.start(t); o.stop(t + .12);
+}
+function hat(t, v, open) { noiseHit(t, "highpass", 7600, 0, v, open ? .24 : .035); }
+function chord(t, notes, dur, vol) {
+  const f = ctx.createBiquadFilter(); f.type = "lowpass"; f.frequency.value = 1300; const g = ctx.createGain();
+  g.gain.setValueAtTime(.0001, t); g.gain.exponentialRampToValueAtTime(.05 * vol, t + .08); g.gain.setValueAtTime(.05 * vol, t + dur * .7); g.gain.exponentialRampToValueAtTime(.0001, t + dur);
+  f.connect(g).connect(bus);
+  notes.forEach(n => [-4, 4].forEach(det => { const o = ctx.createOscillator(); o.type = "triangle"; o.frequency.value = n; o.detune.value = det; o.connect(f); o.start(t); o.stop(t + dur + .05); }));
+}
+function sixteenth() { const B = BEATS[beat]; return 60 / bpm / 4 * (B.steps === 32 ? 1 : 1); }
+function barDur() { return sixteenth() * BEATS[beat].steps; }
+function playStep(st, t, br) {
+  const B = BEATS[beat];
+  const ci = br % 4;
+  if (st === 0 && br > 0) chord(t, CHORDS[ci], barDur() * .98, B.pad);
+  if (B.k.includes(st)) { if (B.bass === "808" && br > 0) b808(t, ROOTS[ci] * 2, sixteenth() * 7); else kick(t, st === 0 ? 1 : .85); }
+  if (B.s.includes(st)) snare(t, B.snare);
+  if (B.h.includes(st)) hat(t, st % 4 === 0 ? .2 : .13, (B.ho || []).includes(st));
+  if (B.roll && B.roll.includes(st) && br % 2 === 1) { hat(t, .1); hat(t + sixteenth() / 2, .08); }
+  if (br === 0 && st % (B.steps / 4) === 0) { // count-in clicks
+    const o = ctx.createOscillator(), g = ctx.createGain(); o.frequency.value = st === 0 ? 1500 : 1000; env(g, t, .25, .05); o.connect(g).connect(bus); o.start(t); o.stop(t + .07);
+  }
+}
+function scheduler() {
+  const B = BEATS[beat];
+  while (nextTime < ctx.currentTime + .12) {
+    playStep(step, nextTime, bar);
+    uiQ.push({ t: nextTime, step, bar });
+    const s16 = sixteenth();
+    nextTime += step % 2 === 0 ? s16 * (1 + B.swing) : s16 * (1 - B.swing);
+    step++; if (step >= B.steps) { step = 0; bar++; }
+  }
+}
+function start() {
+  ensureAudio(); if (ctx.state === "suspended") ctx.resume();
+  playing = true; step = 0; bar = 0; nextTime = ctx.currentTime + .08; uiQ.length = 0;
+  timer = setInterval(scheduler, 25); scheduler();
+  $("#playIcon").innerHTML = '<rect x="6" y="5" width="4.5" height="14" rx="1" fill="currentColor"/><rect x="13.5" y="5" width="4.5" height="14" rx="1" fill="currentColor"/>';
+  $("#play").setAttribute("aria-label", "Stop beat");
+  requestAnimationFrame(uiLoop);
+}
+function stop() {
+  playing = false; clearInterval(timer); uiQ.length = 0;
+  $("#playIcon").innerHTML = '<path d="M7 4.5v15l13-7.5z" fill="currentColor"/>';
+  $("#play").setAttribute("aria-label", "Play beat");
+  $$("#lights i").forEach(i => i.classList.remove("on")); $$("#fBeats i").forEach(i => i.classList.remove("on"));
+  $("#barNum").textContent = "–"; curBar = -1; renderPrompter();
+}
+$("#play").onclick = () => playing ? stop() : start();
+const lights = $("#lights"); lights.innerHTML = "<i></i>".repeat(16);
+let curBar = -1;
+function uiLoop() {
+  if (!playing) return;
+  while (uiQ.length && uiQ[0].t <= ctx.currentTime) {
+    const ev = uiQ.shift(); const B = BEATS[beat];
+    const li = Math.floor(ev.step * 16 / B.steps);
+    $$("#lights i").forEach((el, i) => el.classList.toggle("on", i === li));
+    const beatN = Math.floor(ev.step / (B.steps / 4));
+    $$("#fBeats i").forEach((el, i) => el.classList.toggle("on", i === beatN));
+    if (ev.step === 0) onBar(ev.bar);
+  }
+  requestAnimationFrame(uiLoop);
+}
+function onBar(b) {
+  curBar = b;
+  $("#barNum").textContent = b === 0 ? "in" : b;
+  renderPrompter();
+  if (b > 0 && (b - 1) % +$("#dropEvery").value === 0 && b > 1) nextDrop();
+}
+const beatSel = $("#beatSel"), bpmIn = $("#bpm");
+beatSel.value = beat; bpmIn.value = bpm; $("#bpmVal").textContent = bpm;
+beatSel.onchange = () => { beat = beatSel.value; bpm = BEATS[beat].bpm; bpmIn.value = bpm; $("#bpmVal").textContent = bpm; store.set("beat", beat); store.set("bpm", bpm); if (playing) { stop(); start(); } };
+bpmIn.oninput = () => { bpm = +bpmIn.value; $("#bpmVal").textContent = bpm; store.set("bpm", bpm); };
+
+/* ================= flow teleprompter ================= */
+function flowGuide(n) {
+  if (!n) return "The beat counts you in for one bar, then the prompter moves to the next line on every bar.";
+  if (n <= 9) return `${n} syllables: laid back. Let the words breathe and land the last one on beat 4.`;
+  if (n <= 13) return `${n} syllables: triplet territory. Three per beat, bouncing.`;
+  if (n <= 17) return `${n} syllables: sixteenth notes, four per beat. Stay crisp on the consonants.`;
+  return `${n} syllables: that's double time. Either speed up hard or trim this bar.`;
+}
+function renderPrompter() {
+  if (!analysis) return;
+  const bars = analysis.bars;
+  const cur = $("#fCur"), prev = $("#fPrev"), next = $("#fNext");
+  const lineHTML = b => b.tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}">${esc(t.t)}</span>` : esc(t.t)).join("");
+  if (!bars.length) { cur.textContent = "Write some bars on the pad first."; prev.textContent = next.textContent = ""; $("#fGuide").textContent = flowGuide(0); return; }
+  let idx;
+  if (!playing || curBar < 0) { idx = 0; $("#fBar").textContent = "–"; }
+  else if (curBar === 0) { prev.textContent = ""; cur.textContent = "One, two, three, four…"; next.innerHTML = lineHTML(bars[0]); $("#fBar").textContent = "count-in"; $("#fLine").textContent = "1"; $("#fSyl").textContent = bars[0].syl; $("#fGuide").textContent = flowGuide(bars[0].syl); return; }
+  else { idx = (curBar - 1) % bars.length; $("#fBar").textContent = curBar; }
+  const b = bars[idx];
+  prev.innerHTML = idx > 0 ? lineHTML(bars[idx - 1]) : "";
+  cur.innerHTML = lineHTML(b);
+  next.innerHTML = bars[idx + 1] ? lineHTML(bars[idx + 1]) : (bars.length > 1 ? `<span class="muted">↻ ${lineHTML(bars[0])}</span>` : "");
+  $("#fLine").textContent = idx + 1; $("#fSyl").textContent = b.syl;
+  $("#fGuide").textContent = !playing ? "Press play. You get one bar of count-in clicks, then each line gets one bar." : flowGuide(b.syl);
+}
+
+/* ================= drills: word drop ================= */
+const DROP = ("lantern glacier verdict compass thunder velvet engine harbor ladder mirror phantom rocket signal shadow crystal anchor jungle marble needle orbit puzzle rhythm saddle " +
+  "satellite spiral trophy vapor volcano wallet whistle window winter hourglass chess diamond eclipse gravity hurricane kingdom laundry magnet midnight oxygen pilot prism " +
+  "quarter ransom sermon skyline subway telescope tornado venom voltage wildfire blueprint chandelier concrete dynamite elevator fingerprint gasoline headline jackpot " +
+  "keyboard lighthouse microphone neon pendulum quicksand receipt sculpture umbrella vinyl yacht zodiac shoelace sneakers passport mortgage cereal pigeon porcelain avalanche " +
+  "campfire ambulance crossword detour dominoes emerald fireworks garden graffiti hammer jigsaw lemonade marathon metronome mosaic nickel overtime paycheck radio rubber " +
+  "sandpaper spaceship statue tsunami turbulence waterfall cactus casino ceiling cherry chimney cobra comet copper coyote dragon falcon feather fortune glitter gorilla " +
+  "helmet honey iceberg island jacket kettle lobster meteor mustard ocean panther parachute pepper piano pirate planet pretzel pyramid rainbow raven ribbon rooftop " +
+  "scarecrow scorpion shipwreck silver skeleton snowflake spider stadium sunrise tiger tractor treasure trumpet tuxedo vampire violin vulture walrus wizard").split(" ");
+let dropOrder = [], dropI = 0;
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+function dropRhymes(w) {
+  const r = findRhymes(w); if (!r || r.missing) return [];
+  return [...r.perfect.slice(0, 5).map(e => e.w), ...r.multis.slice(0, 4).map(x => x.e.w)].slice(0, 7);
+}
+function nextDrop() {
+  if (!dropOrder.length || dropI >= dropOrder.length - 1) { dropOrder = shuffle(DROP.slice()); dropI = 0; } else dropI++;
+  const w = dropOrder[dropI], nx = dropOrder[(dropI + 1) % dropOrder.length];
+  $("#dropWord").textContent = w; $("#dropNext").textContent = nx;
+  $("#dropRhymes").innerHTML = dropRhymes(w).map(x => `<span class="chip">${esc(x)}</span>`).join("") || '<span class="muted">Free pick. Rhyme it your way.</span>';
+}
+$("#dropSkip").onclick = nextDrop;
+
+/* ================= drills: rhyme race ================= */
+const RACE = ["night", "flow", "game", "street", "money", "pain", "cold", "fire", "mind", "heart", "real", "gold", "time", "block", "crown", "pressure", "motion", "pocket",
+  "danger", "hunger", "hustle", "story", "power", "action", "station", "focus", "level", "battle", "matter", "rain", "space", "light", "dream", "fame", "mission", "silence"];
+let raceT = null, raceEnd = 0, raceUsed = new Set(), raceScore = 0, raceWord = "pocket";
+$("#raceBest").textContent = store.get("raceBest", 0);
+function raceTick() {
+  const left = Math.max(0, Math.ceil((raceEnd - Date.now()) / 1000));
+  $("#raceTimer").textContent = `0:${String(left).padStart(2, "0")}`;
+  if (left <= 0) {
+    clearInterval(raceT); raceT = null; $("#raceIn").disabled = true; $("#raceStart").textContent = "Play again";
+    const best = store.get("raceBest", 0);
+    if (raceScore > best) { store.set("raceBest", raceScore); $("#raceBest").textContent = raceScore; toast("New best: " + raceScore); } else toast("Time. You scored " + raceScore);
+  }
+}
+$("#raceStart").onclick = () => {
+  raceWord = RACE[Math.floor(Math.random() * RACE.length)];
+  $("#raceTarget").textContent = raceWord; raceUsed = new Set(); raceScore = 0; $("#raceScore").textContent = 0; $("#raceLog").innerHTML = "";
+  raceEnd = Date.now() + 45000; clearInterval(raceT); raceT = setInterval(raceTick, 200); raceTick();
+  const inp = $("#raceIn"); inp.disabled = false; inp.value = ""; inp.placeholder = "Type a rhyme, hit Enter"; inp.focus(); $("#raceStart").textContent = "Restart";
+};
+$("#raceForm").addEventListener("submit", e => {
+  e.preventDefault(); if (!raceT) return;
+  const inp = $("#raceIn"); const w = inp.value.trim().toLowerCase(); inp.value = "";
+  if (!w) return;
+  let p = raceUsed.has(w) ? 0 : classify(raceWord, w); raceUsed.add(w);
+  raceScore += p; $("#raceScore").textContent = raceScore;
+  const span = document.createElement("span"); span.className = "p" + p; span.textContent = w + (p ? " +" + p : ""); $("#raceLog").prepend(span);
+});
+
+/* ================= drills: flip it ================= */
+const FLIPS = [
+  ["bars", "lines of a verse", "jail cell bars", "I been locked in the booth, every night serving bars"],
+  ["pen", "what you write with", "the penitentiary", "Never caught a case, but I'm still doing time in the pen"],
+  ["sentence", "a line of words", "a prison term", "Every sentence I write, I'm doing time on the page"],
+  ["record", "a song you press", "a criminal history", "My record stays clean, I just break it every time I drop"],
+  ["current", "electric charge", "what's happening now", "Stay current, every verse I write got a little shock in it"],
+  ["bank", "where money sits", "the edge of a river", "Money by the water, now I'm living on the bank"],
+  ["cell", "a phone", "a prison room", "Locked in my cell all night, just texting out my bars"],
+  ["change", "loose coins", "becoming different", "Came up counting change, now I'm not the same man"],
+  ["fire", "flames", "losing your job", "Boss said my work was fire, then he fired me"],
+  ["check", "a paycheck", "a chess threat", "Cash the check, then I check the king, that's mate"],
+  ["ring", "jewelry", "where boxers fight", "Rang the bell in the ring, now I'm shopping for a ring"],
+  ["press", "the media", "to push down hard", "The press keep pressing, I just iron out the wrinkles"],
+  ["key", "opens a lock", "a musical key", "Stayed in key, that's the key to getting through the door"],
+  ["board", "a plank of wood", "the company board", "Got a seat on the board 'cause I nailed every plank"],
+  ["match", "lights a fire", "an equal", "Strike like a match, but you'll never meet your match"],
+  ["capital", "money to invest", "a country's main city", "Raising capital in the capital, my name in capitals"],
+  ["draft", "a first version", "picked by a team", "First draft and I'm already going number one"],
+  ["bread", "money", "a loaf you eat", "Break bread with the team, never let it go stale"],
+  ["scale", "a weighing tool", "musical notes in order", "I run every scale while they still weighing their options"],
+  ["trunk", "back of a car", "middle of a tree", "Family tree solid, got the whole crew in the trunk"],
+  ["rock", "a stone", "to wear something well", "I rock what I want, and my word is a rock"],
+  ["lines", "lyrics", "a queue of people", "Long lines at the door just to hear me spit lines"],
+  ["stars", "famous people", "lights in the sky", "Rated five stars, still I'm reaching for the real ones"],
+  ["hood", "the neighborhood", "the top of a jacket", "Pulled the hood up, and the hood had my back"],
+  ["plates", "dinner dishes", "license plates", "Clean plates on the table and clean plates on the car"],
+];
+let flipI = -1;
+function nextFlip() {
+  flipI = (flipI + 1 + Math.floor(Math.random() * 3)) % FLIPS.length;
+  const [w, a, b, ex] = FLIPS[flipI];
+  $("#flipWord").textContent = w;
+  $("#flipMeanings").innerHTML = `<div><b>Meaning one</b>${esc(a)}</div><div><b>Meaning two</b>${esc(b)}</div>`;
+  $("#flipEx").textContent = "“" + ex + "”"; $("#flipIn").value = "";
+}
+$("#flipNext").onclick = nextFlip;
+$("#flipAdd").onclick = () => {
+  const t = $("#flipIn").value.trim(); if (!t) { toast("Write a bar first"); return; }
+  pad.value = pad.value.replace(/\s*$/, "") + (pad.value.trim() ? "\n" : "") + t; pad.dispatchEvent(new Event("input")); $("#flipIn").value = ""; toast("Added to the pad");
+};
+
+/* ================= drills: devices ================= */
+const DEVICES = [
+  ["Multisyllable rhyme", "Match the vowel sounds of two or more syllables in a row. The consonants can change; the vowels carry it.", "Pocket full of notes, every page is a rocket\nLock it in the vault, ain't nobody gonna stop it", "Type a phrase in the Rhyme Engine and look at Phrase multis."],
+  ["Internal rhyme", "Rhyme inside the bar, not only at the end. It makes a verse sound dense even at a slow tempo.", "I stay late, weigh fate, carve my name in the slate", "Take one of your bars and put a rhyme for its last word in the middle."],
+  ["Simile", "Compare with like or as, and pick an image nobody would expect. The surprise is the point.", "Calm like a pilot when the engine's on fire", "Replace every “cold as ice” with something you've actually seen."],
+  ["Metaphor", "Say it is the thing, then stay inside that world for a few bars.", "My notebook's a gym, every page is a rep\nI don't skip leg day, I just run up the steps", "Pick a world (a kitchen, a courtroom) and write four bars inside it."],
+  ["Punchline", "Set up an expectation in the first half, then flip it with the last word. Put the flip on beat 4.", "They said I'd never make it out the basement\nNow I own the building, still record in the basement", "Write the last word first, then build the setup backward."],
+  ["Alliteration", "Repeat a starting consonant to give a bar texture and bounce.", "Paper planes, pencil pushing, pages piling to the ceiling", "Pick a letter and write a bar where five words start with it."],
+  ["Callback", "Bring an image from earlier in the verse back later with a new meaning. It rewards people who listen twice.", "Bar 2: “I was sleeping on the floor”\nBar 14: “Now I'm buying every floor”", "Underline one image in your verse and bring it back in your last bar."],
+  ["Concrete detail", "Specifics beat summaries. A time, a number, a street, a smell makes the listener see it.", "4 a.m., microwave light, cold noodles, rewriting the hook", "Find your vaguest bar and add one real detail."],
+];
+$("#devices").innerHTML = DEVICES.map(d => `<div class="card device"><h3>${esc(d[0])}</h3><p class="how">${esc(d[1])}</p><p class="ex">${esc(d[2])}</p><div class="try">Try: ${esc(d[3])}</div></div>`).join("");
+
+/* ================= boot ================= */
+refresh();
+search("pocket");
+nextDrop(); nextFlip();
+setView(store.get("view", "write"));
+setDrill(store.get("drill", "drop"));
+</script>
