@@ -345,7 +345,7 @@ details.paste[open] summary { margin-bottom: 10px; }
                 <select id="lang"><option value="explicit" selected>Explicit</option><option value="clean">Clean</option></select></label>
             </div>
           </details>
-          <p class="fine">Every song keeps it real: the stuff the rapper's hits are about, high stakes and raw feeling, no fake flexing, no filler bars. It's written fresh and never reuses lines from the rapper or the song you paste.</p>
+          <p class="fine">Every song is all sauce: swagger, slick punchlines, tight rhymes, no filler. It's written fresh and never reuses lines from the rapper or the song you paste.</p>
         </div>
         <div class="card">
           <div class="card-head"><h2>Their style</h2><span class="eyebrow" id="styleWho">waiting</span></div>
@@ -1365,25 +1365,24 @@ const NO_COPY = who => who === PASTED
   : `- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, especially ${who}'s: no lines, hooks, ad-libs, catchphrases or song titles from their songs, and don't say ${who}'s name in the song.`;
 const CRAFT = `What makes it good:
 - It sounds like a real record from that artist, not a poem or a speech: real slang, contractions, attitude.
-- One story. Plan it in the STORY line. Verse 1 sets it up with a specific moment, Verse 2 shows what came after, and the hook says the feeling plainly. Every bar follows from the one before, so someone could retell what happened.
-- Subject: what that artist's hits are about (streets, loss, loyalty, betrayal, love gone wrong, paranoia, mama, coming up from nothing). High stakes, raw feeling. No boring everyday chores and no fake flexing.
-- Every bar earns its spot: a cold image, a punchline, a twist or a line that hurts. No filler, no clichés, nothing that only sounds cool.
+- Sauce over story. It does NOT need a storyline or to make perfect sense. Bars can jump topic like a real freestyle as long as every one drips: swagger, slick wordplay, cocky punchlines, catchy cadence, attitude.
+- Vibe of the artist's hits (their slang, their energy, their topics). No boring everyday chores. Confidence, not fake millionaire stuff.
+- Every bar earns its spot: quotable, slick, hard. No filler and no clichés.
 - Rhymes: each couplet (bars 1-2, 3-4, and so on) ends on words with the same stressed vowel sound, mostly two- or three-syllable multis, with internal rhymes inside the bars. Never pick a word just because it rhymes.
 - The verses never repeat a word, a phrase or an end word (small words like I, the, my are fine). Only the hook repeats.
 - Keep bars about the same length so it's rappable.`;
-const EXAMPLE = `Quality bar: an original example of how tight it should be (one story, multis, a punchline at the end). Don't reuse any of it:
-Mama said, "Don't trust 'em," I ain't listen, now I'm learnin'
-Gave my last to my dawg, watched the bridge I built burnin'
-Same one I put on, now he duckin' when he see me
-We was splittin' one plate, now he act like he don't need me
-I ain't even mad, I'm just tired of the lyin'
-Three years of loyalty, he traded for a little shine
-Now my circle small, it's just me and my reflection
-Every scar that he left me was a lesson, not a weapon`;
+const EXAMPLE = `Quality bar: an original example of the sauce level (swagger, multis, slick lines). Don't reuse any of it:
+Walked in cold, now the whole room catchin' feelings
+Low-key, but my name still bouncin' off the ceilings
+She said, "Who is that?" Her friend said, "Don't even"
+I ain't need a reason, I just needed a weekend
+They watchin' my moves like it's pay-per-view
+I don't chase, I replace, that's a lesson for you
+Ex keep callin', let it ring, I'm busy
+Got a new main thing and she don't even miss me`;
 const KEEP_IT_REAL = CRAFT;
 const langRule = () => $("#lang").value === "clean" ? "Language: clean, no profanity." : "Language: explicit. Curse the way real people talk, but never use slurs.";
 const FORMAT = `Format exactly like this, with nothing before or after:
-STORY: one sentence saying what happens in this song
 STYLE: 2 or 3 sentences naming the artist's techniques this song uses
 TITLE: the song title
 [Section name]
@@ -1527,15 +1526,15 @@ function fixPrompt(song, misses, repeats) {
     return `- "${a.raw.trim()}" / "${b.raw.trim()}" don't rhyme${sug ? ` (rhymes for "${a.end.t}": ${sug})` : ""}`;
   }).join("\n");
   const problems = [list, repeats.length ? `- Repeated in the verses: ${repeats.join(", ")}` : ""].filter(Boolean).join("\n");
-  return `You're a tough producer and ghostwriter. Turn this draft into a hit without changing what it's about.
+  return `You're a tough producer and ghostwriter. Make this draft saucier and harder.
 
 DRAFT:
 ${song}
 
 Do this:
-1. Read it like a listener. Silently score every bar from 1 to 10 on three things: it makes sense in the story, it hits hard, it rhymes tight. Rewrite every bar under 8 until it's an 8 or better, and keep the bars that already hit.
-2. Make sure the story is easy to follow from start to finish, and that the last bars of Verse 2 land the strongest punchline in the song.
-${problems ? `3. Fix these problems Bar Lab's rhyme checker found:\n${problems}\n` : ""}Keep the same story, the same sections, and both hooks word for word the same.
+1. Read it like a listener. Silently score every bar from 1 to 10 on three things: sauce (swagger, slickness, quotable), how hard it hits, how tight it rhymes. Rewrite every bar under 8 until it's an 8 or better, and keep the bars that already hit. It doesn't need to tell a story.
+2. Make the hook catchier, and end Verse 2 on the coldest line in the song.
+${problems ? `3. Fix these problems Bar Lab's rhyme checker found:\n${problems}\n` : ""}Keep the same vibe, the same sections, and both hooks word for word the same.
 
 ${CRAFT}
 ${langRule()}
