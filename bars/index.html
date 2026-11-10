@@ -334,7 +334,7 @@ details.paste[open] summary { margin-bottom: 10px; }
                   <option value="hook">Hook + short verse</option>
                 </select></label>
               <label class="fl" for="lang">Language
-                <select id="lang"><option value="clean">Clean</option><option value="explicit">Explicit OK</option></select></label>
+                <select id="lang"><option value="explicit" selected>Explicit</option><option value="clean">Clean</option></select></label>
             </div>
             <label class="fl" for="artistLyrics">Paste lyrics to measure their style <span class="opt">for rappers Claude doesn't know</span></label>
             <textarea class="mini" id="artistLyrics" placeholder="A verse, one bar per line. Bar Lab measures the rhyme scheme, syllables and density here. Only those numbers go to Claude, never the lyrics."></textarea>
@@ -1286,6 +1286,7 @@ $("#moods").addEventListener("click", e => {
   $("#mood").dispatchEvent(new Event("input")); syncChips();
 });
 // remember the form for this viewer
+try { if (localStorage.getItem("barlab.f.lang") === '"clean"' && !localStorage.getItem("barlab.langv2")) localStorage.removeItem("barlab.f.lang"); localStorage.setItem("barlab.langv2", "1"); } catch (e) {}
 ["artist", "mood", "story", "details", "shape", "lang"].forEach(id => {
   const el = $("#" + id); const v = store.get("f." + id, null); if (v !== null) el.value = v;
   el.addEventListener("input", () => { store.set("f." + id, el.value); if (id === "mood") syncChips(); });
@@ -1344,6 +1345,7 @@ const KEEP_IT_REAL = `Keep it real. This is the most important part:
 - The world of the song is everyday working-class and lower-middle-class life: rent due before the check clears, overtime and double shifts, a car that barely starts, the bus at 6am, overdraft fees, stretching groceries, a landlord calling, a mom working too hard, a little brother to look after, friends who went the wrong way, staying out of trouble, being tired and doing it anyway, small wins that mean a lot.
 - No fake flexing. No Lambos, jets, mansions, millions, designer labels, bottles, or stacks of cash as if the narrator has them. Money talk uses real numbers people live with (forty in the tank, a two-week check, two hundred short on rent). Dreaming about more is fine if it's clearly a dream they're working toward.
 - No clichés and no filler. Nothing like "on my grind", "top of the game", "chasing the bag", "haters", "started from the bottom". Every bar has to hit: a specific image, a true feeling, a punchline, or a rhyme that lands. If a line could be cut without losing anything, rewrite it.
+- Don't spam words. No repeating the same word or phrase over and over, no stacked ad-libs ("yeah, yeah, uh"), no padding. Only the hook repeats.
 - Honest beats tough. Show the pressure, the pride, the fear and the love the way real people feel them. Don't preach and don't glamorize the street.`;
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
@@ -1361,7 +1363,7 @@ ${fp ? `\nBar Lab measured lyrics the listener pasted from this artist: ${JSON.s
 Mood: ${mood || "pick the mood ${artist} is best known for"}
 ${story ? `Make it about the listener's life, in first person as them: ${story}` : "Write it about real, everyday experiences that fit the mood, so a regular listener feels like it's about them."}
 ${details ? `Work in these real details: ${details}\n` : ""}Song shape: ${SHAPES[$("#shape").value]}
-Language: ${$("#lang").value === "clean" ? "clean, no profanity" : "explicit language is fine where it fits, no slurs"}
+Language: ${$("#lang").value === "clean" ? "clean, no profanity" : "explicit. Curse the way real people talk when they're pressed, but never use slurs"}
 
 ${KEEP_IT_REAL}
 
