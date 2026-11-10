@@ -345,7 +345,7 @@ details.paste[open] summary { margin-bottom: 10px; }
                 <select id="lang"><option value="explicit" selected>Explicit</option><option value="clean">Clean</option></select></label>
             </div>
           </details>
-          <p class="fine">Every song keeps it real: everyday working-class life, real numbers, no fake flexing, no filler bars. It's written fresh and never reuses lines from the rapper or the song you paste.</p>
+          <p class="fine">Every song keeps it real: the stuff the rapper's hits are about, high stakes and raw feeling, no fake flexing, no filler bars. It's written fresh and never reuses lines from the rapper or the song you paste.</p>
         </div>
         <div class="card">
           <div class="card-head"><h2>Their style</h2><span class="eyebrow" id="styleWho">waiting</span></div>
@@ -1365,25 +1365,26 @@ const NO_COPY = who => who === PASTED
   : `- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, especially ${who}'s: no lines, hooks, ad-libs, catchphrases or song titles from their songs, and don't say ${who}'s name in the song.`;
 const KEEP_IT_REAL = `How it has to sound:
 - Like a real rapper on a real record, not a poem, not a motivational speech, not a greeting card. Talk the way people from the hood and working-class neighborhoods actually talk: slang, contractions, attitude, humor, confidence even when it hurts.
-- Real life, not a checklist of struggle props. Pick one or two true, specific situations that fit the mood and go deep on them. Don't list hardships, and don't explain feelings in flat sentences. Show them in moments and details.
-- No fake flexing. The narrator isn't rich. If money comes up, it's real-life money.
+- Real, not regular. No boring day-to-day stuff like bus rides, groceries, bills or a job shift unless the listener asked for it. Write about what the artist's hits are about: the streets, losing people, friends locked up or gone, opps, betrayal, trust issues, love that went wrong, paranoia, mama stressing, survival, coming up from nothing. High stakes, raw feeling, told from inside it.
+- Pick one or two situations and go deep with specific moments and details. Don't explain feelings in flat sentences; show them.
+- No fake flexing. Any shine has to be earned and set against where they came from.
 - Every bar has to be quotable: a punchline, a twist, a cold image or a line that hurts. No filler, no clichés, no forced rhymes, no rhyming-dictionary words nobody says.
 - No word spam. No repeating the same word over and over, no stacked ad-libs. Only the hook repeats.
 - Ride the pocket: keep bars a similar length so they're rappable, and land the rhyme on the last word.
 `;
 const SEEDS = {
   heartbroken: ["heart", "lie", "gone", "alone", "trust", "cold", "pain", "night", "love", "phone"],
-  hungry: ["money", "broke", "work", "rent", "hustle", "pressure", "shift", "struggle", "check", "need"],
+  hungry: ["money", "broke", "starving", "hustle", "pressure", "block", "struggle", "risk", "real", "mama"],
   angry: ["fight", "fake", "snake", "pressure", "war", "blood", "cross", "mad", "problem", "shot"],
-  grateful: ["blessed", "mama", "family", "pray", "made", "grace", "change", "time", "light", "proud"],
+  grateful: ["blessed", "mama", "family", "pray", "made", "survived", "change", "brothers", "lost", "proud"],
   hopeful: ["dream", "change", "light", "rise", "faith", "tomorrow", "better", "day", "way", "try"],
   reflective: ["time", "life", "past", "lost", "learn", "memory", "remember", "young", "grown", "mirror"],
   flexing: ["clean", "fresh", "shine", "proud", "made", "better", "worked", "earned", "level", "real"],
-  motivated: ["work", "grind", "early", "push", "focus", "goal", "climb", "hungry", "chance", "move"],
+  motivated: ["push", "hungry", "focus", "climb", "chance", "move", "pressure", "doubt", "risk", "real"],
   lonely: ["alone", "room", "quiet", "empty", "phone", "night", "cold", "gone", "nobody", "away"],
   celebrating: ["night", "party", "crew", "made", "toast", "proud", "dance", "shine", "family", "free"],
 };
-const GENERAL = ["pain", "real", "street", "block", "weight", "pocket", "problem", "trouble", "living", "pressure", "mama", "struggle"];
+const GENERAL = ["pain", "real", "street", "block", "opps", "problem", "trouble", "trust", "pressure", "mama", "struggle", "gone", "cold", "fake"];
 function rhymeBank(mood) {
   const key = Object.keys(SEEDS).find(k => (mood || "").toLowerCase().includes(k));
   const pool = shuffle([...(key ? SEEDS[key] : []), ...shuffle(GENERAL.slice()).slice(0, key ? 3 : 8)]);
@@ -1446,7 +1447,7 @@ ${ref}
 Bar Lab measured it: ${JSON.stringify(fp)}. Match these numbers.
 ` : ""}
 Mood: ${mood || "pick the mood ${artist} is best known for"}
-${story ? `Make it about the listener's life, in first person as them: ${story}` : "Write it about real, everyday experiences that fit the mood, so a regular listener feels like it's about them."}
+${story ? `Make it about the listener's life, in first person as them: ${story}` : `Write about the subjects ${named ? `${artist}'s hits are known for` : "the reference song deals with"}, in first person, so it hits like a real record from that world.`}
 ${details ? `Work in these real details: ${details}\n` : ""}Song shape: ${SHAPES[$("#shape").value]}
 
 ${RHYME_RULES}
