@@ -1385,7 +1385,7 @@ const NO_COPY = who => who === PASTED
   : `- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, especially ${who}'s: no lines, hooks, ad-libs, catchphrases or song titles from their songs, and don't say ${who}'s name in the song.`;
 const CRAFT = `What makes it good:
 - It sounds like a real record from that artist, not a poem or a speech: real slang, contractions, attitude.
-- Sauce over story. It does NOT need a storyline or to make perfect sense. Bars can jump topic like a real freestyle as long as every one drips: swagger, slick wordplay, cocky punchlines, catchy cadence, attitude.
+- Sauce AND sense. Swagger, slick wordplay, cocky punchlines, catchy cadence, attitude, but every bar has to make sense and stay on the song's topic (what the hook is about). No random nonsense, no lines that only exist to rhyme.
 - Vibe of the artist's hits (their slang, their energy, their topics). No boring everyday chores.
 - Hustler mentality all through it: getting it out the mud, flipping a little into a lot, staying down till you come up, never folding, counting up while they sleep, watching your circle. Money talk is tied to the grind and where they came from, not fake rich fantasies.
 - Every bar earns its spot: quotable, slick, hard. No filler and no clichés.
@@ -1579,7 +1579,7 @@ DRAFT:
 ${song}
 
 Do this:
-1. Read it like a listener. Silently score every bar from 1 to 10 on three things: sauce (swagger, slickness, quotable), how hard it hits, how tight it rhymes. Rewrite every bar under 8 until it's an 8 or better, and keep the bars that already hit. It doesn't need to tell a story.
+1. Read it like a listener. Silently score every bar from 1 to 10 on three things: it makes sense, it has sauce (swagger, slick, quotable), it rhymes tight. Rewrite every bar under 8 until it's an 8 or better, and keep the bars that already hit. Replace any bar that's nonsense or off-topic with one that makes sense.
 2. Make the hook catchier, and end Verse 2 on the coldest line in the song.
 ${problems ? `3. Fix these problems Bar Lab's rhyme checker found:\n${problems}\n` : ""}Keep the same vibe, the same sections, and both hooks word for word the same.
 
@@ -1590,10 +1590,50 @@ ${NO_COPY(st.artist)}
 
 Return only the finished song. ${FORMAT}`;
 }
+/* Rewrite only the bars whose couplet doesn't rhyme, forcing them to end on a word the engine knows rhymes. */
+async function lockRhymes(text) {
+  for (let round = 1; round <= 2; round++) {
+    const { lines } = splitSong(text);
+    const chk = rhymeCheck(lines.join("\n")); st.check = chk; renderSong(text);
+    if (!chk.misses.length) return text;
+    note(`Locking in rhymes on ${chk.misses.length} couplet${chk.misses.length > 1 ? "s" : ""} (round ${round})…`);
+    const jobs = chk.misses.map(([a, b]) => {
+      const r = a.end && a.end.ent ? findRhymes(a.end.w) : null;
+      const ok = e => e.rank < 20000 && e.w.length >= 2 && !e.w.includes("'");
+      const words = r && !r.missing ? [...r.perfect.filter(ok).slice(0, 14).map(e => e.w), ...r.multis.filter(x => ok(x.e)).slice(0, 6).map(x => x.e.w)] : [];
+      return { keep: a.raw.trim(), rewrite: b.raw.trim(), mustEndWithOneOf: words };
+    }).filter(j => j.mustEndWithOneOf.length);
+    if (!jobs.length) return text;
+    let fixes;
+    try {
+      fixes = await sampleFn.json(`You are fixing rhymes in a rap song in the style of ${st.artist}. For each item, rewrite the "rewrite" bar so that:
+- its LAST word is exactly one of the words in mustEndWithOneOf (pick the one that makes the most sense),
+- it follows naturally from the "keep" bar and makes sense,
+- it keeps the same vibe, slang and length, and sounds like a real rapper wrote it.
+${langRule()}
+
+Items: ${JSON.stringify(jobs)}
+
+Reply with only JSON: {"fixes": [{"old": "the exact rewrite bar", "new": "the new bar"}]}`, { signal: st.ctl.signal, cache: false, effort: "low" });
+    } catch (e) { if (e.code === "cancelled") throw e; return text; }
+    const list = Array.isArray(fixes && fixes.fixes) ? fixes.fixes : [];
+    let changed = false;
+    for (const f of list) {
+      if (!f || typeof f.old !== "string" || typeof f.new !== "string" || !f.new.trim()) continue;
+      const old = f.old.trim();
+      // replace every copy so both hooks stay identical
+      const next = text.split("\n").map(l => l.trim() === old ? f.new.trim() : l).join("\n");
+      if (next !== text) { text = next; changed = true; }
+    }
+    if (!changed) return text;
+  }
+  const { lines } = splitSong(text); st.check = rhymeCheck(lines.join("\n")); renderSong(text);
+  return text;
+}
 async function runSong(prompt, isFix, pass = 0) {
   st.ctl = new AbortController(); if (!isFix) { st.lastPrompt = prompt; note(""); } st.check = null; setBusy(true);
   const t0 = Date.now(); let started = false;
-  const label = pass === 2 ? "Rhymes still weak in spots. One more pass on just those bars…" : isFix ? "Producer pass: rewriting weak bars, tightening rhymes…" : `Writing a draft in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
+  const label = isFix ? "Producer pass: rewriting weak bars, tightening rhymes…" : `Writing a draft in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
   if (isFix) $("#songOut").insertAdjacentHTML("afterbegin", `<p class="status" id="wait">${label}</p>`); else $("#songOut").innerHTML = `<p class="status" id="wait">${label}</p>`;
   const tick = setInterval(() => { const w = $("#wait"); if (!started && w) w.textContent = label.replace(/&#?\w+;/g, "") + " " + Math.round((Date.now() - t0) / 1000) + "s"; }, 1000);
   if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "center" });
@@ -1606,10 +1646,11 @@ async function runSong(prompt, isFix, pass = 0) {
       clearInterval(tick); setBusy(false);
       return runSong(fixPrompt(r.text, st.check.misses, st.check.repeats), true, 1);
     }
-    if (pass === 1 && !r.truncated && st.check.misses.length + st.check.singles.length > st.check.pairs * .25) {
-      clearInterval(tick); setBusy(false);
-      return runSong(fixPrompt(r.text, st.check.misses, st.check.repeats), true, 2);
+    if (isFix && !r.truncated && st.check.misses.length) {
+      clearInterval(tick);
+      st.song = await lockRhymes(st.song);
     }
+    note(st.check && st.check.misses.length ? `${st.check.misses.length} couplet${st.check.misses.length > 1 ? "s" : ""} still don't rhyme. Hit Try another, or tell Revise which bars.` : "");
     saveSong();
   } catch (e) {
     if (e.text) { st.song = e.text; renderSong(e.text); } else if (e.code !== "cancelled") $("#songOut").innerHTML = "";
