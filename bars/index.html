@@ -1494,14 +1494,14 @@ const SHAPES = {
   hook: "[Hook] 8 bars, [Verse] 8 bars",
 };
 const STYLE_CARDS = {
-  "jay montana": `Jay Montana (Mobile, Alabama) style guide. Follow it closely:
-- Melodic, soulful sing-rap: bluesy, crooned phrasing that floats over the beat instead of barking. Smooth, never shouted.
-- Beats in the Mobile tradition: light, sunny, country-sounding acoustic guitar. Write with that laid-back, swaying bounce in mind.
-- Wordplay-heavy punchlines delivered calm, like he's just telling you: slick double meanings and similes that land at the end of the bar.
-- Hustler at heart: getting money from nothing, staying down, flipping it, moving smart and quiet, loyalty to the ones who were there. Mixed with vulnerability about love, trust and pain, said honest and a little hurt.
-- Southern slang and drawl. Stretch the long vowel at the end of bars so the rhymes ring out when sung.
-- Rhyme scheme: tight couplets on long open vowels (oh, ay, ee, I) that ring out when crooned, mostly two-syllable multis, with an internal rhyme setting up each punchline. Mid-tempo, about 9 to 12 syllables a bar.
-- Hooks are sung, simple and catchy, built around one repeated phrase.`,
+  "jay montana": `Jay Montana (Mobile, Alabama) style guide, measured by Bar Lab from 8 songs on Montana 3 (Deluxe). Follow it closely:
+- Flow: full, conversational bars of about 14 to 17 syllables (median 16). He talks his shit in long run-on lines that spill across the beat, not short choppy bars.
+- Rhyme density is the signature: about 2 rhyming words INSIDE every bar, and roughly 4 in 10 bars carry a two-syllable multi. Rhymes chain inside the bar and into the next bar, so the whole verse sounds stacked.
+- Favorite rhyme sounds: the short "a" (back, that, mad, cash), the long "ee" (me, leave, see), and two-syllable endings like "ah-uh" (problem, posted) and "ih-uh" (living, with 'em). Lean on these.
+- Delivery: melodic and soulful, bluesy croons over sunny, country-sounding acoustic guitar. Smooth and confident, never shouted.
+- Topics: hustler at heart. Getting money from nothing, working while they sleep, staying down, moving smart, loyalty and fake people, plus honest pain about love and trust.
+- Wordplay-heavy punchlines delivered calm, landing at the end of the bar.
+- Hooks are sung, simple and catchy, built around one repeated phrase.``,
 };
 const styleCard = artist => STYLE_CARDS[(artist || "").toLowerCase().replace(/\s+/g, " ").trim()] || "";
 function songPrompt(artist, mood) {
