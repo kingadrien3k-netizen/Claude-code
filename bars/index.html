@@ -255,6 +255,7 @@ details.paste[open] summary { margin-bottom: 10px; }
 .song .sec { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--margin); margin: 18px 0 4px; font-weight: 600; }
 .song .sec:first-child { margin-top: 0; }
 .song .ly { overflow-wrap: anywhere; }
+.song .w { cursor: default; }
 .notes { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); }
 .notes ul { margin: 6px 0 0; padding-left: 20px; font-size: 14px; display: grid; gap: 4px; }
 .status { font-size: 14px; color: var(--muted); }
@@ -1366,6 +1367,58 @@ const KEEP_IT_REAL = `How it has to sound:
 - No word spam. No repeating the same word over and over, no stacked ad-libs. Only the hook repeats.
 - Ride the pocket: keep bars a similar length so they're rappable, and land the rhyme on the last word.
 `;
+const SEEDS = {
+  heartbroken: ["heart", "lie", "gone", "alone", "trust", "cold", "pain", "night", "love", "phone"],
+  hungry: ["money", "broke", "work", "rent", "hustle", "pressure", "shift", "struggle", "check", "need"],
+  angry: ["fight", "fake", "snake", "pressure", "war", "blood", "cross", "mad", "problem", "shot"],
+  grateful: ["blessed", "mama", "family", "pray", "made", "grace", "change", "time", "light", "proud"],
+  hopeful: ["dream", "change", "light", "rise", "faith", "tomorrow", "better", "day", "way", "try"],
+  reflective: ["time", "life", "past", "lost", "learn", "memory", "remember", "young", "grown", "mirror"],
+  flexing: ["clean", "fresh", "shine", "proud", "made", "better", "worked", "earned", "level", "real"],
+  motivated: ["work", "grind", "early", "push", "focus", "goal", "climb", "hungry", "chance", "move"],
+  lonely: ["alone", "room", "quiet", "empty", "phone", "night", "cold", "gone", "nobody", "away"],
+  celebrating: ["night", "party", "crew", "made", "toast", "proud", "dance", "shine", "family", "free"],
+};
+const GENERAL = ["pain", "real", "street", "block", "weight", "pocket", "problem", "trouble", "living", "pressure", "mama", "struggle"];
+function rhymeBank(mood) {
+  const key = Object.keys(SEEDS).find(k => (mood || "").toLowerCase().includes(k));
+  const pool = shuffle([...(key ? SEEDS[key] : []), ...shuffle(GENERAL.slice()).slice(0, key ? 3 : 8)]);
+  const out = [];
+  for (const w of pool) {
+    if (out.length >= 7) break;
+    const r = findRhymes(w); if (!r || r.missing) continue;
+    const common = e => e.rank < 15000 && e.w.length >= 3 && !e.w.includes("'");
+    const perfect = r.perfect.filter(common).slice(0, 8).map(e => e.w);
+    const multi = r.multis.filter(x => common(x.e)).slice(0, 7).map(x => x.e.w);
+    if (perfect.length + multi.length < 5) continue;
+    out.push(`${w}: ${perfect.join(", ")}${multi.length ? ` | multis: ${multi.join(", ")}` : ""}`);
+  }
+  return out.join("\n");
+}
+const RHYME_RULES = `How it has to rhyme. This is not optional:
+- Write in couplets: bars 1 and 2 of every section end on words that rhyme, then bars 3 and 4, and so on. The two end words must share the same stressed vowel sound and ending (pain / rain, cold / fold, pocket / lock it).
+- Go for multisyllable rhymes at the end of most couplets: match two or three syllables of vowel sound (problem / got 'em, pressure / dresser, family / can't be).
+- Put at least one internal rhyme in most bars: a word mid-bar that rhymes with the end word or with a word in the next bar.
+- Keep the same vowel sound going across a couplet so it sounds tight when rapped out loud.`;
+function endsRhyme(a, b) {
+  const x = a.end && a.end.I, y = b.end && b.end.I;
+  if (!x || !y) return false;
+  if (a.end.w === b.end.w) return false;
+  if (x.fam === y.fam || x.tail === y.tail) return true;
+  if (x.tv[0] === y.tv[0]) return true; // same stressed vowel: a slant rhyme that works in rap
+  return matchLen(x.v, y.v) >= 2;
+}
+function rhymeCheck(text) {
+  const A = analyse(text);
+  // group bars into sections using the original lines
+  const sections = []; let cur = [];
+  const barByLine = new Map(A.bars.map(b => [b.i, b]));
+  A.L.forEach(l => { if (SECTION.test(l.raw)) { if (cur.length) sections.push(cur); cur = []; } else if (barByLine.has(l.i)) cur.push(barByLine.get(l.i)); });
+  if (cur.length) sections.push(cur);
+  const misses = []; let pairs = 0;
+  sections.forEach(sec => { for (let k = 0; k + 1 < sec.length; k += 2) { pairs++; if (!endsRhyme(sec[k], sec[k + 1])) misses.push([sec[k], sec[k + 1]]); } });
+  return { A, pairs, misses };
+}
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
   radio: "[Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 12 bars, [Hook] repeated in full",
@@ -1391,6 +1444,11 @@ Bar Lab measured it: ${JSON.stringify(fp)}. Match these numbers.
 Mood: ${mood || "pick the mood ${artist} is best known for"}
 ${story ? `Make it about the listener's life, in first person as them: ${story}` : "Write it about real, everyday experiences that fit the mood, so a regular listener feels like it's about them."}
 ${details ? `Work in these real details: ${details}\n` : ""}Song shape: ${SHAPES[$("#shape").value]}
+
+${RHYME_RULES}
+
+RHYME BANK, grouped by sound from Bar Lab's pronunciation dictionary. Build couplets from these or from your own words with the same vowel sounds:
+${rhymeBank(mood)}
 Language: ${$("#lang").value === "clean" ? "clean, no profanity" : "explicit. Curse the way real people talk when they're pressed, but never use slurs"}
 
 ${KEEP_IT_REAL}
@@ -1428,8 +1486,11 @@ function renderSong(text) {
     $("#styleWho").textContent = st.artist;
     $("#styleOut").innerHTML = `<div class="sty"><p class="sum">${esc(style)}</p>${notes.length ? `<div><div class="sub">Where it shows up in your song</div><ol>${notes.map(n => `<li>${esc(n)}</li>`).join("")}</ol></div>` : ""}</div>`;
   }
+  const A = analyse(lines.join("\n")); const bars = new Map(A.bars.map(b => [b.i, b]));
+  const lineHTML = l => bars.has(l.i) ? bars.get(l.i).tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}${t.m ? " m" : ""}">${esc(t.t)}</span>` : esc(t.t)).join("") : esc(l.raw);
   $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") +
-    `<div class="song">${lines.map(l => !l.trim() ? "" : /^\s*\[[^\]]*\]\s*$/.test(l) ? `<div class="sec">${esc(l.trim().slice(1, -1))}</div>` : `<div class="ly">${esc(l)}</div>`).join("")}</div>`;
+    `<div class="song">${A.L.map(l => !l.raw.trim() ? "" : SECTION.test(l.raw) ? `<div class="sec">${esc(l.raw.trim().replace(/^\[|\]$/g, ""))}</div>` : `<div class="ly">${lineHTML(l)}</div>`).join("")}</div>` +
+    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme. Same color = same rhyme sound.</p>` : "");
 }
 function setBusy(b) {
   st.busy = b; setAvail();
@@ -1437,17 +1498,41 @@ function setBusy(b) {
   const has = !!st.song && !b;
   $("#toPadBtn").hidden = $("#againBtn").hidden = $("#reviseForm").hidden = !has;
 }
-async function runSong(prompt) {
-  st.ctl = new AbortController(); st.lastPrompt = prompt; note(""); setBusy(true);
+function fixPrompt(song, misses) {
+  const list = misses.map(([a, b]) => {
+    const r = a.end && a.end.ent ? findRhymes(a.end.w) : null;
+    const sug = r && !r.missing ? [...r.perfect.slice(0, 6).map(e => e.w), ...r.combos.slice(0, 3).map(c => c.w), ...r.multis.slice(0, 4).map(x => x.e.w)].join(", ") : "";
+    return `- "${a.raw.trim()}" / "${b.raw.trim()}"${sug ? `\n  words that rhyme with "${a.end.t}": ${sug}` : ""}`;
+  }).join("\n");
+  return `Here is a rap song:
+
+${song}
+
+These couplets don't rhyme. Rewrite them so the two end words rhyme on the same vowel sound, ideally a multisyllable rhyme, and keep the meaning and the style:
+${list}
+
+Don't change any other bar.
+${KEEP_IT_REAL}
+${NO_COPY(st.artist)}
+Return the whole song in the same format: STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES.`;
+}
+async function runSong(prompt, isFix) {
+  st.ctl = new AbortController(); if (!isFix) { st.lastPrompt = prompt; note(""); } st.check = null; setBusy(true);
   const t0 = Date.now(); let started = false;
-  const label = `Writing your song in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
-  $("#songOut").innerHTML = `<p class="status" id="wait">${label}</p>`;
+  const label = isFix ? "Fixing the bars that didn't rhyme…" : `Writing your song in the style of ${esc(st.artist === PASTED ? "your pasted song" : st.artist)}…`;
+  if (isFix) $("#songOut").insertAdjacentHTML("afterbegin", `<p class="status" id="wait">${label}</p>`); else $("#songOut").innerHTML = `<p class="status" id="wait">${label}</p>`;
   const tick = setInterval(() => { const w = $("#wait"); if (!started && w) w.textContent = label.replace(/&#?\w+;/g, "") + " " + Math.round((Date.now() - t0) / 1000) + "s"; }, 1000);
   if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "center" });
   try {
     const r = await sampleFn(prompt, { signal: st.ctl.signal, cache: false, effort: "low", onText: ({ text }) => { started = true; renderSong(text); } });
-    st.song = r.text; renderSong(r.text);
+    st.song = r.text;
+    st.check = rhymeCheck(splitSong(r.text).lines.join("\n")); renderSong(r.text);
     if (r.truncated) note("The song got cut off. Try a shorter song shape.");
+    if (!isFix && !r.truncated && st.check.misses.length >= 1) {
+      clearInterval(tick); setBusy(false);
+      note(`${st.check.misses.length} couplets didn't rhyme. Tightening them now…`);
+      return runSong(fixPrompt(r.text, st.check.misses), true);
+    }
     saveSong();
   } catch (e) {
     if (e.text) { st.song = e.text; renderSong(e.text); } else if (e.code !== "cancelled") $("#songOut").innerHTML = "";
@@ -1476,6 +1561,7 @@ Revise it. The listener's request: ${ask}
 Keep everything they didn't ask to change, and keep the same style.
 ${KEEP_IT_REAL}
 ${NO_COPY(st.artist)}
+${RHYME_RULES}
 Use the same format: STYLE: line, TITLE: line, [Section] labels, then a line with only ---, then STYLE NOTES with 3 to 5 bullets.`);
 });
 $("#toPadBtn").onclick = () => {
@@ -1496,7 +1582,7 @@ function renderSaved() {
 }
 $("#saved").addEventListener("click", e => {
   const b = e.target.closest("[data-song]"); if (!b || st.busy) return;
-  const sg = songs[+b.dataset.song]; st.song = sg.text; st.artist = sg.artist || ""; renderSong(st.song); setBusy(false);
+  const sg = songs[+b.dataset.song]; st.song = sg.text; st.artist = sg.artist || ""; st.check = rhymeCheck(splitSong(sg.text).lines.join("\n")); renderSong(st.song); setBusy(false);
 });
 renderSaved();
 showFp();
