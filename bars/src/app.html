@@ -55,6 +55,8 @@
   --h5: rgba(255, 146, 36, .36); --h6: rgba(166, 104, 255, .38); --h7: rgba(0, 196, 196, .32); --h8: rgba(255, 72, 72, .34);
   color-scheme: dark;
 }
+/* bright rhyme colors for reading lyrics on dark */
+:root { --t1: #ffd84d; --t2: #ff7ac0; --t3: #5ee38f; --t4: #6cb8ff; --t5: #ffa24c; --t6: #c09cff; --t7: #3fe0d8; --t8: #ff6b6b; }
 /* Bar Lab is dark-only: the same dark palette wins whatever theme the viewer picked. */
 :root, :root[data-theme="light"] {
   --paper: #0f111c; --panel: #161929; --ink: #e8eaf6; --muted: #9298b8; --line: #272c45;
@@ -255,11 +257,24 @@ details.paste[open] summary { margin-bottom: 10px; }
 .sty dd { margin: 0; min-width: 0; }
 .sty ol { margin: 0; padding-left: 20px; display: grid; gap: 4px; font-size: 14px; }
 .song-title { font-family: var(--display); font-size: clamp(30px, 4vw, 42px); line-height: 1.05; margin: 4px 0 10px; text-wrap: balance; }
-.song { font-size: 17px; line-height: 1.6; }
-.song .sec { font-family: var(--mono); font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--margin); margin: 18px 0 4px; font-weight: 600; }
+.song { font-size: 20px; line-height: 1.75; max-width: 62ch; font-weight: 500; }
+.song .sec { display: inline-block; font-family: var(--mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--ink); background: var(--accent-soft); border-radius: 6px; padding: 2px 10px; margin: 26px 0 8px; font-weight: 600; }
 .song .sec:first-child { margin-top: 0; }
-.song .ly { overflow-wrap: anywhere; }
-.song .w { cursor: default; }
+.song .ly { display: flex; gap: 10px; align-items: baseline; padding: 3px 0; overflow-wrap: anywhere; }
+.song .ly > span.txt { flex: 1; min-width: 0; }
+.song .w { cursor: default; background: none; padding: 0; border-radius: 0; }
+.song .w.m { text-decoration: none; }
+.song .w.c1 { color: var(--t1); } .song .w.c2 { color: var(--t2); } .song .w.c3 { color: var(--t3); } .song .w.c4 { color: var(--t4); }
+.song .w.c5 { color: var(--t5); } .song .w.c6 { color: var(--t6); } .song .w.c7 { color: var(--t7); } .song .w.c8 { color: var(--t8); }
+.song .w[class*=" c"] { font-weight: 700; }
+.song.plain .w[class*=" c"] { color: inherit; font-weight: 500; }
+.fav { flex: none; border: 0; background: none; color: var(--muted); font-size: 18px; line-height: 1; padding: 4px; opacity: .45; }
+.fav:hover { opacity: 1; }
+.fav[aria-pressed="true"] { color: var(--t2); opacity: 1; }
+.favs { list-style: none; margin: 0; padding: 0; display: grid; gap: 8px; }
+.favs li { display: flex; gap: 8px; align-items: baseline; font-size: 16px; padding: 8px 10px; background: var(--paper); border-radius: 8px; }
+.favs li span { flex: 1; min-width: 0; }
+.favs li button { border: 0; background: none; color: var(--muted); font-size: 16px; }
 .notes { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); }
 .notes ul { margin: 6px 0 0; padding-left: 20px; font-size: 14px; display: grid; gap: 4px; }
 .status { font-size: 14px; color: var(--muted); }
@@ -351,11 +366,16 @@ details.paste[open] summary { margin-bottom: 10px; }
           <div class="card-head"><h2>Their style</h2><span class="eyebrow" id="styleWho">waiting</span></div>
           <div id="styleOut"><p class="empty">After you hit Write, this shows what Claude pulled from the rapper's hit songs: the flow, rhymes and delivery your song uses.</p></div>
         </div>
+        <div class="card">
+          <div class="card-head"><h2>Lines you liked</h2><span class="eyebrow">the bot writes toward these</span></div>
+          <ul class="favs" id="favs"></ul>
+          <p class="fine">Tap the heart next to any line on the lyric sheet to add it. New songs aim for the same vibe without copying them.</div>
       </div>
       <div class="col">
         <div class="card">
           <div class="card-head"><h2>Lyric sheet</h2>
             <div class="row">
+              <button class="btn small" id="colorBtn" aria-pressed="true" title="Color the rhyming words">Colors on</button>
               <button class="btn small" id="stopBtn" hidden>Stop</button>
               <button class="btn small" id="againBtn" hidden>Try another</button>
               <button class="btn small primary" id="toPadBtn" hidden>Send to pad</button>
@@ -1502,6 +1522,8 @@ ${CRAFT}
 
 ${EXAMPLE}
 
+${favBlock()}
+
 Rhyme ideas from Bar Lab's dictionary, grouped by sound. Use them only where they fit the story:
 ${rhymeBank(mood)}
 
@@ -1528,9 +1550,9 @@ function renderSong(text) {
     $("#styleOut").innerHTML = `<div class="sty"><p class="sum">${esc(style)}</p>${notes.length ? `<div><div class="sub">Where it shows up in your song</div><ol>${notes.map(n => `<li>${esc(n)}</li>`).join("")}</ol></div>` : ""}</div>`;
   }
   const A = analyse(lines.join("\n")); const bars = new Map(A.bars.map(b => [b.i, b]));
-  const lineHTML = l => bars.has(l.i) ? bars.get(l.i).tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}${t.m ? " m" : ""}">${esc(t.t)}</span>` : esc(t.t)).join("") : esc(l.raw);
+  const lineHTML = l => `<span class="txt">${bars.has(l.i) ? bars.get(l.i).tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}${t.m ? " m" : ""}">${esc(t.t)}</span>` : esc(t.t)).join("") : esc(l.raw)}</span><button class="fav" data-line="${esc(l.raw.trim())}" aria-pressed="${favs.includes(l.raw.trim())}" aria-label="Save this line" title="Save this line">♥</button>`;
   $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") + (story ? `<p class="rmeta" style="margin:-4px 0 14px">${esc(story)}</p>` : "") +
-    `<div class="song">${A.L.map(l => !l.raw.trim() ? "" : SECTION.test(l.raw) ? `<div class="sec">${esc(l.raw.trim().replace(/^\[|\]$/g, ""))}</div>` : `<div class="ly">${lineHTML(l)}</div>`).join("")}</div>` +
+    `<div class="song${colorsOn ? "" : " plain"}">${A.L.map(l => !l.raw.trim() ? "" : SECTION.test(l.raw) ? `<div class="sec">${esc(l.raw.trim().replace(/^\[|\]$/g, ""))}</div>` : `<div class="ly">${lineHTML(l)}</div>`).join("")}</div>` +
     (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme · <b>${st.check.multis}</b> multis · <b>${st.check.repeats.length}</b> repeats in the verses${st.check.repeats.length ? ` (${esc(st.check.repeats.slice(0, 6).join(", "))})` : ""}. Same color = same rhyme sound.</p>` : "");
 }
 function setBusy(b) {
@@ -1560,6 +1582,7 @@ Do this:
 ${problems ? `3. Fix these problems Bar Lab's rhyme checker found:\n${problems}\n` : ""}Keep the same vibe, the same sections, and both hooks word for word the same.
 
 ${CRAFT}
+${favBlock()}
 ${langRule()}
 ${NO_COPY(st.artist)}
 
@@ -1623,6 +1646,22 @@ $("#toPadBtn").onclick = () => {
   clearTimeout(padT); refresh(); setView("write"); window.scrollTo(0, 0); toast("Song is on the pad");
 };
 
+let favs = store.get("favs", ["Phone ring, I let it ring", "I ain't cryin', that's just rain, I'm just rainin' on the ground"]);
+function renderFavs() {
+  $("#favs").innerHTML = favs.length ? favs.map((f, i) => `<li><span>${esc(f)}</span><button data-unfav="${i}" aria-label="Remove">×</button></li>`).join("") : '<li class="muted"><span>No saved lines yet.</span></li>';
+}
+$("#favs").addEventListener("click", e => { const b = e.target.closest("[data-unfav]"); if (!b) return; favs.splice(+b.dataset.unfav, 1); store.set("favs", favs); renderFavs(); if (st.song) renderSong(st.song); });
+$("#songOut").addEventListener("click", e => {
+  const b = e.target.closest(".fav"); if (!b) return;
+  const line = b.dataset.line; const k = favs.indexOf(line);
+  if (k >= 0) favs.splice(k, 1); else { favs.unshift(line); favs = favs.slice(0, 20); toast("Saved. New songs will aim for this vibe"); }
+  store.set("favs", favs); renderFavs(); b.setAttribute("aria-pressed", k < 0);
+});
+let colorsOn = store.get("colors", true);
+const applyColors = () => { $("#colorBtn").setAttribute("aria-pressed", colorsOn); $("#colorBtn").textContent = colorsOn ? "Colors on" : "Colors off"; const sg = $("#songOut .song"); if (sg) sg.classList.toggle("plain", !colorsOn); };
+$("#colorBtn").onclick = () => { colorsOn = !colorsOn; store.set("colors", colorsOn); applyColors(); };
+applyColors();
+const favBlock = () => favs.length ? `Lines the listener loved from earlier songs. This is exactly the vibe they want: simple, catchy, melodic and a little hurt. Hit that same feeling, but don't reuse these lines:\n${favs.slice(0, 10).map(f => "- " + f).join("\n")}` : "";
 let songs = store.get("songs", []);
 function saveSong() {
   const { title } = splitSong(st.song);
@@ -1638,6 +1677,7 @@ $("#saved").addEventListener("click", e => {
   const sg = songs[+b.dataset.song]; st.song = sg.text; st.artist = sg.artist || ""; st.check = rhymeCheck(splitSong(sg.text).lines.join("\n")); renderSong(st.song); setBusy(false);
 });
 renderSaved();
+renderFavs();
 showFp();
 
 /* ================= boot ================= */
