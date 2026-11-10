@@ -1357,12 +1357,14 @@ const PASTED = "your pasted song";
 const NO_COPY = who => who === PASTED
   ? "- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, including the reference song."
   : `- Every line must be brand new. Do not quote, paraphrase or interpolate any existing lyrics, especially ${who}'s: no lines, hooks, ad-libs, catchphrases or song titles from their songs, and don't say ${who}'s name in the song.`;
-const KEEP_IT_REAL = `Keep it real. This is the most important part:
-- The world of the song is everyday working-class and lower-middle-class life: rent due before the check clears, overtime and double shifts, a car that barely starts, the bus at 6am, overdraft fees, stretching groceries, a landlord calling, a mom working too hard, a little brother to look after, friends who went the wrong way, staying out of trouble, being tired and doing it anyway, small wins that mean a lot.
-- No fake flexing. No Lambos, jets, mansions, millions, designer labels, bottles, or stacks of cash as if the narrator has them. Money talk uses real numbers people live with (forty in the tank, a two-week check, two hundred short on rent). Dreaming about more is fine if it's clearly a dream they're working toward.
-- No clichés and no filler. Nothing like "on my grind", "top of the game", "chasing the bag", "haters", "started from the bottom". Every bar has to hit: a specific image, a true feeling, a punchline, or a rhyme that lands. If a line could be cut without losing anything, rewrite it.
-- Don't spam words. No repeating the same word or phrase over and over, no stacked ad-libs ("yeah, yeah, uh"), no padding. Only the hook repeats.
-- Honest beats tough. Show the pressure, the pride, the fear and the love the way real people feel them. Don't preach and don't glamorize the street.`;
+const KEEP_IT_REAL = `How it has to sound:
+- Like a real rapper on a real record, not a poem, not a motivational speech, not a greeting card. Talk the way people from the hood and working-class neighborhoods actually talk: slang, contractions, attitude, humor, confidence even when it hurts.
+- Real life, not a checklist of struggle props. Pick one or two true, specific situations that fit the mood and go deep on them. Don't list hardships, and don't explain feelings in flat sentences. Show them in moments and details.
+- No fake flexing. The narrator isn't rich. If money comes up, it's real-life money.
+- Every bar has to be quotable: a punchline, a twist, a cold image or a line that hurts. No filler, no clichés, no forced rhymes, no rhyming-dictionary words nobody says.
+- No word spam. No repeating the same word over and over, no stacked ad-libs. Only the hook repeats.
+- Ride the pocket: keep bars a similar length so they're rappable, and land the rhyme on the last word.
+- Before you answer, read every bar back and rewrite any that's weak, corny or forced.`;
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
   radio: "[Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 12 bars, [Hook] repeated in full",
@@ -1439,7 +1441,7 @@ async function runSong(prompt) {
   $("#songOut").innerHTML = `<p class="status">Studying ${esc(st.artist === PASTED ? "your pasted song" : st.artist + "'s hits")} and writing yours… this can take up to a minute.</p>`;
   if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "center" });
   try {
-    const r = await sampleFn(prompt, { signal: st.ctl.signal, cache: false, onText: ({ text }) => renderSong(text) });
+    const r = await sampleFn(prompt, { signal: st.ctl.signal, cache: false, modelTier: "complex", onText: ({ text }) => renderSong(text) });
     st.song = r.text; renderSong(r.text);
     if (r.truncated) note("The song got cut off. Try a shorter song shape.");
     saveSong();
