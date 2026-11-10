@@ -323,7 +323,7 @@ details.paste[open] summary { margin-bottom: 10px; }
           <div class="card-head"><h2>Make a song</h2></div>
           <form id="makeForm">
             <label class="fl" for="artist">Rapper <span class="opt">or paste a song below</span></label>
-            <input class="mini big-in" id="artist" type="text" autocomplete="off" placeholder="e.g. Polo G" enterkeyhint="next">
+            <input class="mini big-in" id="artist" type="text" autocomplete="off" placeholder="e.g. Jay Montana" value="Jay Montana" enterkeyhint="next">
             <label class="fl" for="mood">Mood</label>
             <input class="mini big-in" id="mood" type="text" autocomplete="off" placeholder="e.g. heartbroken, hungry, grateful" enterkeyhint="go">
             <div class="chips" id="moods" style="margin-top:8px"></div>
@@ -1462,6 +1462,17 @@ const SHAPES = {
   sixteen: "[Verse] 16 bars, no hook",
   hook: "[Hook] 8 bars, [Verse] 8 bars",
 };
+const STYLE_CARDS = {
+  "jay montana": `Jay Montana (Mobile, Alabama) style guide. Follow it closely:
+- Melodic, soulful sing-rap: bluesy, crooned phrasing that floats over the beat instead of barking. Smooth, never shouted.
+- Beats in the Mobile tradition: light, sunny, country-sounding acoustic guitar. Write with that laid-back, swaying bounce in mind.
+- Wordplay-heavy punchlines delivered calm, like he's just telling you: slick double meanings and similes that land at the end of the bar.
+- Street wisdom mixed with vulnerability: real-talk advice, loyalty, hustle, love and trust, said honest and a little hurt.
+- Southern slang and drawl. Stretch the long vowel at the end of bars so the rhymes ring out when sung.
+- Rhyme scheme: couplets on long open vowels (oh, ay, ee, I), plenty of slant rhymes that work when crooned, an internal rhyme setting up each punchline. Mid-tempo, about 9 to 12 syllables a bar.
+- Hooks are sung, simple and catchy, built around one repeated phrase.`,
+};
+const styleCard = artist => STYLE_CARDS[(artist || "").toLowerCase().replace(/\s+/g, " ").trim()] || "";
 function songPrompt(artist, mood) {
   const story = $("#story").value.trim(), details = $("#details").value.trim();
   const raw = $("#artistLyrics").value.trim();
@@ -1471,7 +1482,7 @@ function songPrompt(artist, mood) {
   return `Write a brand-new, original rap song ${named ? `in ${artist}'s style` : "in the style of the reference song below"}.
 
 First think about what defines ${named ? `${artist}'s biggest hits` : "the reference song"}: flow and cadence, syllables per bar, rhyme patterns, how melodic or rapped the delivery is, how the hook is built, the themes, the slang. Then write a song that sounds like it came off the same album.
-${ref ? `
+${styleCard(artist) ? `\n${styleCard(artist)}\n` : ""}${ref ? `
 REFERENCE SONG (study the style only; never reuse its lines, phrases, names, ad-libs or slurs):
 <<<
 ${ref}
@@ -1491,7 +1502,7 @@ Rhyme ideas from Bar Lab's dictionary, grouped by sound. Use them only where the
 ${rhymeBank(mood)}
 
 ${NO_COPY(artist)}
-${named && !ref ? `- If you don't know this artist, begin the STYLE line with "Unknown artist:" and write in a style that fits the mood.` : ""}
+${named && !ref && !styleCard(artist) ? `- If you don't know this artist, begin the STYLE line with "Unknown artist:" and write in a style that fits the mood.` : ""}
 
 ${FORMAT}`;
 }
