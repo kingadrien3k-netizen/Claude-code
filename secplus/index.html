@@ -50,7 +50,7 @@
 }
 
 *, *::before, *::after { box-sizing: border-box; }
-html { -webkit-text-size-adjust: 100%; }
+html { -webkit-text-size-adjust: 100%; overflow-x: clip; }
 body {
   margin: 0; background: var(--bg); color: var(--ink);
   font: 400 16px/1.5 var(--f-body);
@@ -233,6 +233,81 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
 
 .search { width: 100%; padding: 12px 14px; border-radius: var(--r); border: 1px solid var(--line); background: var(--surface); font-size: 16px; }
 
+/* ---------- life: motion, feedback, streaks ---------- */
+@keyframes lift { from { transform: translateY(14px); } to { transform: none; } }
+@keyframes slidein { from { transform: translateX(30px) rotate(1deg); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes pop { 0% { transform: scale(1); } 35% { transform: scale(1.035); } 100% { transform: scale(1); } }
+@keyframes shake { 0%, 100% { transform: none; } 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(2px); } }
+@keyframes bump { 0% { transform: scale(1); } 40% { transform: scale(1.3); } 100% { transform: scale(1); } }
+#v-home > * { animation: lift .55s cubic-bezier(.2,.8,.2,1) both; }
+#v-home > :nth-child(2) { animation-delay: .05s; }
+#v-home > :nth-child(3) { animation-delay: .1s; }
+#v-home > :nth-child(4) { animation-delay: .15s; }
+#v-home > :nth-child(5) { animation-delay: .2s; }
+.enter { animation: slidein .34s cubic-bezier(.2,.8,.2,1) both; }
+.choice.right, .verdict.ok { animation: pop .38s ease; }
+.choice.wrong, .verdict.no { animation: shake .42s ease; }
+.mode::after { content: "\2192"; justify-self: end; margin-top: -22px; font-size: 18px; opacity: 0; transform: translateX(-6px); transition: opacity .15s, transform .15s; }
+.mode:hover::after { opacity: .8; transform: none; }
+
+.flip { position: relative; touch-action: pan-y; user-select: none; -webkit-user-select: none; }
+.flip.release { transition: transform .35s cubic-bezier(.2,.8,.2,1.2); }
+.flip.fly { transition: transform .3s ease-in, opacity .3s ease-in; opacity: 0; }
+.stamp {
+  position: absolute; top: 20px; z-index: 2; pointer-events: none; opacity: 0;
+  font: 700 14px var(--f-mono); letter-spacing: .1em; text-transform: uppercase;
+  padding: 4px 10px; border: 2px solid currentColor; border-radius: 6px; background: var(--surface);
+}
+.stamp.hit { right: 20px; color: var(--good); transform: rotate(8deg); }
+.stamp.miss { left: 20px; color: var(--bad); transform: rotate(-8deg); }
+
+.streak {
+  display: inline-block; margin-left: 8px; padding: 1px 9px; border-radius: 99px;
+  background: var(--accent-soft); color: var(--accent); font-weight: 500;
+}
+.streak.hot { background: var(--learn); color: var(--surface); }
+.streak.bump { animation: bump .32s ease; }
+
+.toast {
+  position: fixed; left: 50%; bottom: calc(20px + env(safe-area-inset-bottom, 0px)); z-index: 20;
+  transform: translate(-50%, calc(100% + 40px)); transition: transform .4s cubic-bezier(.2,.9,.3,1.25);
+  display: flex; align-items: center; gap: 10px; max-width: calc(100vw - 32px);
+  background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 99px; box-shadow: var(--shadow); font-size: 15px;
+}
+.toast.show { transform: translate(-50%, 0); }
+.toast i { width: 9px; height: 9px; border-radius: 50%; background: var(--good); flex: 0 0 auto; }
+.toast .label { color: inherit; opacity: .7; }
+.toast span:last-child { font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+#confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 30; }
+
+.top .right { display: flex; align-items: center; gap: 12px; }
+.sound { display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; border: 1px solid var(--line); background: none; color: var(--muted); padding: 0; }
+.sound[aria-pressed="true"] { color: var(--accent); border-color: var(--accent); }
+.sound svg { width: 16px; height: 16px; }
+
+.week { display: flex; align-items: end; justify-content: space-between; flex-wrap: wrap; gap: 12px 20px; padding-top: 6px; }
+.streakline { font-size: 14px; color: var(--muted); }
+.streakline b { font: 600 22px var(--f-display); color: var(--ink); margin-right: 4px; }
+.days { display: flex; gap: 6px; }
+.day { display: grid; justify-items: center; gap: 4px; font: 400 11px var(--f-mono); color: var(--muted); }
+.day i { display: block; width: 24px; height: 24px; border-radius: 6px; background: var(--surface-2); }
+.day i[data-h="1"] { background: color-mix(in srgb, var(--good) 35%, var(--surface-2)); }
+.day i[data-h="2"] { background: color-mix(in srgb, var(--good) 65%, var(--surface-2)); }
+.day i[data-h="3"] { background: var(--good); }
+.day.today span { color: var(--ink); font-weight: 500; }
+.day.today i { outline: 1.5px solid var(--ink); outline-offset: 1px; }
+
+.scoreline { display: flex; align-items: center; gap: 20px; }
+.ring { width: 104px; height: 104px; flex: 0 0 auto; }
+.ring circle { fill: none; stroke-width: 9; }
+.ring .track { stroke: var(--surface-2); }
+.ring .val { stroke-linecap: round; transform: rotate(-90deg); transform-origin: 50% 50%; transition: stroke-dashoffset 1.1s cubic-bezier(.2,.8,.2,1); }
+.ring text { fill: var(--ink); font: 600 21px var(--f-display); }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { font: 500 13px var(--f-mono); padding: 4px 11px; border-radius: 99px; border: 1px solid var(--line); background: var(--surface); }
+.chip.good { background: var(--good-soft); color: var(--good); border-color: transparent; }
+.chip.warm { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
+
 @media (max-width: 520px) {
   .modes { grid-template-columns: minmax(0, 1fr); }
   .mode { min-height: 0; }
@@ -241,7 +316,8 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   .studyhead .pos { grid-column: 1 / -1; grid-row: 2; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .card, .bar > span, .mode { transition: none; }
+  .card, .bar > span, .mode, .toast, .flip.release, .flip.fly, .ring .val { transition: none; }
+  #v-home > *, .enter, .choice, .verdict, .streak { animation: none !important; }
 }
 </style>
 </head>
@@ -251,7 +327,13 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     <button class="brand" id="home-link" type="button" aria-label="Back to sets">
       <h1>Sec+ Drill</h1><span class="tag">SY0-701</span>
     </button>
-    <div class="tally" id="tally"></div>
+    <div class="right">
+      <div class="tally" id="tally"></div>
+      <button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Sound effects off" title="Sound effects">
+        <svg id="snd-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
+        <svg id="snd-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>
+      </button>
+    </div>
   </header>
 
   <!-- HOME -->
@@ -261,6 +343,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       <h2 id="ov-title">Your cards</h2>
       <div class="bar" id="ov-bar"></div>
       <div class="legend" id="ov-legend"></div>
+      <div class="week" id="week"></div>
     </div>
 
     <section>
@@ -321,8 +404,18 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   <main id="v-results" class="wrap" hidden>
     <div class="score">
       <span class="label" id="r-mode"></span>
-      <div class="big" id="r-big"></div>
-      <p id="r-sub" style="margin:0;color:var(--muted)"></p>
+      <div class="scoreline">
+        <svg class="ring" id="r-ring" viewBox="0 0 100 100" aria-hidden="true">
+          <circle class="track" cx="50" cy="50" r="42"></circle>
+          <circle class="val" cx="50" cy="50" r="42"></circle>
+          <text id="r-pct" x="50" y="57" text-anchor="middle">0%</text>
+        </svg>
+        <div style="display:grid;gap:6px;min-width:0">
+          <div class="big" id="r-big"></div>
+          <p id="r-sub" style="margin:0;color:var(--muted)"></p>
+        </div>
+      </div>
+      <div class="chips" id="r-chips"></div>
     </div>
     <div class="row" id="r-actions"></div>
     <section id="r-missed-wrap">
@@ -342,6 +435,8 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     <div class="list" id="b-list"></div>
   </main>
 </div>
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+<canvas id="confetti" hidden></canvas>
 
 <script src="cards.js"></script>
 <script src="engine.js"></script>
@@ -361,7 +456,108 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   function load(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v && typeof v === 'object' ? v : d; } catch { return d; } }
   function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } }
   let progress = load(KEY_P, {});
-  const prefs = Object.assign({ prompt: 'def', focus: 'all', len: '20', sets: SETS.map((s) => s.id) }, load(KEY_O, {}));
+  const prefs = Object.assign({ prompt: 'def', focus: 'all', len: '20', sound: false, sets: SETS.map((s) => s.id) }, load(KEY_O, {}));
+  const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ---------- daily activity ----------
+  const KEY_D = 'secplus.days.v1';
+  const days = load(KEY_D, {});
+  const dayKey = (d) => d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0');
+  function bumpDay() { const k = dayKey(new Date()); days[k] = (days[k] || 0) + 1; store(KEY_D, days); }
+  function dayStreak() {
+    const d = new Date();
+    if (!days[dayKey(d)]) d.setDate(d.getDate() - 1);
+    let n = 0;
+    while (days[dayKey(d)]) { n++; d.setDate(d.getDate() - 1); }
+    return n;
+  }
+  function renderWeek() {
+    const today = new Date(), todayN = days[dayKey(today)] || 0, st = dayStreak();
+    const line = el('div', 'streakline');
+    if (st) line.append(el('b', null, String(st)), document.createTextNode((st === 1 ? ' day' : ' day streak') + ' · ' + todayN + ' reviewed today'));
+    else line.textContent = 'Review a few cards today to start a streak';
+    const strip = el('div', 'days');
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(today); d.setDate(today.getDate() - i);
+      const n = days[dayKey(d)] || 0;
+      const c = el('div', 'day' + (i === 0 ? ' today' : ''));
+      const sq = el('i'); sq.dataset.h = String(n === 0 ? 0 : n < 20 ? 1 : n < 50 ? 2 : 3);
+      sq.title = n + ' cards reviewed';
+      c.append(sq, el('span', null, 'SMTWTFS'[d.getDay()]));
+      strip.append(c);
+    }
+    $('week').replaceChildren(line, strip);
+  }
+
+  // ---------- sound (off by default; tiny synth blips) ----------
+  let audio = null;
+  const TUNES = { hit: [[660, 0], [880, .07]], miss: [[233, 0], [185, .1]], master: [[523, 0], [659, .08], [784, .16], [1047, .24]], done: [[392, 0], [523, .1], [659, .2], [784, .3]] };
+  function sfx(kind) {
+    if (!prefs.sound) return;
+    try {
+      audio = audio || new (window.AudioContext || window.webkitAudioContext)();
+      const t0 = audio.currentTime;
+      for (const [f, dt] of TUNES[kind]) {
+        const o = audio.createOscillator(), g = audio.createGain();
+        o.type = kind === 'miss' ? 'triangle' : 'sine'; o.frequency.value = f;
+        g.gain.setValueAtTime(0.0001, t0 + dt);
+        g.gain.exponentialRampToValueAtTime(0.16, t0 + dt + 0.015);
+        g.gain.exponentialRampToValueAtTime(0.0001, t0 + dt + 0.17);
+        o.connect(g).connect(audio.destination); o.start(t0 + dt); o.stop(t0 + dt + 0.2);
+      }
+    } catch { /* audio unavailable */ }
+  }
+  function renderSound() {
+    const b = $('sound');
+    b.setAttribute('aria-pressed', String(!!prefs.sound));
+    b.setAttribute('aria-label', prefs.sound ? 'Sound effects on' : 'Sound effects off');
+    $('snd-on').toggleAttribute('hidden', !prefs.sound); $('snd-off').toggleAttribute('hidden', !!prefs.sound);
+  }
+  $('sound').addEventListener('click', () => { prefs.sound = !prefs.sound; store(KEY_O, prefs); renderSound(); sfx('hit'); });
+
+  // ---------- toast + confetti ----------
+  let toastTimer = 0;
+  function toast(label, text) {
+    const t = $('toast');
+    t.replaceChildren(el('i'), el('span', 'label', label), el('span', null, text));
+    t.classList.add('show');
+    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1900);
+  }
+  function confetti() {
+    if (reduced) return;
+    const cv = $('confetti'); cv.hidden = false;
+    const dpr = window.devicePixelRatio || 1, W = innerWidth, H = innerHeight;
+    cv.width = W * dpr; cv.height = H * dpr;
+    const ctx = cv.getContext('2d'); ctx.scale(dpr, dpr);
+    const cs = getComputedStyle(document.documentElement);
+    const cols = ['--accent', '--good', '--learn', '--bad'].map((v) => cs.getPropertyValue(v).trim());
+    const ps = Array.from({ length: 150 }, () => ({
+      x: W / 2 + (Math.random() - .5) * W * .35, y: H * .3, vx: (Math.random() - .5) * 10, vy: -Math.random() * 11 - 4,
+      r: Math.random() * Math.PI, vr: (Math.random() - .5) * .3, w: 5 + Math.random() * 5, h: 8 + Math.random() * 7,
+      c: cols[Math.floor(Math.random() * cols.length)],
+    }));
+    const t0 = performance.now();
+    (function frame(t) {
+      const age = t - t0;
+      ctx.clearRect(0, 0, W, H);
+      for (const p of ps) {
+        p.vy += .3; p.vx *= .99; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+        ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+        ctx.globalAlpha = Math.max(0, 1 - age / 2300); ctx.fillStyle = p.c;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h); ctx.restore();
+      }
+      if (age < 2300) requestAnimationFrame(frame); else cv.hidden = true;
+    })(t0);
+  }
+  function countUp(node, to) {
+    if (reduced || to < 2) { node.textContent = String(to); return; }
+    const t0 = performance.now(), dur = 750;
+    (function frame(t) {
+      const k = Math.min(1, (t - t0) / dur);
+      node.textContent = String(Math.round(to * (1 - Math.pow(1 - k, 3))));
+      if (k < 1) requestAnimationFrame(frame);
+    })(t0);
+  }
   prefs.sets = prefs.sets.filter((id) => SETS.some((s) => s.id === id));
   const levelOf = (id) => (progress[id] && progress[id].l) || 0;
   function record(card, ok) {
@@ -369,6 +565,8 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     p.prev = p.l; // lets "I was right" undo a typed-answer miss
     p.l = E.grade(p.l, ok); p.s++; if (!ok) p.m++;
     progress[card.id] = p; store(KEY_P, progress);
+    bumpDay();
+    return p.prev < E.MASTERED && p.l >= E.MASTERED; // just became mastered
   }
 
   // ---------- home ----------
@@ -400,6 +598,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     const b = el('b', null, String(all.m)); $('tally').append(b, document.createTextNode(' / ' + all.total + ' mastered'));
     $('ov-title').textContent = all.total + ' cards across ' + SETS.length + ' sets';
     fillBar($('ov-bar'), all);
+    renderWeek(); renderSound();
     $('ov-legend').replaceChildren(...[
       ['var(--good)', all.m + ' mastered'], ['var(--learn)', all.l + ' learning'], ['var(--surface-2)', all.n + ' new'],
     ].map(([c, t]) => { const s = el('span'); const i = el('i'); i.style.background = c; s.append(i, t); return s; }));
@@ -486,7 +685,8 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   const MODE_NAME = { flash: 'Flashcards', quiz: 'Multiple choice', type: 'Type the term' };
   let session = null;
   function startSession(mode, cards) {
-    session = { mode, cards, i: 0, results: [], answered: false, flipped: false };
+    session = { mode, cards, i: 0, results: [], answered: false, flipped: false, busy: false,
+                streak: 0, prevStreak: 0, shownStreak: 0, best: 0, mastered: [] };
     show('study'); renderStep();
   }
   function meta(card) {
@@ -501,8 +701,14 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     const s = session, n = s.cards.length;
     const done = s.results.length;
     $('s-bar').firstElementChild.style.width = (done / n * 100) + '%';
-    const right = s.results.filter((r) => r.ok).length;
-    $('s-pos').textContent = Math.min(s.i + 1, n) + ' / ' + n + (done ? '  ·  ' + right + ' right' : '');
+    const pos = $('s-pos');
+    pos.replaceChildren(document.createTextNode(Math.min(s.i + 1, n) + ' / ' + n));
+    if (s.streak >= 3) {
+      const k = el('span', 'streak' + (s.streak >= 10 ? ' hot' : ''), s.streak + ' in a row');
+      if (s.streak > s.shownStreak) k.classList.add('bump');
+      pos.append(k);
+    }
+    s.shownStreak = s.streak;
   }
   function renderStep() {
     const s = session;
@@ -510,6 +716,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     s.answered = false; s.flipped = false;
     updateHead();
     const stage = $('stage'); stage.replaceChildren();
+    stage.classList.remove('enter'); void stage.offsetWidth; stage.classList.add('enter');
     const card = s.cards[s.i];
     if (s.mode === 'flash') renderFlash(stage, card);
     else if (s.mode === 'quiz') renderQuiz(stage, card);
@@ -519,8 +726,13 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   function answer(card, ok) {
     if (session.answered) return;
     session.answered = true;
-    record(card, ok);
+    const mastered = record(card, ok);
     session.results.push({ id: card.id, ok });
+    session.prevStreak = session.streak;
+    session.streak = ok ? session.streak + 1 : 0;
+    session.best = Math.max(session.best, session.streak);
+    if (mastered) { session.mastered.push(card.id); toast('Mastered', card.term); sfx('master'); }
+    else sfx(ok ? 'hit' : 'miss');
     updateHead();
   }
 
@@ -539,9 +751,11 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     const c = el('button', 'card'); c.type = 'button';
     c.setAttribute('aria-label', 'Flip card');
     c.append(face(card, front, false), face(card, backSide, true));
-    c.addEventListener('click', flip);
-    wrap.append(c);
-    const hint = el('p', 'hint', 'Tap the card or press Space to flip');
+    c.addEventListener('click', () => { if (wrap.dataset.dragged) return; flip(); });
+    const hitS = el('span', 'stamp hit', 'Knew it'), missS = el('span', 'stamp miss', 'Still learning');
+    wrap.append(missS, hitS, c);
+    attachSwipe(wrap, hitS, missS);
+    const hint = el('p', 'hint', 'Tap to flip. Swipe right if you knew it, left if not.');
     const g = el('div', 'grade');
     const miss = el('button', 'btn miss'); miss.type = 'button'; miss.innerHTML = 'Still learning <kbd>1</kbd>';
     const hit = el('button', 'btn hit'); hit.type = 'button'; hit.innerHTML = 'Knew it <kbd>2</kbd>';
@@ -555,7 +769,52 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     session.flipped = !session.flipped;
     c.classList.toggle('flipped', session.flipped);
   }
-  function gradeFlash(ok) { answer(session.cards[session.i], ok); next(); }
+  function gradeFlash(ok) {
+    if (!session || session.busy || session.answered) return;
+    session.busy = true;
+    answer(session.cards[session.i], ok);
+    const s = session;
+    const done = () => { if (session !== s) return; s.busy = false; next(); };
+    const wrap = document.querySelector('#stage .flip');
+    if (!wrap || reduced) return done();
+    const st = wrap.querySelector(ok ? '.stamp.hit' : '.stamp.miss'); if (st) st.style.opacity = '1';
+    wrap.classList.remove('release'); wrap.classList.add('fly');
+    wrap.style.transform = 'translateX(' + (ok ? 130 : -130) + '%) rotate(' + (ok ? 14 : -14) + 'deg)';
+    setTimeout(done, 280);
+  }
+  // Drag the card sideways: it tilts, a stamp fades in, and past 100px it grades itself.
+  function attachSwipe(wrap, hitS, missS) {
+    let x0 = null, y0 = 0, dx = 0, pid = null, dragging = false;
+    wrap.addEventListener('pointerdown', (e) => {
+      if (session.busy || (e.pointerType === 'mouse' && e.button !== 0)) return;
+      x0 = e.clientX; y0 = e.clientY; dx = 0; pid = e.pointerId; dragging = false;
+    });
+    wrap.addEventListener('pointermove', (e) => {
+      if (x0 === null || e.pointerId !== pid) return;
+      dx = e.clientX - x0;
+      if (!dragging) {
+        if (Math.abs(dx) < 8 || Math.abs(e.clientY - y0) > Math.abs(dx)) return;
+        dragging = true; wrap.classList.remove('release');
+        try { wrap.setPointerCapture(pid); } catch { /* not supported */ }
+      }
+      wrap.style.transform = 'translateX(' + dx + 'px) rotate(' + (dx / 18) + 'deg)';
+      const k = Math.min(1, Math.abs(dx) / 100);
+      hitS.style.opacity = dx > 0 ? String(k) : '0';
+      missS.style.opacity = dx < 0 ? String(k) : '0';
+    });
+    const end = () => {
+      if (x0 === null) return;
+      x0 = null;
+      if (!dragging) return;
+      dragging = false;
+      wrap.dataset.dragged = '1'; setTimeout(() => { delete wrap.dataset.dragged; }, 0);
+      if (Math.abs(dx) > 100) return gradeFlash(dx > 0);
+      wrap.classList.add('release'); wrap.style.transform = '';
+      hitS.style.opacity = '0'; missS.style.opacity = '0';
+    };
+    wrap.addEventListener('pointerup', end);
+    wrap.addEventListener('pointercancel', end);
+  }
 
   // multiple choice
   function renderQuiz(stage, card) {
@@ -641,7 +900,11 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       over.addEventListener('click', () => {
         const r = session.results[session.results.length - 1]; r.ok = true;
         const p = progress[card.id]; p.l = E.grade(p.prev, true); p.m = Math.max(0, p.m - 1);
-        store(KEY_P, progress); next();
+        store(KEY_P, progress);
+        session.streak = session.prevStreak + 1; session.best = Math.max(session.best, session.streak);
+        if (p.prev < E.MASTERED && p.l >= E.MASTERED) { session.mastered.push(card.id); toast('Mastered', card.term); sfx('master'); }
+        else sfx('hit');
+        next();
       });
       row.append(over);
     }
@@ -654,9 +917,23 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     const right = s.results.filter((r) => r.ok).length;
     const missed = s.results.filter((r) => !r.ok).map((r) => BY_ID.get(r.id));
     $('r-mode').textContent = MODE_NAME[s.mode] + ' · finished';
-    $('r-big').replaceChildren(document.createTextNode(String(right)), el('small', null, ' / ' + s.results.length + (s.mode === 'flash' ? ' known' : ' correct')));
+    const num = el('span', null, '0');
+    $('r-big').replaceChildren(num, el('small', null, ' / ' + s.results.length + (s.mode === 'flash' ? ' known' : ' correct')));
     const pct = s.results.length ? Math.round(right / s.results.length * 100) : 0;
-    $('r-sub').textContent = pct + '%. ' + (missed.length ? 'Missed cards drop back to new so they come up first next time.' : 'Clean run. These cards moved up a level.');
+    $('r-sub').textContent = missed.length === 0 ? 'Clean run. Every card moved up a level.'
+      : pct >= 80 ? 'Strong round. The few you missed will come up first next time.'
+      : pct >= 50 ? 'Getting there. Missed cards drop back to new so you see them again soon.'
+      : 'Tough set. Drill the misses now while they are fresh.';
+    const C = 2 * Math.PI * 42, ring = document.querySelector('#r-ring .val');
+    ring.style.transition = 'none';
+    ring.style.strokeDasharray = String(C); ring.style.strokeDashoffset = String(C);
+    ring.style.stroke = pct >= 80 ? 'var(--good)' : pct >= 50 ? 'var(--learn)' : 'var(--bad)';
+    $('r-pct').textContent = pct + '%';
+    const chips = $('r-chips'); chips.replaceChildren();
+    if (s.mastered.length) chips.append(el('span', 'chip good', s.mastered.length + ' newly mastered'));
+    if (s.best >= 3) chips.append(el('span', 'chip warm', 'Best streak ' + s.best));
+    const ds = dayStreak();
+    if (ds) chips.append(el('span', 'chip', ds + (ds === 1 ? ' day' : '-day streak')));
     const act = $('r-actions'); act.replaceChildren();
     if (missed.length) {
       const again = el('button', 'btn go', 'Drill the ' + missed.length + ' missed'); again.type = 'button';
@@ -678,6 +955,12 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     $('r-missed').replaceChildren(...missed.map(itemRow));
     session = null;
     show('results');
+    requestAnimationFrame(() => requestAnimationFrame(() => {
+      ring.style.transition = '';
+      ring.style.strokeDashoffset = String(C * (1 - pct / 100));
+    }));
+    countUp(num, right);
+    if (pct >= 80 && s.results.length >= 5) { confetti(); sfx('done'); }
   }
   function itemRow(c) {
     const r = el('div', 'item');
