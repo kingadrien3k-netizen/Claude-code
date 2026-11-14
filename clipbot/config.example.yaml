@@ -1,0 +1,46 @@
+# Copy to config.yaml and fill in. config.yaml and tokens.json are git-ignored.
+
+twitch:
+  # Register an app at https://dev.twitch.tv/console/apps
+  # and add this exact redirect URL to it.
+  client_id: "YOUR_TWITCH_CLIENT_ID"
+  client_secret: "YOUR_TWITCH_CLIENT_SECRET"
+  redirect_uri: "http://localhost:8765/callback"
+
+# Channels to watch. Set tiktok: true only for streamers who are OK with
+# you reposting their clips. The others still get clipped and rendered.
+channels:
+  - name: some_streamer
+    tiktok: true
+    hashtags: [valorant, gaming]
+  - name: another_streamer
+    tiktok: false
+
+detector:
+  window_seconds: 12
+  baseline_seconds: 300
+  spike_ratio: 3.0       # lower = more clips, higher = only big moments
+  min_messages: 15       # raise for huge chats (e.g. 60+), lower for small ones
+  keyword_hits: 8
+  cooldown_seconds: 180
+  warmup_seconds: 90
+
+video:
+  vertical: true         # 9:16 with blurred background
+  burn_caption: true     # hook text on top of the video
+  font_file: /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
+
+captions:
+  hashtags: [twitch, twitchclips, streamer, fyp]
+  credit: true           # adds "twitch.tv/<streamer>" to every caption
+
+tiktok:
+  enabled: true
+  # Create an app at https://developers.tiktok.com, add the Login Kit and
+  # Content Posting API products, and register this redirect URL.
+  client_key: "YOUR_TIKTOK_CLIENT_KEY"
+  client_secret: "YOUR_TIKTOK_CLIENT_SECRET"
+  redirect_uri: "https://your-site.example/tiktok/callback"
+  mode: direct           # direct = post with caption, draft = send to your TikTok inbox
+  privacy_level: SELF_ONLY   # required until TikTok audits your app; then PUBLIC_TO_EVERYONE
+  max_posts_per_day: 5

@@ -53,3 +53,10 @@ browser — no install, no build step.
 
 90-second games, 14-second shot clock, 2s and 3s, rebounds off misses, steals, blocks,
 an "on fire" streak bonus, a second defender once you hit 10 points, and a saved best score.
+
+---
+
+# Clipbot (`clipbot/`)
+
+A Python bot that watches Twitch chats, clips hype moments, renders them as vertical
+videos with hook text and posts them to TikTok with captions. See `clipbot/README.md`.
