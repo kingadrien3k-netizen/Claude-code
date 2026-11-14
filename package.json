@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node server.js",
     "test": "node test/smoke.js",
-    "test:secplus": "node test/secplus.js"
+    "test:secplus": "node test/secplus.js && node test/hunter.js",
+    "hunt": "node secplus/hunt.js"
   },
   "license": "MIT",
   "dependencies": {
