@@ -31,6 +31,9 @@
   --f-body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
   --f-mono: "IBM Plex Mono", ui-monospace, "SFMono-Regular", Menlo, Consolas, monospace;
   --r: 10px;
+  /* Breach arcade: one deliberate dark console look in both themes */
+  --g-bg: #0c1428; --g-ink: #e8edf7; --g-dim: #94a1bd; --g-line: #24325a;
+  --g-hot: #ffb04a; --g-cool: #86a2ff; --g-good: #53d29a; --g-bad: #ff6b63;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -308,6 +311,88 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
 .chip.good { background: var(--good-soft); color: var(--good); border-color: transparent; }
 .chip.warm { background: var(--accent-soft); color: var(--accent); border-color: transparent; }
 
+/* ---------- readiness ---------- */
+.domains { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.dom { display: grid; grid-template-columns: 30px minmax(0, 1fr) auto; align-items: center; gap: 6px 10px; width: 100%; background: var(--surface); border: 0; padding: 12px 16px; text-align: left; }
+.dom .num { font: 600 13px var(--f-mono); color: var(--muted); grid-row: span 2; align-self: start; padding-top: 2px; }
+.dom .name { font-weight: 600; font-size: 15px; }
+.dom .pct { font: 500 14px var(--f-mono); }
+.dom .sub { grid-column: 2 / 4; display: flex; align-items: center; gap: 10px; font: 400 12px var(--f-mono); color: var(--muted); white-space: nowrap; }
+.dom .sub .bar { flex: 1; min-width: 40px; }
+.dom[aria-pressed="true"] { background: var(--accent-soft); }
+.dom[aria-pressed="true"] .num { color: var(--accent); }
+.focus { display: inline-block; font: 500 10px var(--f-mono); letter-spacing: .06em; text-transform: uppercase; padding: 2px 6px; border-radius: 4px; background: var(--learn); color: var(--surface); vertical-align: 2px; margin-left: 6px; }
+#opt-domain button { padding: 6px 10px; }
+
+/* ---------- Breach ---------- */
+.mode.game { grid-column: 1 / -1; position: relative; overflow: hidden; min-height: 156px; background: var(--g-bg); border-color: var(--g-line); color: var(--g-ink); }
+.mode.game > * { position: relative; max-width: 72%; }
+.mode.game h3 { font-size: 28px; letter-spacing: .01em; }
+.mode.game p, .mode.game .label { color: var(--g-dim); }
+.mode.game .label:first-child { color: var(--g-hot); }
+.mode.game:hover { border-color: var(--g-cool); }
+.mode.game::before {
+  content: ""; position: absolute; right: -70px; top: 50%; width: 240px; height: 240px; margin-top: -120px; border-radius: 50%;
+  background: conic-gradient(from 0deg, rgb(134 162 255 / 0) 0deg, rgb(134 162 255 / .38) 46deg, rgb(134 162 255 / 0) 47deg),
+              repeating-radial-gradient(circle, transparent 0 36px, rgb(134 162 255 / .2) 37px 38px);
+  animation: sweep 4s linear infinite; pointer-events: none;
+}
+@keyframes sweep { to { transform: rotate(360deg); } }
+
+.hud { display: flex; align-items: center; flex-wrap: wrap; gap: 10px 22px; }
+.hudstat { display: grid; gap: 1px; }
+.hudstat b { font: 600 22px/1.1 var(--f-display); font-variant-numeric: tabular-nums; }
+.shields { margin-left: auto; display: flex; gap: 6px; color: var(--accent); }
+.shields svg { width: 24px; height: 24px; transition: opacity .3s, transform .3s; }
+.shields svg.lost { opacity: .18; transform: scale(.75); }
+.arena {
+  position: relative; overflow: hidden; display: grid; gap: 14px; min-height: 220px; padding: 16px 18px 18px;
+  background-color: var(--g-bg); color: var(--g-ink); border: 1px solid var(--g-line); border-radius: 14px;
+  background-image: linear-gradient(rgb(134 162 255 / .07) 1px, transparent 1px), linear-gradient(90deg, rgb(134 162 255 / .07) 1px, transparent 1px);
+  background-size: 28px 28px; transition: border-color .2s;
+}
+.arena.boss { border-color: var(--g-hot); box-shadow: inset 0 0 0 1px var(--g-hot); }
+.arena.block { border-color: var(--g-good); }
+.arena.hit { border-color: var(--g-bad); animation: shake .42s ease; }
+.arena-top { display: flex; justify-content: space-between; gap: 10px; font: 500 12px var(--f-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--g-dim); }
+.arena.boss #g-tag, #g-combo { color: var(--g-hot); }
+.arena-q { font-size: clamp(18px, 4.6vw, 22px); line-height: 1.45; align-self: center; }
+.arena-why { display: grid; gap: 4px; padding: 12px 14px; border-radius: 10px; font-size: 14px; color: var(--g-dim); background: rgb(255 107 99 / .12); border: 1px solid rgb(255 107 99 / .35); }
+.arena-why .label { color: var(--g-bad); }
+.arena-why strong { color: var(--g-ink); font: 600 18px var(--f-display); }
+.fuse { height: 6px; border-radius: 99px; background: rgb(255 255 255 / .09); overflow: hidden; }
+.fuse span { display: block; height: 100%; width: 100%; background: var(--g-cool); }
+.arena.boss .fuse span { background: var(--g-hot); }
+.fuse.low span { background: var(--g-bad) !important; animation: blink .5s steps(2) infinite; }
+@keyframes blink { 50% { opacity: .4; } }
+.pop { position: absolute; right: 18px; top: 38px; font: 700 26px var(--f-display); color: var(--g-good); opacity: 0; pointer-events: none; white-space: pre; }
+.pop.show { animation: floatup .9s ease-out; }
+@keyframes floatup { 0% { opacity: 0; transform: translateY(10px); } 20% { opacity: 1; } 100% { opacity: 0; transform: translateY(-34px); } }
+.stampbig {
+  position: absolute; left: 50%; top: 50%; padding: 6px 16px; border: 3px solid currentColor; border-radius: 8px; background: var(--g-bg);
+  font: 700 26px var(--f-mono); letter-spacing: .14em; text-transform: uppercase; white-space: nowrap;
+  opacity: 0; pointer-events: none; transform: translate(-50%, -50%) rotate(-8deg);
+}
+.stampbig.ok { color: var(--g-good); }
+.stampbig.bad { color: var(--g-bad); }
+.stampbig.show { animation: stampin .8s ease-out forwards; }
+@keyframes stampin {
+  0% { opacity: 0; transform: translate(-50%, -50%) rotate(-8deg) scale(1.7); }
+  22% { opacity: 1; transform: translate(-50%, -50%) rotate(-8deg) scale(1); }
+  75% { opacity: 1; } 100% { opacity: 0; transform: translate(-50%, -50%) rotate(-8deg) scale(1); }
+}
+.gpanel { display: grid; gap: 14px; padding: 24px 20px; background: var(--g-bg); color: var(--g-ink); border: 1px solid var(--g-line); border-radius: 14px; }
+.gpanel h2 { font-size: clamp(30px, 8vw, 44px); letter-spacing: -.02em; }
+.gpanel p { margin: 0; color: var(--g-dim); }
+.gpanel .label { color: var(--g-hot); }
+.gpanel .rules { margin: 0; padding-left: 18px; display: grid; gap: 6px; color: var(--g-dim); }
+.gstats { display: flex; flex-wrap: wrap; gap: 10px 26px; }
+.gstats > div { display: grid; gap: 2px; }
+.gstats b { font: 600 24px var(--f-display); font-variant-numeric: tabular-nums; }
+.gstats .label { color: var(--g-dim); }
+.gpanel .btn { background: transparent; color: var(--g-ink); border-color: var(--g-line); }
+.gpanel .btn.go { background: var(--g-cool); border-color: var(--g-cool); color: var(--g-bg); }
+
 @media (max-width: 520px) {
   .modes { grid-template-columns: minmax(0, 1fr); }
   .mode { min-height: 0; }
@@ -317,7 +402,8 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
 }
 @media (prefers-reduced-motion: reduce) {
   .card, .bar > span, .mode, .toast, .flip.release, .flip.fly, .ring .val { transition: none; }
-  #v-home > *, .enter, .choice, .verdict, .streak { animation: none !important; }
+  #v-home > *, .enter, .choice, .verdict, .streak, .arena, .fuse span, .mode.game::before { animation: none !important; }
+  .pop.show, .stampbig.show { animation: none; }
 }
 </style>
 </head>
@@ -347,6 +433,30 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     </div>
 
     <section>
+      <div class="head"><span class="label">Study</span><button class="linkbtn" id="browse-link" type="button">Browse all cards</button></div>
+      <div id="empty" class="empty" hidden></div>
+      <div class="modes">
+        <button class="mode game" type="button" data-mode="game">
+          <span class="label">Arcade</span>
+          <h3>Breach</h3>
+          <p>Threats incoming. Match each one before the fuse burns out, chain combos, and survive the scenario boss at the end of every wave.</p>
+          <span class="label" id="n-game"></span>
+        </button>
+        <button class="mode" type="button" data-mode="scn"><h3>Scenarios</h3><p>Exam-style questions with an explanation after every answer.</p><span class="label" id="n-scn"></span></button>
+        <button class="mode" type="button" data-mode="quiz"><h3>Multiple choice</h3><p>Pick the matching term from four close options.</p><span class="label" id="n-quiz"></span></button>
+        <button class="mode" type="button" data-mode="flash"><h3>Flashcards</h3><p>Flip, then swipe right if you knew it, left if not.</p><span class="label" id="n-flash"></span></button>
+        <button class="mode" type="button" data-mode="type"><h3>Type the term</h3><p>Read the definition and type the term or acronym.</p><span class="label" id="n-type"></span></button>
+      </div>
+      <p class="note" id="clue-note"></p>
+    </section>
+
+    <section>
+      <div class="head"><span class="label">Exam readiness</span><span class="label" id="ready-total"></span></div>
+      <div class="domains" id="domains"></div>
+      <p class="note">Weighted by each domain's share of the SY0-701 exam. Mastered items count fully, learning items partly. Tap a domain to aim every mode at it. This measures your deck, not the full exam outline.</p>
+    </section>
+
+    <section>
       <div class="head"><span class="label">Sets</span><button class="linkbtn" id="toggle-all" type="button">Select all</button></div>
       <div class="sets" id="sets"></div>
     </section>
@@ -369,22 +479,17 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
             <button type="button" data-v="10">10</button><button type="button" data-v="20">20</button><button type="button" data-v="40">40</button><button type="button" data-v="0">All</button>
           </div>
         </div>
+        <div class="opt"><span>Domain</span>
+          <div class="seg" id="opt-domain" role="group" aria-label="Exam domain">
+            <button type="button" data-v="0">All</button><button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button>
+          </div>
+        </div>
       </div>
     </section>
 
-    <section>
-      <div class="head"><span class="label">Study</span></div>
-      <div id="empty" class="empty" hidden></div>
-      <div class="modes">
-        <button class="mode primary" type="button" data-mode="flash"><h3>Flashcards</h3><p>Flip each card and mark whether you knew it.</p><span class="label" id="n-flash"></span></button>
-        <button class="mode" type="button" data-mode="quiz"><h3>Multiple choice</h3><p>Pick the match from four options, exam style.</p><span class="label" id="n-quiz"></span></button>
-        <button class="mode" type="button" data-mode="type"><h3>Type the term</h3><p>Read the definition and type the term or acronym.</p><span class="label" id="n-type"></span></button>
-        <button class="mode" type="button" data-mode="browse"><h3>Browse</h3><p>Search every card and see where you stand on each.</p><span class="label" id="n-browse"></span></button>
-      </div>
-      <p class="note" id="clue-note"></p>
-    </section>
 
     <footer class="foot">
+      <span>SY0-701: up to 90 questions in 90 minutes, passing score 750 on a 100-900 scale.</span>
       <span>Cards from <a href="https://quizlet.com/user/zavotakeoff/folders/sec-flashcards-in-progress" target="_blank" rel="noopener">your Quizlet folder</a>. Progress is saved in this browser.</span>
       <button class="danger" id="reset" type="button">Reset progress</button>
     </footer>
@@ -424,6 +529,29 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     </section>
   </main>
 
+  <!-- BREACH -->
+  <main id="v-game" class="wrap" hidden>
+    <div class="hud">
+      <button class="back" id="g-exit" type="button">Exit</button>
+      <div class="hudstat"><span class="label">Score</span><b id="g-score">0</b></div>
+      <div class="hudstat"><span class="label">Wave</span><b id="g-wave">1</b></div>
+      <div class="shields" id="g-shields" role="img" aria-label="3 shields left"></div>
+    </div>
+    <div id="g-play" style="display:grid;gap:16px">
+      <div class="arena" id="arena">
+        <div class="arena-top"><span id="g-tag"></span><span id="g-combo"></span></div>
+        <div class="arena-q" id="g-q"></div>
+        <div class="arena-why" id="g-why" hidden></div>
+        <div class="fuse" id="g-fuse"><span></span></div>
+        <div class="pop" id="g-pop" aria-hidden="true"></div>
+        <div class="stampbig" id="g-stamp" aria-hidden="true"></div>
+      </div>
+      <div class="choices" id="g-choices"></div>
+      <button class="btn go" id="g-next" type="button" hidden>Continue <kbd>Enter</kbd></button>
+    </div>
+    <div id="g-panel" style="display:grid;gap:20px" hidden></div>
+  </main>
+
   <!-- BROWSE -->
   <main id="v-browse" class="wrap" hidden>
     <div class="studyhead">
@@ -439,6 +567,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
 <canvas id="confetti" hidden></canvas>
 
 <script src="cards.js"></script>
+<script src="scenarios.js"></script>
 <script src="engine.js"></script>
 <script>
 (function () {
@@ -446,7 +575,8 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   const E = window.SecEngine;
   const SETS = window.SECPLUS_SETS;
   const DECK = E.buildDeck(SETS);
-  const BY_ID = new Map(DECK.map((c) => [c.id, c]));
+  const SCN = E.buildScenarios(window.SECPLUS_SCENARIOS || []);
+  const BY_ID = new Map(DECK.concat(SCN).map((c) => [c.id, c]));
   const QUIZ_POOL = DECK.filter((c) => !c.clue);
   const $ = (id) => document.getElementById(id);
   const el = (tag, cls, text) => { const n = document.createElement(tag); if (cls) n.className = cls; if (text != null) n.textContent = text; return n; };
@@ -456,7 +586,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   function load(k, d) { try { const v = JSON.parse(localStorage.getItem(k)); return v && typeof v === 'object' ? v : d; } catch { return d; } }
   function store(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch { /* storage unavailable */ } }
   let progress = load(KEY_P, {});
-  const prefs = Object.assign({ prompt: 'def', focus: 'all', len: '20', sound: false, sets: SETS.map((s) => s.id) }, load(KEY_O, {}));
+  const prefs = Object.assign({ prompt: 'def', focus: 'all', len: '20', sound: false, domain: '0', sets: SETS.map((s) => s.id) }, load(KEY_O, {}));
   const reduced = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
 
   // ---------- daily activity ----------
@@ -582,11 +712,31 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     bar.append(m, l);
   }
   function selectedCards() { return DECK.filter((c) => prefs.sets.includes(c.setId)); }
+  const inDomain = (c) => prefs.domain === '0' || c.domain === Number(prefs.domain);
   function poolFor(mode) {
-    let cards = selectedCards();
-    if (mode === 'quiz' || mode === 'type') cards = cards.filter((c) => !c.clue);
-    if (prefs.focus === 'weak') cards = cards.filter((c) => levelOf(c.id) < E.MASTERED);
+    let cards = mode === 'scn' ? SCN.filter(inDomain) : selectedCards().filter(inDomain);
+    if (mode === 'quiz' || mode === 'type' || mode === 'game') cards = cards.filter((c) => !c.clue);
+    if (prefs.focus === 'weak' && mode !== 'game') cards = cards.filter((c) => levelOf(c.id) < E.MASTERED);
     return cards;
+  }
+  function renderReadiness() {
+    const r = E.readiness(DECK.concat(SCN), levelOf);
+    $('ready-total').textContent = Math.round(r.overall * 100) + '% ready';
+    const box = $('domains'); box.replaceChildren();
+    for (const d of r.domains) {
+      const b = el('button', 'dom'); b.type = 'button';
+      b.setAttribute('aria-pressed', String(prefs.domain === String(d.n)));
+      const name = el('span', 'name', d.name);
+      if (r.focus === d && r.overall < 0.999) name.append(el('span', 'focus', 'Focus here'));
+      const bar = el('div', 'bar thin'); const f = el('span', 'm'); f.style.width = (d.score * 100) + '%'; bar.append(f);
+      const sub = el('div', 'sub'); sub.append(el('span', null, d.w + '% of exam'), bar, el('span', null, d.count + ' items'));
+      b.append(el('span', 'num', 'D' + d.n), name, el('span', 'pct', Math.round(d.score * 100) + '%'), sub);
+      b.addEventListener('click', () => {
+        prefs.domain = prefs.domain === String(d.n) ? '0' : String(d.n);
+        store(KEY_O, prefs); renderHome();
+      });
+      box.append(b);
+    }
   }
   function setSeg(id, value) {
     for (const b of $(id).querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === value));
@@ -618,7 +768,8 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       box.append(btn);
     }
     $('toggle-all').textContent = prefs.sets.length === SETS.length ? 'Clear' : 'Select all';
-    setSeg('opt-prompt', prefs.prompt); setSeg('opt-focus', prefs.focus); setSeg('opt-len', prefs.len);
+    setSeg('opt-prompt', prefs.prompt); setSeg('opt-focus', prefs.focus); setSeg('opt-len', prefs.len); setSeg('opt-domain', prefs.domain);
+    renderReadiness();
 
     const len = Number(prefs.len);
     const cap = (n) => (len && n > len ? len : n);
@@ -626,13 +777,15 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     $('n-flash').textContent = cap(flash) + ' cards';
     $('n-quiz').textContent = cap(quiz) + ' questions';
     $('n-type').textContent = cap(quiz) + ' prompts';
-    $('n-browse').textContent = selectedCards().length + ' cards';
+    $('n-scn').textContent = cap(poolFor('scn').length) + ' questions';
+    const gb = gameBest();
+    $('n-game').textContent = (gb ? 'High score ' + gb.toLocaleString() + ' · ' : '') + poolFor('game').length + ' terms in play';
     const clues = selectedCards().filter((c) => c.clue).length;
     $('clue-note').textContent = clues ? clues + ' exam-clue and memory-trick cards show up in Flashcards and Browse, not in the quiz modes.' : '';
 
     const empty = $('empty');
     if (!prefs.sets.length) { empty.textContent = 'Pick at least one set to study.'; empty.hidden = false; }
-    else if (!flash) { empty.textContent = 'Every card in these sets is mastered. Switch Cards to All to keep reviewing.'; empty.hidden = false; }
+    else if (!flash && !poolFor('scn').length) { empty.textContent = 'Nothing left with these filters. Switch Cards to All or pick another domain.'; empty.hidden = false; }
     else empty.hidden = true;
     for (const m of document.querySelectorAll('.mode')) {
       const mode = m.dataset.mode;
@@ -640,7 +793,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     }
   }
 
-  for (const [id, key] of [['opt-prompt', 'prompt'], ['opt-focus', 'focus'], ['opt-len', 'len']]) {
+  for (const [id, key] of [['opt-prompt', 'prompt'], ['opt-focus', 'focus'], ['opt-len', 'len'], ['opt-domain', 'domain']]) {
     $(id).addEventListener('click', (e) => {
       const b = e.target.closest('button'); if (!b) return;
       prefs[key] = b.dataset.v; store(KEY_O, prefs); renderHome();
@@ -663,7 +816,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   });
   document.querySelector('.modes').addEventListener('click', (e) => {
     const m = e.target.closest('.mode'); if (!m || m.disabled) return;
-    if (m.dataset.mode === 'browse') return showBrowse();
+    if (m.dataset.mode === 'game') return startGame();
     const len = Number(prefs.len);
     let cards = E.order(poolFor(m.dataset.mode), levelOf);
     if (len) cards = cards.slice(0, len);
@@ -674,15 +827,16 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   let view = 'home';
   function show(v) {
     view = v;
-    for (const id of ['home', 'study', 'results', 'browse']) $('v-' + id).hidden = id !== v;
+    for (const id of ['home', 'study', 'results', 'browse', 'game']) $('v-' + id).hidden = id !== v;
     window.scrollTo(0, 0);
   }
-  function goHome() { session = null; renderHome(); show('home'); }
+  function goHome() { session = null; stopGame(); renderHome(); show('home'); }
+  $('browse-link').addEventListener('click', () => showBrowse());
   $('home-link').addEventListener('click', goHome);
   $('browse-back').addEventListener('click', goHome);
 
   // ---------- session ----------
-  const MODE_NAME = { flash: 'Flashcards', quiz: 'Multiple choice', type: 'Type the term' };
+  const MODE_NAME = { flash: 'Flashcards', quiz: 'Multiple choice', type: 'Type the term', scn: 'Scenarios' };
   let session = null;
   function startSession(mode, cards) {
     session = { mode, cards, i: 0, results: [], answered: false, flipped: false, busy: false,
@@ -719,7 +873,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     stage.classList.remove('enter'); void stage.offsetWidth; stage.classList.add('enter');
     const card = s.cards[s.i];
     if (s.mode === 'flash') renderFlash(stage, card);
-    else if (s.mode === 'quiz') renderQuiz(stage, card);
+    else if (s.mode === 'quiz' || s.mode === 'scn') renderQuiz(stage, card);
     else renderType(stage, card);
   }
   function next() { session.i++; renderStep(); }
@@ -816,40 +970,63 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     wrap.addEventListener('pointercancel', end);
   }
 
-  // multiple choice
-  function renderQuiz(stage, card) {
-    const askTerm = prefs.prompt === 'term';
-    const p = el('div', 'prompt');
-    const top = el('div', 'facetop'); top.append(el('span', 'label', askTerm ? 'Which definition matches?' : 'Which term matches?'));
-    p.append(top, el('div', 'body' + (askTerm ? ' term' : ''), askTerm ? card.term : card.def), meta(card));
-    const opts = E.shuffle([card].concat(E.pickDistractors(card, QUIZ_POOL, 3)));
-    const list = el('div', 'choices');
-    opts.forEach((o, i) => {
-      const b = el('button', 'choice' + (askTerm ? '' : ' termopt')); b.type = 'button';
-      b.dataset.id = o.id;
-      b.append(el('span', 'k', String(i + 1)), el('span', null, askTerm ? o.def : o.term));
-      b.addEventListener('click', () => choose(card, b));
-      list.append(b);
+  // multiple choice: cards (definition <-> term) and scenarios share one renderer
+  function buildQuestion(item, side) {
+    if (item.kind === 'scn') {
+      return { label: 'Scenario', prompt: item.q, promptIsTerm: false, termOpts: false,
+               options: E.shuffle(item.opts.map((label, i) => ({ id: item.id + '#' + i, label, correct: i === item.c }))) };
+    }
+    const askTerm = side === 'term';
+    return {
+      label: askTerm ? 'Which definition matches?' : 'Which term matches?',
+      prompt: askTerm ? item.term : item.def, promptIsTerm: askTerm, termOpts: !askTerm,
+      options: E.shuffle([item].concat(E.pickDistractors(item, QUIZ_POOL, 3)))
+        .map((o) => ({ id: o.id, label: askTerm ? o.def : o.term, correct: o.id === item.id })),
+    };
+  }
+  function choiceButtons(Q, onPick) {
+    return Q.options.map((o, i) => {
+      const b = el('button', 'choice' + (Q.termOpts ? ' termopt' : '')); b.type = 'button';
+      b.dataset.id = o.id; b.dataset.correct = o.correct ? '1' : '0';
+      b.append(el('span', 'k', String(i + 1)), el('span', null, o.label));
+      b.addEventListener('click', () => onPick(b));
+      return b;
     });
+  }
+  function markChoices(list, picked) {
+    for (const b of list.children) {
+      b.disabled = true;
+      if (b.dataset.correct === '1') b.classList.add('right');
+      else if (b === picked) b.classList.add('wrong');
+      else b.classList.add('dim');
+    }
+  }
+  function renderQuiz(stage, card) {
+    const Q = buildQuestion(card, prefs.prompt);
+    const p = el('div', 'prompt');
+    const top = el('div', 'facetop'); top.append(el('span', 'label', Q.label));
+    if (card.kind === 'scn') top.append(el('span', 'badge', 'D' + card.domain + ' ' + E.DOMAINS[card.domain - 1].short));
+    p.append(top, el('div', 'body' + (Q.promptIsTerm ? ' term' : ''), Q.prompt), meta(card));
+    const list = el('div', 'choices');
+    list.append(...choiceButtons(Q, (b) => choose(card, b, list)));
     const after = el('div'); after.id = 'after'; after.style.cssText = 'display:grid;gap:12px';
     stage.append(p, list, after);
   }
-  function choose(card, btn) {
+  function choose(card, btn, list) {
     if (session.answered) return;
-    const ok = btn.dataset.id === card.id;
+    const ok = btn.dataset.correct === '1';
     answer(card, ok);
-    for (const b of document.querySelectorAll('#stage .choice')) {
-      b.disabled = true;
-      if (b.dataset.id === card.id) b.classList.add('right');
-      else if (b === btn) b.classList.add('wrong');
-      else b.classList.add('dim');
-    }
+    markChoices(list, btn);
     const after = $('after');
-    if (!ok) {
+    if (card.kind === 'scn') {
+      const v = el('div', 'verdict ' + (ok ? 'ok' : 'no'));
+      v.append(el('strong', null, ok ? 'Correct' : 'Not quite'), el('span', 't', card.term), el('span', 'd', card.why));
+      after.append(v);
+    } else if (!ok) {
       const picked = BY_ID.get(btn.dataset.id);
       const v = el('div', 'verdict no');
       v.append(el('strong', null, 'Not quite'), el('span', 't', card.term), el('span', 'd', card.def));
-      v.append(el('span', 'd', 'You picked ' + picked.term + ': ' + picked.def));
+      if (picked) v.append(el('span', 'd', 'You picked ' + picked.term + ': ' + picked.def));
       after.append(v);
     }
     after.append(nextButton());
@@ -995,17 +1172,211 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     if (session && session.results.length) showResults(); else goHome();
   });
 
+  // ---------- Breach (arcade) ----------
+  const WAVE = 8, KEY_G = 'secplus.breach.v1';
+  const SHIELD_SVG = '<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2 4 5v6c0 5.1 3.4 9.4 8 11 4.6-1.6 8-5.9 8-11V5l-8-3z"/></svg>';
+  let G = null, gRAF = 0, gTimer = 0;
+  function gameBest() { return load(KEY_G, { best: 0 }).best || 0; }
+  const pctOf = (a, b) => (b ? Math.round(a / b * 100) : 0);
+  function stat(k, v) { const d = el('div'); d.append(el('b', null, v), el('span', 'label', k)); return d; }
+
+  function startGame() {
+    const cards = poolFor('game');
+    if (!cards.length) return;
+    stopGame();
+    G = { score: 0, wave: 1, idx: 0, shields: 3, streak: 0, bestStreak: 0, right: 0, total: 0, missed: [],
+          cards: E.order(cards, levelOf), ci: 0, scns: E.shuffle(SCN.filter(inDomain)), si: 0,
+          cur: null, locked: true, over: false, t0: 0, dur: 1, pausedAt: 0 };
+    show('game'); gameHud(); gamePanel('start');
+  }
+  function stopGame() { cancelAnimationFrame(gRAF); clearTimeout(gTimer); G = null; }
+  function gameOver() { if (!G) return; cancelAnimationFrame(gRAF); clearTimeout(gTimer); G.locked = true; G.over = true; gamePanel('over'); }
+  function exitGame() { if (G && G.total && !G.over) gameOver(); else goHome(); }
+
+  function gameHud() {
+    if (!G) return;
+    $('g-score').textContent = G.score.toLocaleString();
+    $('g-wave').textContent = String(G.wave);
+    const sh = $('g-shields');
+    if (!sh.children.length) sh.innerHTML = SHIELD_SVG + SHIELD_SVG + SHIELD_SVG;
+    Array.from(sh.children).forEach((svg, i) => svg.classList.toggle('lost', i >= G.shields));
+    sh.setAttribute('aria-label', G.shields + ' shields left');
+    const combo = Math.min(5, 1 + Math.floor(G.streak / 3));
+    $('g-combo').textContent = combo > 1 ? 'x' + combo + ' combo' : (G.streak ? G.streak + ' blocked' : '');
+  }
+
+  function gamePanel(kind) {
+    $('g-play').hidden = true;
+    const panel = $('g-panel'); panel.hidden = false; panel.replaceChildren();
+    const box = el('div', 'gpanel'), actions = el('div', 'row');
+    const btn = (label, cls, fn) => { const b = el('button', 'btn ' + cls, label); b.type = 'button'; b.addEventListener('click', fn); actions.append(b); };
+    let extra = null;
+    if (kind === 'start') {
+      box.append(el('span', 'label', 'Arcade · ' + poolFor('game').length + ' terms in play'), el('h2', null, 'Breach'));
+      const ul = el('ul', 'rules');
+      ['Each threat shows a definition. Pick the matching term before the fuse burns out.',
+       'Answer fast for more points. Three blocks in a row raise your combo, up to x5.',
+       'The last threat of every wave is a scenario boss worth double, with a longer fuse.',
+       'A wrong pick or a timeout costs a shield and shows you the right answer. Lose all three and the network falls.',
+      ].forEach((t) => ul.append(el('li', null, t)));
+      box.append(ul);
+      const best = gameBest();
+      if (best) box.append(el('p', null, 'Your high score: ' + best.toLocaleString()));
+      btn('Start', 'go', nextThreat);
+      btn('Back', '', goHome);
+    } else if (kind === 'wave') {
+      const bonus = G.shields * 50 * G.wave; G.score += bonus;
+      const regen = G.shields < 3; if (regen) G.shields++;
+      box.append(el('span', 'label', 'Wave ' + G.wave + ' cleared'), el('h2', null, 'Network holding'));
+      const st = el('div', 'gstats');
+      st.append(stat('Score', G.score.toLocaleString()), stat('Shield bonus', '+' + bonus), stat('Accuracy', pctOf(G.right, G.total) + '%'));
+      box.append(st, el('p', null, (regen ? 'One shield restored. ' : 'All shields up. ') + 'Wave ' + (G.wave + 1) + ' has a shorter fuse.'));
+      G.wave++; G.idx = 0; gameHud();
+      btn('Start wave ' + G.wave, 'go', nextThreat);
+      sfx('done');
+    } else {
+      const best = gameBest(), isBest = G.score > best;
+      if (isBest) store(KEY_G, { best: G.score });
+      box.append(el('span', 'label', isBest && G.score ? 'New high score' : 'Network breached'), el('h2', null, G.score.toLocaleString()));
+      const st = el('div', 'gstats');
+      st.append(stat('Waves cleared', String(G.wave - 1)), stat('Blocked', G.right + '/' + G.total),
+                stat('Best streak', String(G.bestStreak)), stat('High score', Math.max(best, G.score).toLocaleString()));
+      box.append(st);
+      const missed = G.missed.slice();
+      box.append(el('p', null, missed.length ? 'Drill what got through now and it will stick for the next run.' : 'Nothing got through. Clean defense.'));
+      if (missed.length) btn('Drill the ' + missed.length + ' that got through', 'go', () => { stopGame(); startSession('quiz', E.shuffle(missed)); });
+      btn('Play again', missed.length ? '' : 'go', startGame);
+      btn('Back to sets', '', goHome);
+      if (missed.length) {
+        extra = el('section');
+        const h = el('div', 'head'); h.append(el('span', 'label', 'Got through (' + missed.length + ')'));
+        const list = el('div', 'list'); list.append(...missed.map(itemRow));
+        extra.append(h, list);
+      }
+      if (isBest && G.score > 0) { confetti(); sfx('done'); }
+    }
+    box.append(actions);
+    panel.append(box);
+    if (extra) panel.append(extra);
+    window.scrollTo(0, 0);
+    setTimeout(() => { const g = actions.querySelector('.go'); if (g) g.focus({ preventScroll: true }); }, 0);
+  }
+
+  function nextThreat() {
+    if (!G) return;
+    if (G.idx >= WAVE) return gamePanel('wave');
+    $('g-panel').hidden = true; $('g-play').hidden = false;
+    const boss = G.idx === WAVE - 1 && G.scns.length > 0;
+    let item;
+    if (boss) item = G.scns[G.si++ % G.scns.length];
+    else {
+      if (G.ci >= G.cards.length) { G.cards = E.order(G.cards, levelOf); G.ci = 0; }
+      item = G.cards[G.ci++];
+    }
+    G.cur = item; G.locked = false;
+    const Q = buildQuestion(item, 'def');
+    const arena = $('arena');
+    arena.classList.remove('hit', 'block', 'boss', 'enter');
+    if (boss) arena.classList.add('boss');
+    $('g-tag').textContent = boss ? 'Boss · scenario · x2 points' : 'Wave ' + G.wave + ' · threat ' + (G.idx + 1) + '/' + WAVE;
+    $('g-q').textContent = Q.prompt;
+    $('g-why').hidden = true; $('g-why').replaceChildren();
+    $('g-next').hidden = true;
+    $('g-stamp').className = 'stampbig';
+    $('g-pop').classList.remove('show');
+    const list = $('g-choices');
+    list.replaceChildren(...choiceButtons(Q, gResolve));
+    gameHud();
+    void arena.offsetWidth; arena.classList.add('enter');
+    G.dur = (boss ? Math.max(14, 26 - G.wave) : Math.max(5, 13 - G.wave)) * 1000;
+    G.t0 = performance.now(); G.pausedAt = 0;
+    $('g-fuse').classList.remove('low');
+    cancelAnimationFrame(gRAF); gRAF = requestAnimationFrame(gTick);
+    window.scrollTo(0, 0);
+  }
+  function gTick() {
+    if (!G || G.locked || G.pausedAt) return;
+    const k = 1 - (performance.now() - G.t0) / G.dur;
+    const f = $('g-fuse');
+    f.firstElementChild.style.width = Math.max(0, k * 100) + '%';
+    f.classList.toggle('low', k < 0.3);
+    if (k <= 0) return gResolve(null);
+    gRAF = requestAnimationFrame(gTick);
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (!G || G.locked) return;
+    if (document.hidden) { G.pausedAt = performance.now(); cancelAnimationFrame(gRAF); }
+    else if (G.pausedAt) { G.t0 += performance.now() - G.pausedAt; G.pausedAt = 0; gRAF = requestAnimationFrame(gTick); }
+  });
+  function gPop(text) { const p = $('g-pop'); p.textContent = text; p.classList.remove('show'); void p.offsetWidth; p.classList.add('show'); }
+  function gStamp(text, cls) { const s = $('g-stamp'); s.textContent = text; s.className = 'stampbig ' + cls; void s.offsetWidth; s.classList.add('show'); }
+
+  function gResolve(btn) {
+    if (!G || G.locked) return;
+    G.locked = true; cancelAnimationFrame(gRAF);
+    const item = G.cur, ok = !!btn && btn.dataset.correct === '1';
+    const kFuse = Math.max(0, 1 - (performance.now() - G.t0) / G.dur);
+    markChoices($('g-choices'), btn);
+    const mastered = record(item, ok);
+    G.total++; G.idx++;
+    const arena = $('arena');
+    if (ok) {
+      G.right++; G.streak++; G.bestStreak = Math.max(G.bestStreak, G.streak);
+      const combo = Math.min(5, 1 + Math.floor((G.streak - 1) / 3));
+      const pts = Math.round((100 + 150 * kFuse) * combo * (item.kind === 'scn' ? 2 : 1));
+      G.score += pts;
+      gPop('+' + pts + (combo > 1 ? '\nx' + combo : ''));
+      gStamp(item.kind === 'scn' ? 'Boss down' : 'Blocked', 'ok');
+      arena.classList.add('block');
+      if (mastered) { toast('Mastered', item.term); sfx('master'); } else sfx('hit');
+      gameHud();
+      gTimer = setTimeout(gProceed, 750);
+    } else {
+      G.streak = 0; G.shields = Math.max(0, G.shields - 1);
+      if (!G.missed.includes(item)) G.missed.push(item);
+      gStamp(btn ? 'Breach' : 'Timed out', 'bad');
+      arena.classList.remove('block'); void arena.offsetWidth; arena.classList.add('hit');
+      sfx('miss');
+      const why = $('g-why');
+      why.replaceChildren(el('span', 'label', 'Correct answer'), el('strong', null, item.term));
+      if (item.kind === 'scn') why.append(el('span', null, item.why));
+      else if (btn) { const picked = BY_ID.get(btn.dataset.id); if (picked) why.append(el('span', null, 'You picked ' + picked.term + ': ' + picked.def)); }
+      why.hidden = false;
+      gameHud();
+      const n = $('g-next'); n.hidden = false;
+      n.innerHTML = (G.shields <= 0 ? 'See the damage report' : 'Continue') + ' <kbd>Enter</kbd>';
+      setTimeout(() => n.focus({ preventScroll: true }), 0);
+    }
+  }
+  function gProceed() {
+    if (!G) return;
+    clearTimeout(gTimer);
+    if (G.shields <= 0) gameOver(); else nextThreat();
+  }
+  $('g-next').addEventListener('click', gProceed);
+  $('g-exit').addEventListener('click', exitGame);
+  function gameKey(e) {
+    if (!G) return;
+    if (!$('g-panel').hidden) {
+      if (e.key === 'Enter' && e.target.tagName !== 'BUTTON') { e.preventDefault(); const g = $('g-panel').querySelector('.btn.go'); if (g) g.click(); }
+      return;
+    }
+    if (!G.locked && /^[1-4]$/.test(e.key)) { const b = $('g-choices').children[Number(e.key) - 1]; if (b) b.click(); }
+    else if (G.locked && e.key === 'Enter' && !$('g-next').hidden && e.target.id !== 'g-next') { e.preventDefault(); gProceed(); }
+  }
+
   // ---------- keyboard ----------
   document.addEventListener('keydown', (e) => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    if (e.key === 'Escape') { if (view === 'study') $('end').click(); else if (view !== 'home') goHome(); return; }
+    if (e.key === 'Escape') { if (view === 'study') $('end').click(); else if (view === 'game') exitGame(); else if (view !== 'home') goHome(); return; }
+    if (view === 'game') return gameKey(e);
     if (view !== 'study' || !session) return;
     const typing = e.target.tagName === 'INPUT';
     if (session.mode === 'flash') {
       if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flip(); }
       else if (e.key === '1' || e.key === 'ArrowLeft') gradeFlash(false);
       else if (e.key === '2' || e.key === 'ArrowRight') gradeFlash(true);
-    } else if (session.mode === 'quiz') {
+    } else if (session.mode === 'quiz' || session.mode === 'scn') {
       if (!session.answered && /^[1-4]$/.test(e.key)) {
         const b = document.querySelectorAll('#stage .choice')[Number(e.key) - 1]; if (b) b.click();
       } else if (session.answered && e.key === 'Enter' && e.target.id !== 'next') { e.preventDefault(); next(); }

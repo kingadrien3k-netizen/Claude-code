@@ -66,3 +66,33 @@ const ordered = E.order(deck.slice(0, 5), (id) => levels[id] || 0, rnd);
 assert.strictEqual(ordered[ordered.length - 1].id, 's1-1', 'mastered cards come last');
 
 console.log('secplus: all checks passed (' + deck.length + ' cards)');
+
+// Domains: every card tagged 1-5, and every domain has cards.
+for (const s of SETS) assert.strictEqual(s.domains.length, s.cards.length, s.id + ' domain tags line up');
+for (const c of deck) assert.ok(c.domain >= 1 && c.domain <= 5, 'domain for ' + c.id);
+const perDomain = [1, 2, 3, 4, 5].map((d) => deck.filter((c) => c.domain === d).length);
+assert.ok(perDomain.every((n) => n >= 20), 'each domain has cards: ' + perDomain);
+assert.strictEqual(card('Annualized Loss Expectancy (ALE)').domain, 5);
+assert.strictEqual(card('Directory Traversal').domain, 2);
+assert.strictEqual(card('Honeyfile').domain, 1);
+assert.strictEqual(E.DOMAINS.reduce((a, d) => a + d.w, 0), 100);
+
+// Scenarios: well formed, unique ids and options, all domains covered.
+const SCN = E.buildScenarios(require('../secplus/scenarios.js'));
+assert.strictEqual(new Set(SCN.map((q) => q.id)).size, SCN.length);
+for (const q of SCN) {
+  assert.strictEqual(q.opts.length, 4, q.id);
+  assert.strictEqual(new Set(q.opts).size, 4, q.id + ' options unique');
+  assert.ok(q.c >= 0 && q.c < 4 && q.why && q.q.length > 20, q.id);
+  assert.ok(q.domain >= 1 && q.domain <= 5, q.id);
+}
+for (let d = 1; d <= 5; d++) assert.ok(SCN.filter((q) => q.domain === d).length >= 8, 'scenarios in domain ' + d);
+
+// Readiness: weighted by exam share; the weakest heavy domain is flagged.
+const all = deck.concat(SCN);
+assert.strictEqual(E.readiness(all, () => 0).overall, 0);
+assert.strictEqual(E.readiness(all, () => 3).overall, 1);
+const r = E.readiness(all, (id) => (all.find((x) => x.id === id).domain === 4 ? 0 : 3));
+assert.strictEqual(r.focus.n, 4);
+assert.ok(Math.abs(r.overall - 0.72) < 1e-9, 'domain 4 is 28% of the exam');
+console.log('secplus: domains ' + perDomain.join('/') + ', ' + SCN.length + ' scenarios ok');

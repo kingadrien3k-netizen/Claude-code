@@ -5,6 +5,14 @@
   'use strict';
 
   const MASTERED = 3;
+  // CompTIA Security+ SY0-701 domains and their share of the exam.
+  const DOMAINS = [
+    { n: 1, name: 'General Security Concepts', short: 'Concepts', w: 12 },
+    { n: 2, name: 'Threats, Vulnerabilities, and Mitigations', short: 'Threats', w: 22 },
+    { n: 3, name: 'Security Architecture', short: 'Architecture', w: 18 },
+    { n: 4, name: 'Security Operations', short: 'Operations', w: 28 },
+    { n: 5, name: 'Security Program Management and Oversight', short: 'Oversight', w: 20 },
+  ];
   const STOP = new Set(('a an and are as at be by for from has in into is it its of on or such that the ' +
     'their them then to used uses using via was when where which while with without not only after before ' +
     'than other another can may more most one two three').split(' '));
@@ -54,11 +62,41 @@
           term,
           def,
           clue: isClue(term),
+          domain: Number((set.domains || '')[i]) || 0,
           keys: variants(term),
         });
       });
     }
     return cards;
+  }
+
+  // Scenario questions share the card shape (term = correct answer, def = question)
+  // so the quiz, results and browse code can show either.
+  function buildScenarios(list) {
+    return list.map((s, i) => ({
+      id: s.id, kind: 'scn', q: s.q, opts: s.opts, c: s.c, why: s.why, domain: s.d,
+      term: s.opts[s.c], def: s.q, setId: 'scn', setTitle: 'Scenarios', pos: i + 1, setSize: list.length,
+      clue: false, keys: new Set(),
+    }));
+  }
+
+  // Per-domain readiness: mastered items count fully, learning items by level.
+  // Overall readiness is weighted by each domain's share of the exam.
+  function readiness(items, levelOf) {
+    const per = DOMAINS.map((d) => Object.assign({ count: 0, score: 0 }, d));
+    for (const it of items) {
+      const d = per[it.domain - 1];
+      if (!d) continue;
+      d.count++;
+      d.score += Math.min(levelOf(it.id) || 0, MASTERED) / MASTERED;
+    }
+    let total = 0, wsum = 0, focus = null;
+    for (const d of per) {
+      d.score = d.count ? d.score / d.count : 0;
+      total += d.w * d.score; wsum += d.w;
+      if (!focus || d.w * (1 - d.score) > focus.w * (1 - focus.score)) focus = d;
+    }
+    return { domains: per, overall: wsum ? total / wsum : 0, focus };
   }
 
   function sameConcept(a, b) {
@@ -153,7 +191,7 @@
     return correct ? Math.min(MASTERED, (level || 0) + 1) : 0;
   }
 
-  const api = { MASTERED, norm, variants, isClue, buildDeck, sameConcept, checkAnswer, pickDistractors, shuffle, order, grade };
+  const api = { MASTERED, DOMAINS, buildScenarios, readiness, norm, variants, isClue, buildDeck, sameConcept, checkAnswer, pickDistractors, shuffle, order, grade };
   if (typeof module === 'object' && module.exports) module.exports = api;
   else root.SecEngine = api;
 })(this);

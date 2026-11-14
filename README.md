@@ -61,6 +61,9 @@ an "on fire" streak bonus, a second defender once you hit 10 points, and a saved
 A study app for the 304 CompTIA Security+ cards in the Quizlet folder
 "Sec+ Flashcards (in progress)". Open `secplus/index.html` in any browser; no install or build step.
 
+- **Breach** (arcade): definitions come in as threats with a burning fuse; pick the term to block them, build combos up to x5, and beat a scenario boss each wave. Misses cost a shield and show the right answer; at game over you can drill everything that got through.
+- **Scenarios**: 48 original exam-style questions (in `secplus/scenarios.js`) with an explanation after each answer
+- **Exam readiness**: every card is tagged with its SY0-701 domain; readiness is weighted by each domain's share of the exam and flags where to focus. Tap a domain to aim every mode at it.
 - **Flashcards**: flip, then mark "Still learning" or "Knew it" (Space, 1, 2)
 - **Multiple choice**: four options picked from similar cards, so distractors are plausible (keys 1-4, Enter)
 - **Type the term**: accepts the full term or its acronym, ignores case and punctuation, allows a small typo on long terms
@@ -71,6 +74,7 @@ A study app for the 304 CompTIA Security+ cards in the Quizlet folder
 | File | Purpose |
 |---|---|
 | `secplus/cards.js` | The card data, one block per Quizlet set. Add new sets here. |
-| `secplus/engine.js` | Answer checking, distractor choice, ordering and mastery levels |
+| `secplus/scenarios.js` | Exam-style scenario questions, tagged by domain |
+| `secplus/engine.js` | Answer checking, distractor choice, ordering, mastery levels, domain readiness |
 | `secplus/index.html` | The app |
 | `test/secplus.js` | `npm run test:secplus` |

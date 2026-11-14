@@ -7,6 +7,8 @@
   const SETS = [
     {
       id: 's1',
+      // SY0-701 domain per card, in order (1 Concepts, 2 Threats, 3 Architecture, 4 Operations, 5 Oversight)
+      domains: '54444444555533443322222242222225545552154545144444333444443555111344555522244444333333',
       title: 'Sec+ JD exam 1',
       url: 'https://quizlet.com/1225489427/sec-jd-exam-1-flash-cards',
       cards: [
@@ -100,6 +102,8 @@
     },
     {
       id: 's2',
+      // SY0-701 domain per card, in order (1 Concepts, 2 Threats, 3 Architecture, 4 Operations, 5 Oversight)
+      domains: '3444335542444433211133335544444555551111441111555224444355555',
       title: 'JD Sec+ 2',
       url: 'https://quizlet.com/1231978785/jd-sec-2-flash-cards',
       cards: [
@@ -168,6 +172,8 @@
     },
     {
       id: 's3',
+      // SY0-701 domain per card, in order (1 Concepts, 2 Threats, 3 Architecture, 4 Operations, 5 Oversight)
+      domains: '333311111443222224443344455551111155554424444444444442255522222244422222',
       title: 'JD Sec+3',
       url: 'https://quizlet.com/1233787564/jd-sec3-flash-cards',
       cards: [
@@ -247,6 +253,8 @@
     },
     {
       id: 's4',
+      // SY0-701 domain per card, in order (1 Concepts, 2 Threats, 3 Architecture, 4 Operations, 5 Oversight)
+      domains: '5544442225555111133355111113455111111155555554113522224412222233335555552222224444444',
       title: 'JD Sec+ 4 1/2',
       url: 'https://quizlet.com/1235438168/jd-sec-4-12-flash-cards',
       cards: [
