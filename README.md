@@ -53,3 +53,24 @@ browser — no install, no build step.
 
 90-second games, 14-second shot clock, 2s and 3s, rebounds off misses, steals, blocks,
 an "on fire" streak bonus, a second defender once you hit 10 points, and a saved best score.
+
+---
+
+# Sec+ Drill (`secplus/`)
+
+A study app for the 304 CompTIA Security+ cards in the Quizlet folder
+"Sec+ Flashcards (in progress)". Open `secplus/index.html` in any browser; no install or build step.
+
+- **Flashcards**: flip, then mark "Still learning" or "Knew it" (Space, 1, 2)
+- **Multiple choice**: four options picked from similar cards, so distractors are plausible (keys 1-4, Enter)
+- **Type the term**: accepts the full term or its acronym, ignores case and punctuation, allows a small typo on long terms
+- **Browse**: search every card and see its mastery level
+- Weakest cards come first; three correct answers in a row marks a card mastered, a miss resets it. Progress is kept in the browser's local storage.
+- Exam-clue and memory-trick cards (e.g. "ICS memory trick") appear in Flashcards and Browse only.
+
+| File | Purpose |
+|---|---|
+| `secplus/cards.js` | The card data, one block per Quizlet set. Add new sets here. |
+| `secplus/engine.js` | Answer checking, distractor choice, ordering and mastery levels |
+| `secplus/index.html` | The app |
+| `test/secplus.js` | `npm run test:secplus` |
