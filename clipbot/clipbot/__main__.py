@@ -11,7 +11,7 @@ import sys
 import urllib.parse
 from pathlib import Path
 
-from . import config, tiktok, twitch, video
+from . import config, style, tiktok, twitch, video
 from .bot import Bot
 from .tokens import TokenStore
 
@@ -97,7 +97,13 @@ def main() -> None:
     re_ = sub.add_parser("render", help="make a vertical TikTok video from any clip")
     re_.add_argument("src")
     re_.add_argument("dst")
-    re_.add_argument("--text", help="hook text to burn into the video")
+    re_.add_argument("--text", help="hook text to show at the top")
+    re_.add_argument("--style", choices=["pro", "simple"], help="default: from config (pro)")
+    re_.add_argument("--layout", choices=["center", "split", "blur"])
+    re_.add_argument("--facecam", help="split layout: x,y,w,h fractions, e.g. 0.72,0.05,0.26,0.3")
+    re_.add_argument("--focus-x", type=float, help="center layout: 0=left .. 1=right")
+    re_.add_argument("--no-captions", action="store_true", help="skip spoken captions")
+    re_.add_argument("--no-punch", action="store_true", help="skip the zoom punch-in")
 
     sub.add_parser("history", help="show recent clips")
 
@@ -116,7 +122,19 @@ def main() -> None:
     elif args.cmd == "post":
         cmd_post(cfg, args.file, args.caption, args.mode)
     elif args.cmd == "render":
-        video.render(Path(args.src), Path(args.dst), args.text, cfg["video"])
+        v = cfg["video"]
+        if (args.style or v["style"]) == "pro":
+            facecam = [float(n) for n in args.facecam.split(",")] if args.facecam else v["facecam"]
+            style.render_pro(
+                Path(args.src), Path(args.dst), args.text,
+                layout=args.layout or ("split" if args.facecam else v["layout"]), facecam=facecam,
+                focus_x=v["focus_x"] if args.focus_x is None else args.focus_x,
+                transcribe_audio=v["captions"] and not args.no_captions,
+                punch=v["punch"] and not args.no_punch,
+                font=v["caption_font"], whisper_model=v["whisper_model"],
+            )
+        else:
+            video.render(Path(args.src), Path(args.dst), args.text, v)
         print("wrote", args.dst)
     elif args.cmd == "history":
         cmd_history(cfg)

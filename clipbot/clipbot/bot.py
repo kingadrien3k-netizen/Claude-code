@@ -5,7 +5,7 @@ import asyncio
 import logging
 from pathlib import Path
 
-from . import captions, video
+from . import captions, style, video
 from .chat import read_chat
 from .detector import SpikeDetector, Trigger
 from .store import Store
@@ -95,7 +95,7 @@ class Bot:
             hook, caption = captions.build(name, game, trig, self.cfg["captions"],
                                            self.channels[name]["hashtags"])
             out = self.clips_dir / "tiktok" / f"{name}_{clip_id}.mp4"
-            await asyncio.to_thread(video.render, raw, out, hook, self.cfg["video"])
+            await asyncio.to_thread(render_for_channel, raw, out, hook, self.cfg["video"], self.channels[name])
             out.with_suffix(".txt").write_text(caption + "\n")
             self.store.update(clip_id, video_path=str(out), caption=caption, status="rendered")
             log.info("[%s] rendered %s", name, out)
@@ -122,3 +122,15 @@ class Bot:
             status = await asyncio.to_thread(self.tiktok.wait_for_status, publish_id)
             self.store.update(clip_id, status=status.lower())
             log.info("[%s] TikTok: %s", name, status)
+
+
+def render_for_channel(raw: Path, out: Path, hook: str, vcfg: dict, channel: dict) -> Path:
+    if vcfg["style"] != "pro":
+        return video.render(raw, out, hook, vcfg)
+    pick = lambda key: channel.get(key) if channel.get(key) is not None else vcfg[key]  # noqa: E731
+    return style.render_pro(
+        raw, out, hook,
+        layout=pick("layout"), facecam=pick("facecam"), focus_x=pick("focus_x"),
+        transcribe_audio=vcfg["captions"], punch=vcfg["punch"],
+        font=vcfg["caption_font"], whisper_model=vcfg["whisper_model"],
+    )

@@ -10,8 +10,14 @@ twitch:
 # Channels to watch. Set tiktok: true only for streamers who are OK with
 # you reposting their clips. The others still get clipped and rendered.
 channels:
+  - name: kaicenat
+    tiktok: false          # true only if you're in his clipping program / have permission
+    layout: center         # IRL / just-chatting: full-screen crop on the streamer
+    hashtags: [kaicenat, ampfam]
   - name: some_streamer
     tiktok: true
+    layout: split          # gaming: facecam on top, gameplay below
+    facecam: [0.72, 0.05, 0.26, 0.30]   # where the cam sits: x, y, width, height (fractions)
     hashtags: [valorant, gaming]
   - name: another_streamer
     tiktok: false
@@ -26,8 +32,13 @@ detector:
   warmup_seconds: 90
 
 video:
-  vertical: true         # 9:16 with blurred background
-  burn_caption: true     # hook text on top of the video
+  style: pro             # pro = word-by-word captions, hook box, zoom punch; simple = blur + text
+  layout: blur           # default layout for channels that don't set one
+  captions: true         # spoken captions via faster-whisper
+  whisper_model: base    # small/medium = more accurate, slower
+  punch: true            # zoom in on the loudest moment
+  vertical: true         # (simple style) 9:16 with blurred background
+  burn_caption: true     # (simple style) hook text on top of the video
   font_file: /usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf
 
 captions:

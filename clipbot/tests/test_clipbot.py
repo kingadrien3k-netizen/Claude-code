@@ -5,7 +5,7 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from clipbot import captions, config, tiktok, video
+from clipbot import captions, config, style, tiktok, video
 from clipbot.detector import SpikeDetector, Trigger, top_terms
 from clipbot.tokens import TokenStore
 
@@ -129,6 +129,35 @@ class VideoTests(unittest.TestCase):
                                   "stream=width,height", "-of", "csv=p=0", str(dst)],
                                  capture_output=True, text=True, check=True).stdout.strip()
             self.assertEqual(out, "1080,1920")
+
+
+class StyleTests(unittest.TestCase):
+    WORDS = [style.Word(0.0, 0.3, "bro"), style.Word(0.3, 0.6, "what"), style.Word(0.6, 0.9, "is"),
+             style.Word(0.9, 1.2, "this"), style.Word(3.0, 3.4, "NAH")]
+
+    def test_groups_split_on_size_and_pauses(self):
+        groups = [[w.text for w in g] for g in style.group_words(self.WORDS)]
+        self.assertEqual(groups, [["bro", "what", "is"], ["this"], ["NAH"]])
+
+    def test_ass_highlights_one_word_per_event(self):
+        ass = style.build_ass(self.WORDS, "hook {x} 😭", 5.0, 1300)
+        events = [l for l in ass.splitlines() if l.startswith("Dialogue: 0")]
+        self.assertEqual(len(events), 5)
+        self.assertTrue(all(e.count("\\c&H0000E5FF&") == 1 for e in events))
+        self.assertIn("Hook,,0,0,0,,hook (x)", ass)
+
+    def test_render_layouts(self):
+        with tempfile.TemporaryDirectory() as d:
+            src = Path(d, "in.mp4")
+            subprocess.run(["ffmpeg", "-loglevel", "error", "-f", "lavfi", "-i", "testsrc=size=1920x1080:rate=30",
+                            "-f", "lavfi", "-i", "sine", "-t", "2", "-shortest", str(src)], check=True)
+            for layout, cam in (("center", None), ("split", (0.7, 0.05, 0.28, 0.3)), ("blur", None)):
+                dst = Path(d, f"{layout}.mp4")
+                style.render_pro(src, dst, "hook", layout=layout, facecam=cam, words=self.WORDS[:2])
+                out = subprocess.run(["ffprobe", "-v", "error", "-select_streams", "v:0", "-show_entries",
+                                      "stream=width,height", "-of", "csv=p=0", str(dst)],
+                                     capture_output=True, text=True, check=True).stdout.strip()
+                self.assertEqual(out, "1080,1920", layout)
 
 
 if __name__ == "__main__":

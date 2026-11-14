@@ -16,6 +16,23 @@ Every channel gets its own detector. First it learns what "normal" chat looks li
 There is a 3-minute cooldown per channel. Every number is tunable in `config.yaml`.
 For big streamers (10k+ viewers) raise `min_messages`; for small ones lower it.
 
+## The "pro" look (default)
+Modelled on what the big clip channels post:
+- **Layouts**: `center` fills the screen with the streamer (IRL / just chatting, e.g. Kai Cenat),
+  `split` puts the facecam on top and gameplay below, `blur` shows the whole frame over a blurred copy.
+- **Word-by-word captions**: 2-3 words at a time, current word in yellow with a little pop.
+  Speech is transcribed locally with faster-whisper (the model downloads on first use).
+- **Hook title** in a white box at the top.
+- **Zoom punch-in** on the loudest moment (the scream / reaction).
+
+Make one from any clip file:
+```bash
+python -m clipbot render kai.mp4 kai_tiktok.mp4 --layout center --text "Kai Cenat was NOT ready for this"
+python -m clipbot render stream.mp4 out.mp4 --facecam 0.72,0.05,0.26,0.3 --text "..."  # split layout
+```
+Set `layout`, `facecam` and `focus_x` per channel in `config.yaml`; set `video.style: simple`
+for the older blur-plus-text look.
+
 ## Setup
 
 **1. Install** (Python 3.10+, plus `ffmpeg` on your PATH)
@@ -80,7 +97,8 @@ python -m unittest discover -s tests              # tests
 | `clipbot/detector.py` | Chat spike / hype-keyword detection |
 | `clipbot/chat.py` | Anonymous read-only Twitch chat (IRC) |
 | `clipbot/twitch.py` | Live status, create clip, download (yt-dlp) |
-| `clipbot/video.py` | ffmpeg: 9:16 blurred-background layout + hook text |
+| `clipbot/style.py` | Pro look: layouts, word-by-word captions, hook box, zoom punch |
+| `clipbot/video.py` | Simple look: 9:16 blurred background + hook text |
 | `clipbot/captions.py` | Hook text and caption with credit + hashtags |
 | `clipbot/tiktok.py` | TikTok Content Posting API (direct post or inbox draft) |
 | `clipbot/store.py` | SQLite history (`clipbot.db`) |

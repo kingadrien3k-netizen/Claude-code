@@ -28,6 +28,14 @@ DEFAULTS = {
         ],
     },
     "video": {
+        "style": "pro",              # pro = top-clipper style; simple = blur + hook only
+        "layout": "blur",            # pro: center | split | blur (per-channel override)
+        "facecam": None,             # pro split: [x, y, w, h] as fractions of the frame
+        "focus_x": 0.5,              # pro center: 0 = keep left side, 1 = right side
+        "captions": True,            # pro: spoken word-by-word captions (faster-whisper)
+        "whisper_model": "base",     # tiny | base | small | medium (bigger = better, slower)
+        "punch": True,               # pro: zoom punch-in on the loudest moment
+        "caption_font": "DejaVu Sans",
         "vertical": True,
         "burn_caption": True,
         "font_file": "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
@@ -76,6 +84,9 @@ def normalize_channels(raw: list) -> list[dict]:
             "name": entry["name"].lower().lstrip("#"),
             "tiktok": bool(entry.get("tiktok", False)),
             "hashtags": list(entry.get("hashtags", [])),
+            "layout": entry.get("layout"),
+            "facecam": entry.get("facecam"),
+            "focus_x": entry.get("focus_x"),
         })
     return channels
 
