@@ -61,6 +61,7 @@ an "on fire" streak bonus, a second defender once you hit 10 points, and a saved
 A study app for the 304 CompTIA Security+ cards in the Quizlet folder
 "Sec+ Flashcards (in progress)". Open `secplus/index.html` in any browser; no install or build step.
 
+- **Lobby**: the home page is a hunter status screen (dark mode by default, with a light toggle): rank badge, level and XP, five stats that are your mastery of the five exam domains (tap one to aim every mode at it), a daily quest, and a Rank-up Trial that unlocks at each rank's level cap. Every mode earns XP; the leveling rules are shared with the terminal game (`secplus/hunter-core.js`).
 - **Breach** (arcade): definitions come in as threats with a burning fuse; pick the term to block them, build combos up to x5, and beat a scenario boss each wave. Misses cost a shield and show the right answer; at game over you can drill everything that got through.
 - **Scenarios**: 48 original exam-style questions (in `secplus/scenarios.js`) with an explanation after each answer
 - **Exam readiness**: every card is tagged with its SY0-701 domain; readiness is weighted by each domain's share of the exam and flags where to focus. Tap a domain to aim every mode at it.

@@ -37,16 +37,16 @@
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0e131e; --surface: #161d2b; --surface-2: #1f2838; --ink: #e5e9f1; --muted: #98a2b6;
-    --line: #2a3446; --accent: #7d9cff; --accent-ink: #0e131e; --accent-soft: #212e55;
+    --bg: #070b16; --surface: #0f1627; --surface-2: #19223a; --ink: #e6ebf5; --muted: #95a1bb;
+    --line: #233054; --accent: #7d9cff; --accent-ink: #070b16; --accent-soft: #1a2650;
     --good: #4dc38b; --good-soft: #15322a; --bad: #f1736b; --bad-soft: #3a1d1f; --learn: #e3a53f;
     --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 10px 30px rgb(0 0 0 / .35);
     color-scheme: dark;
   }
 }
 :root[data-theme="dark"] {
-  --bg: #0e131e; --surface: #161d2b; --surface-2: #1f2838; --ink: #e5e9f1; --muted: #98a2b6;
-  --line: #2a3446; --accent: #7d9cff; --accent-ink: #0e131e; --accent-soft: #212e55;
+  --bg: #070b16; --surface: #0f1627; --surface-2: #19223a; --ink: #e6ebf5; --muted: #95a1bb;
+  --line: #233054; --accent: #7d9cff; --accent-ink: #070b16; --accent-soft: #1a2650;
   --good: #4dc38b; --good-soft: #15322a; --bad: #f1736b; --bad-soft: #3a1d1f; --learn: #e3a53f;
   --shadow: 0 1px 2px rgb(0 0 0 / .3), 0 10px 30px rgb(0 0 0 / .35);
   color-scheme: dark;
@@ -277,6 +277,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   display: flex; align-items: center; gap: 10px; max-width: calc(100vw - 32px);
   background: var(--ink); color: var(--bg); padding: 10px 18px; border-radius: 99px; box-shadow: var(--shadow); font-size: 15px;
 }
+.toast:not(.show) { visibility: hidden; transition: transform .4s cubic-bezier(.2,.9,.3,1.25), visibility 0s .4s; }
 .toast.show { transform: translate(-50%, 0); }
 .toast i { width: 9px; height: 9px; border-radius: 50%; background: var(--good); flex: 0 0 auto; }
 .toast .label { color: inherit; opacity: .7; }
@@ -393,6 +394,105 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
 .gpanel .btn { background: transparent; color: var(--g-ink); border-color: var(--g-line); }
 .gpanel .btn.go { background: var(--g-cool); border-color: var(--g-cool); color: var(--g-bg); }
 
+/* ---------- lobby ---------- */
+.lobby {
+  position: relative; overflow: hidden; display: grid; gap: 16px; padding: 20px; border-radius: 16px; color: var(--g-ink);
+  background: radial-gradient(120% 90% at 100% 0%, rgb(134 162 255 / .18), transparent 60%), var(--g-bg);
+  border: 1px solid rgb(134 162 255 / .38);
+  box-shadow: 0 0 0 1px rgb(134 162 255 / .08), 0 18px 50px rgb(6 10 30 / .35), inset 0 0 44px rgb(134 162 255 / .07);
+}
+.lobby::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: repeating-linear-gradient(0deg, rgb(255 255 255 / .022) 0 1px, transparent 1px 3px); }
+.lobby > * { position: relative; z-index: 1; }
+.lobby .label { color: var(--g-dim); }
+.lobby .sys { color: var(--g-cool); }
+.lobby-top { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 16px; }
+.emblem { --rk: #8d97ab; filter: drop-shadow(0 0 12px var(--rk)); }
+.emblem[data-rank="D"] { --rk: #4cc38a; } .emblem[data-rank="C"] { --rk: #5b8cff; } .emblem[data-rank="B"] { --rk: #a77bff; }
+.emblem[data-rank="A"] { --rk: #ffb04a; } .emblem[data-rank="S"] { --rk: #ff5d5d; }
+.emblem .hex {
+  width: 62px; height: 70px; display: grid; place-items: center;
+  clip-path: polygon(50% 0, 100% 25%, 100% 75%, 50% 100%, 0 75%, 0 25%);
+  background: linear-gradient(160deg, var(--rk), color-mix(in srgb, var(--rk) 28%, #050814));
+  font: 700 32px/1 var(--f-display); color: #ffffff; text-shadow: 0 1px 6px rgb(0 0 0 / .5);
+}
+.who { display: grid; gap: 2px; min-width: 0; }
+.hname { background: none; border: 0; padding: 0; text-align: left; color: var(--g-ink); font: 600 24px/1.15 var(--f-display); overflow-wrap: anywhere; }
+.hname:hover { text-decoration: underline dotted rgb(134 162 255 / .6); text-underline-offset: 4px; }
+.htitle { font: 500 12px var(--f-mono); letter-spacing: .05em; color: var(--g-hot); }
+.lvl { display: grid; justify-items: end; }
+.lvl b { font: 700 42px/1 var(--f-display); color: var(--g-ink); font-variant-numeric: tabular-nums; }
+.rename { display: flex; gap: 8px; }
+.rename input { flex: 1; min-width: 0; padding: 10px 12px; border-radius: 8px; border: 1px solid var(--g-line); background: rgb(255 255 255 / .06); color: var(--g-ink); font-size: 16px; }
+.rename .btn { padding: 10px 16px; background: var(--g-cool); border-color: var(--g-cool); color: var(--g-bg); }
+.xprow { display: flex; align-items: center; gap: 12px; }
+.xpbar { flex: 1; height: 10px; border-radius: 99px; overflow: hidden; background: rgb(255 255 255 / .08); box-shadow: inset 0 0 0 1px rgb(134 162 255 / .22); }
+.xpbar span { display: block; height: 100%; background: linear-gradient(90deg, #4f74ff, var(--g-cool)); box-shadow: 0 0 12px var(--g-cool); transition: width .6s cubic-bezier(.2,.8,.2,1); }
+#h-xp { font: 500 12px var(--f-mono); color: var(--g-dim); white-space: nowrap; }
+.hmeta { display: flex; flex-wrap: wrap; gap: 6px 16px; font: 500 12px var(--f-mono); color: var(--g-dim); }
+.hmeta b { color: var(--g-ink); font-weight: 500; }
+.hmeta .ready { color: var(--g-hot); }
+.hstats { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+.hstat {
+  display: grid; gap: 5px; justify-items: start; min-width: 0; text-align: left; padding: 10px;
+  color: var(--g-ink); background: rgb(255 255 255 / .04); border: 1px solid var(--g-line); border-radius: 10px;
+  transition: border-color .15s, background .15s;
+}
+.hstat:hover { border-color: rgb(134 162 255 / .6); }
+.hstat[aria-pressed="true"] { border-color: var(--g-cool); background: rgb(134 162 255 / .16); }
+.hstat.focus { border-color: var(--g-hot); }
+.hstat .k { font: 600 12px var(--f-mono); letter-spacing: .08em; color: var(--g-cool); }
+.hstat b { font: 700 22px/1 var(--f-display); font-variant-numeric: tabular-nums; }
+.hstat .mini { width: 100%; height: 3px; border-radius: 2px; overflow: hidden; background: rgb(255 255 255 / .1); }
+.hstat .mini span { display: block; height: 100%; background: var(--g-good); }
+.hstat .dn { max-width: 100%; font-size: 11px; color: var(--g-dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.hstat .ft { font: 500 9px var(--f-mono); letter-spacing: .1em; text-transform: uppercase; color: var(--g-hot); }
+.lobby .streakline { color: var(--g-dim); }
+.lobby .streakline b { color: var(--g-ink); }
+.lobby .day span { color: var(--g-dim); }
+.lobby .day i { background: rgb(255 255 255 / .08); }
+.lobby .day i[data-h="1"] { background: color-mix(in srgb, var(--g-good) 35%, transparent); }
+.lobby .day i[data-h="2"] { background: color-mix(in srgb, var(--g-good) 65%, transparent); }
+.lobby .day i[data-h="3"] { background: var(--g-good); }
+.lobby .day.today i { outline-color: var(--g-ink); }
+.lobby .day.today span { color: var(--g-ink); }
+
+.questlist { display: grid; gap: 1px; background: var(--line); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.quest { display: grid; grid-template-columns: 20px minmax(0, 1fr) auto; align-items: center; gap: 6px 12px; padding: 12px 16px; background: var(--surface); }
+.quest .chk { width: 18px; height: 18px; border-radius: 5px; border: 1.5px solid var(--line); grid-row: span 2; display: grid; place-items: center; }
+.quest.done .chk { background: var(--good); border-color: var(--good); }
+.quest.done .chk::after { content: ""; width: 9px; height: 5px; border: 2px solid var(--surface); border-top: 0; border-right: 0; transform: rotate(-45deg) translate(1px, -1px); }
+.quest .qt { font-weight: 500; }
+.quest.done .qt { color: var(--muted); text-decoration: line-through; }
+.quest .qn { font: 400 13px var(--f-mono); color: var(--muted); }
+.quest .bar { grid-column: 2 / 4; }
+
+.mode:disabled { opacity: .5; cursor: not-allowed; transform: none; }
+.mode.trial { grid-column: 1 / -1; min-height: 0; border-color: color-mix(in srgb, var(--learn) 55%, var(--line)); }
+.mode.trial:not(:disabled) { background: linear-gradient(100deg, color-mix(in srgb, var(--learn) 22%, var(--surface)), var(--surface) 70%); }
+.mode.trial .label:first-child { color: var(--learn); }
+
+.loadout { border: 1px solid var(--line); border-radius: var(--r); background: var(--surface); }
+.loadout summary { list-style: none; cursor: pointer; display: flex; align-items: center; gap: 12px; padding: 14px 16px; }
+.loadout summary::-webkit-details-marker { display: none; }
+.loadout summary::after { content: "+"; font: 500 18px/1 var(--f-mono); color: var(--muted); }
+.loadout[open] summary::after { content: "\2212"; }
+.sumtext { flex: 1; min-width: 0; text-align: right; font-size: 13px; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.loadout-body { display: grid; gap: 24px; padding: 4px 16px 18px; }
+.loadout .overview { padding-top: 0; }
+.loadout .overview h2 { font-size: 22px; }
+
+@media (max-width: 520px) {
+  .hstats { gap: 6px; }
+  .hstat { padding: 8px 6px; gap: 4px; }
+  .hstat b { font-size: 19px; }
+  .hstat .dn { font-size: 10px; }
+  .hstat .dn .long { display: none; }
+  .lobby { padding: 16px; }
+  .emblem .hex { width: 52px; height: 59px; font-size: 26px; }
+  .lvl b { font-size: 34px; }
+}
+@media (max-width: 420px) { .brand .tag { display: none; } .top .tally { font-size: 12px; } }
+
 @media (max-width: 520px) {
   .modes { grid-template-columns: minmax(0, 1fr); }
   .mode { min-height: 0; }
@@ -408,13 +508,18 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
 </style>
 </head>
 <body>
+<script>try { document.documentElement.setAttribute("data-theme", localStorage.getItem("secplus.theme") || "dark"); } catch (e) { document.documentElement.setAttribute("data-theme", "dark"); }</script>
 <div class="wrap">
   <header class="top">
-    <button class="brand" id="home-link" type="button" aria-label="Back to sets">
+    <button class="brand" id="home-link" type="button" aria-label="Back to the lobby">
       <h1>Sec+ Drill</h1><span class="tag">SY0-701</span>
     </button>
     <div class="right">
       <div class="tally" id="tally"></div>
+      <button class="sound" id="theme" type="button" aria-label="Switch to light mode" title="Light or dark mode">
+        <svg id="th-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
+        <svg id="th-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+      </button>
       <button class="sound" id="sound" type="button" aria-pressed="false" aria-label="Sound effects off" title="Sound effects">
         <svg id="snd-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" hidden><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M16.5 8.5a5 5 0 0 1 0 7M19 6a8.5 8.5 0 0 1 0 12"/></svg>
         <svg id="snd-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 9v6h4l5 4V5L8 9H4z" fill="currentColor"/><path d="M17 9l5 6M22 9l-5 6"/></svg>
@@ -424,16 +529,33 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
 
   <!-- HOME -->
   <main id="v-home" class="wrap">
-    <div class="overview">
-      <span class="label">Sec+ Flashcards (in progress)</span>
-      <h2 id="ov-title">Your cards</h2>
-      <div class="bar" id="ov-bar"></div>
-      <div class="legend" id="ov-legend"></div>
+    <section class="lobby" aria-label="Hunter status">
+      <div class="lobby-top">
+        <div class="emblem" id="h-emblem" data-rank="E"><span class="hex">E</span></div>
+        <div class="who">
+          <span class="label sys">[ Status ]</span>
+          <button class="hname" id="h-name" type="button" title="Rename your hunter">Hunter</button>
+          <span class="htitle" id="h-title"></span>
+        </div>
+        <div class="lvl"><span class="label sys">Level</span><b id="h-level">1</b></div>
+      </div>
+      <form class="rename" id="h-rename" hidden>
+        <input id="h-name-input" maxlength="24" autocomplete="off" aria-label="Hunter name">
+        <button class="btn go" type="submit">Save</button>
+      </form>
+      <div class="xprow"><div class="xpbar"><span id="h-xpfill"></span></div><span id="h-xp"></span></div>
+      <div class="hmeta" id="h-meta"></div>
+      <div class="hstats" id="h-stats"></div>
       <div class="week" id="week"></div>
-    </div>
+    </section>
 
     <section>
-      <div class="head"><span class="label">Study</span><button class="linkbtn" id="browse-link" type="button">Browse all cards</button></div>
+      <div class="head"><span class="label">Daily quest</span><span class="label" id="q-reward"></span></div>
+      <div class="questlist" id="quests"></div>
+    </section>
+
+    <section>
+      <div class="head"><span class="label">Choose your gate</span><button class="linkbtn" id="browse-link" type="button">Browse all cards</button></div>
       <div id="empty" class="empty" hidden></div>
       <div class="modes">
         <button class="mode game" type="button" data-mode="game">
@@ -441,6 +563,11 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
           <h3>Breach</h3>
           <p>Threats incoming. Match each one before the fuse burns out, chain combos, and survive the scenario boss at the end of every wave.</p>
           <span class="label" id="n-game"></span>
+        </button>
+        <button class="mode trial" type="button" data-mode="trial">
+          <span class="label">Rank-up</span>
+          <h3>Trial</h3>
+          <p id="trial-desc"></p>
         </button>
         <button class="mode" type="button" data-mode="scn"><h3>Scenarios</h3><p>Exam-style questions with an explanation after every answer.</p><span class="label" id="n-scn"></span></button>
         <button class="mode" type="button" data-mode="quiz"><h3>Multiple choice</h3><p>Pick the matching term from four close options.</p><span class="label" id="n-quiz"></span></button>
@@ -450,46 +577,48 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       <p class="note" id="clue-note"></p>
     </section>
 
-    <section>
-      <div class="head"><span class="label">Exam readiness</span><span class="label" id="ready-total"></span></div>
-      <div class="domains" id="domains"></div>
-      <p class="note">Weighted by each domain's share of the SY0-701 exam. Mastered items count fully, learning items partly. Tap a domain to aim every mode at it. This measures your deck, not the full exam outline.</p>
-    </section>
-
-    <section>
-      <div class="head"><span class="label">Sets</span><button class="linkbtn" id="toggle-all" type="button">Select all</button></div>
-      <div class="sets" id="sets"></div>
-    </section>
-
-    <section>
-      <div class="head"><span class="label">Options</span></div>
-      <div class="opts">
-        <div class="opt"><span>Show first</span>
-          <div class="seg" id="opt-prompt" role="group" aria-label="Show first">
-            <button type="button" data-v="def">Definition</button><button type="button" data-v="term">Term</button>
-          </div>
+    <details class="loadout" id="loadout">
+      <summary><span class="label">Loadout</span><span class="sumtext" id="loadout-sum"></span></summary>
+      <div class="loadout-body">
+        <div class="overview">
+          <h2 id="ov-title">Your cards</h2>
+          <div class="bar" id="ov-bar"></div>
+          <div class="legend" id="ov-legend"></div>
         </div>
-        <div class="opt"><span>Cards</span>
-          <div class="seg" id="opt-focus" role="group" aria-label="Which cards">
-            <button type="button" data-v="all">All</button><button type="button" data-v="weak">Not mastered</button>
+        <section>
+          <div class="head"><span class="label">Sets</span><button class="linkbtn" id="toggle-all" type="button">Select all</button></div>
+          <div class="sets" id="sets"></div>
+        </section>
+        <section>
+          <div class="head"><span class="label">Options</span></div>
+          <div class="opts">
+            <div class="opt"><span>Show first</span>
+              <div class="seg" id="opt-prompt" role="group" aria-label="Show first">
+                <button type="button" data-v="def">Definition</button><button type="button" data-v="term">Term</button>
+              </div>
+            </div>
+            <div class="opt"><span>Cards</span>
+              <div class="seg" id="opt-focus" role="group" aria-label="Which cards">
+                <button type="button" data-v="all">All</button><button type="button" data-v="weak">Not mastered</button>
+              </div>
+            </div>
+            <div class="opt"><span>Session length</span>
+              <div class="seg" id="opt-len" role="group" aria-label="Session length">
+                <button type="button" data-v="10">10</button><button type="button" data-v="20">20</button><button type="button" data-v="40">40</button><button type="button" data-v="0">All</button>
+              </div>
+            </div>
+            <div class="opt"><span>Domain</span>
+              <div class="seg" id="opt-domain" role="group" aria-label="Exam domain">
+                <button type="button" data-v="0">All</button><button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button>
+              </div>
+            </div>
           </div>
-        </div>
-        <div class="opt"><span>Session length</span>
-          <div class="seg" id="opt-len" role="group" aria-label="Session length">
-            <button type="button" data-v="10">10</button><button type="button" data-v="20">20</button><button type="button" data-v="40">40</button><button type="button" data-v="0">All</button>
-          </div>
-        </div>
-        <div class="opt"><span>Domain</span>
-          <div class="seg" id="opt-domain" role="group" aria-label="Exam domain">
-            <button type="button" data-v="0">All</button><button type="button" data-v="1">1</button><button type="button" data-v="2">2</button><button type="button" data-v="3">3</button><button type="button" data-v="4">4</button><button type="button" data-v="5">5</button>
-          </div>
-        </div>
+        </section>
       </div>
-    </section>
-
+    </details>
 
     <footer class="foot">
-      <span>SY0-701: up to 90 questions in 90 minutes, passing score 750 on a 100-900 scale.</span>
+      <span>SY0-701: up to 90 questions in 90 minutes, passing score 750 on a 100-900 scale. Your five stats are your mastery of its five domains; tap one to aim every mode at it.</span>
       <span>Cards from <a href="https://quizlet.com/user/zavotakeoff/folders/sec-flashcards-in-progress" target="_blank" rel="noopener">your Quizlet folder</a>. Progress is saved in this browser.</span>
       <button class="danger" id="reset" type="button">Reset progress</button>
     </footer>
@@ -569,10 +698,12 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
 <script src="cards.js"></script>
 <script src="scenarios.js"></script>
 <script src="engine.js"></script>
+<script src="hunter-core.js"></script>
 <script>
 (function () {
   'use strict';
   const E = window.SecEngine;
+  const H = window.HunterCore;
   const SETS = window.SECPLUS_SETS;
   const DECK = E.buildDeck(SETS);
   const SCN = E.buildScenarios(window.SECPLUS_SCENARIOS || []);
@@ -619,6 +750,54 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     $('week').replaceChildren(line, strip);
   }
 
+  // ---------- hunter (levels, ranks, daily quest; rules shared with the terminal game) ----------
+  const KEY_H = 'secplus.hunter.v1';
+  const hunter = H.migrate(Object.assign(H.newSave('Hunter'), load(KEY_H, {})));
+  hunter.days = days;
+  function saveHunter() { const copy = Object.assign({}, hunter); delete copy.days; delete copy.progress; store(KEY_H, copy); }
+  const XP_FOR = { flash: 3, quiz: 5, type: 8, scn: 10, trial: 10, game: 6 };
+  const QUEST_TEXT = { answer: 'Answer 30 questions', scenario: 'Win 8 scenario questions', rift: 'Clear a Breach wave', training: 'Review 15 flashcards' };
+  function gainXp(n) {
+    const r = H.addXp(hunter, n);
+    if (r.ups) { toast('Level up', 'Level ' + hunter.level); sfx('master'); }
+    if (r.ups && r.capped) toast('Trial unlocked', 'Pass it to reach rank ' + H.nextRank(hunter).r);
+    saveHunter();
+    return r;
+  }
+  function settleHunter() {
+    const rw = H.claimDaily(hunter);
+    if (rw) { toast('Daily quest complete', '+' + rw.xp.gained + ' XP'); sfx('done'); if (rw.xp.ups) toast('Level up', 'Level ' + hunter.level); }
+    const ctx = { streak: H.dayStreak(hunter), readiness: E.readiness(DECK.concat(SCN), levelOf).overall };
+    for (const t of H.checkTitles(hunter, ctx)) toast('Title earned', t.name);
+    saveHunter();
+  }
+  function hunterAnswer(item, ok, mode) {
+    hunter.stats.answered++;
+    const d = H.daily(hunter);
+    d.answer++;
+    if (mode === 'flash') d.training++;
+    if (ok) {
+      hunter.stats.correct++;
+      if (item.kind === 'scn') d.scenario++;
+      gainXp(XP_FOR[mode] || 5);
+    }
+    settleHunter();
+  }
+
+  // ---------- theme (dark by default) ----------
+  let theme = document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark';
+  function applyTheme() {
+    document.documentElement.setAttribute('data-theme', theme);
+    $('theme').setAttribute('aria-label', theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode');
+    $('th-sun').toggleAttribute('hidden', theme !== 'dark');
+    $('th-moon').toggleAttribute('hidden', theme === 'dark');
+  }
+  $('theme').addEventListener('click', () => {
+    theme = theme === 'dark' ? 'light' : 'dark';
+    try { localStorage.setItem('secplus.theme', theme); } catch { /* storage unavailable */ }
+    applyTheme();
+  });
+
   // ---------- sound (off by default; tiny synth blips) ----------
   let audio = null;
   const TUNES = { hit: [[660, 0], [880, .07]], miss: [[233, 0], [185, .1]], master: [[523, 0], [659, .08], [784, .16], [1047, .24]], done: [[392, 0], [523, .1], [659, .2], [784, .3]] };
@@ -646,12 +825,21 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   $('sound').addEventListener('click', () => { prefs.sound = !prefs.sound; store(KEY_O, prefs); renderSound(); sfx('hit'); });
 
   // ---------- toast + confetti ----------
-  let toastTimer = 0;
+  const toastQ = [];
+  let toastBusy = false;
   function toast(label, text) {
+    toastQ.push([label, text]);
+    if (toastQ.length > 4) toastQ.shift();
+    if (!toastBusy) nextToast();
+  }
+  function nextToast() {
+    const item = toastQ.shift();
+    if (!item) { toastBusy = false; return; }
+    toastBusy = true;
     const t = $('toast');
-    t.replaceChildren(el('i'), el('span', 'label', label), el('span', null, text));
+    t.replaceChildren(el('i'), el('span', 'label', item[0]), el('span', null, item[1]));
     t.classList.add('show');
-    clearTimeout(toastTimer); toastTimer = setTimeout(() => t.classList.remove('show'), 1900);
+    setTimeout(() => { t.classList.remove('show'); setTimeout(nextToast, 380); }, 1700);
   }
   function confetti() {
     if (reduced) return;
@@ -719,25 +907,63 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     if (prefs.focus === 'weak' && mode !== 'game') cards = cards.filter((c) => levelOf(c.id) < E.MASTERED);
     return cards;
   }
-  function renderReadiness() {
+  function renderLobby() {
     const r = E.readiness(DECK.concat(SCN), levelOf);
-    $('ready-total').textContent = Math.round(r.overall * 100) + '% ready';
-    const box = $('domains'); box.replaceChildren();
-    for (const d of r.domains) {
-      const b = el('button', 'dom'); b.type = 'button';
-      b.setAttribute('aria-pressed', String(prefs.domain === String(d.n)));
-      const name = el('span', 'name', d.name);
-      if (r.focus === d && r.overall < 0.999) name.append(el('span', 'focus', 'Focus here'));
-      const bar = el('div', 'bar thin'); const f = el('span', 'm'); f.style.width = (d.score * 100) + '%'; bar.append(f);
-      const sub = el('div', 'sub'); sub.append(el('span', null, d.w + '% of exam'), bar, el('span', null, d.count + ' items'));
-      b.append(el('span', 'num', 'D' + d.n), name, el('span', 'pct', Math.round(d.score * 100) + '%'), sub);
+    $('h-emblem').dataset.rank = hunter.rank;
+    $('h-emblem').firstElementChild.textContent = hunter.rank;
+    $('h-name').textContent = hunter.name;
+    $('h-title').textContent = hunter.title ? '"' + hunter.title + '"' : 'Rank ' + hunter.rank + ' hunter';
+    $('h-level').textContent = String(hunter.level);
+    const need = H.xpToNext(hunter.level);
+    $('h-xpfill').style.width = Math.min(100, hunter.xp / need * 100) + '%';
+    $('h-xp').textContent = hunter.xp + ' / ' + need + ' XP';
+    const meta = $('h-meta'); meta.replaceChildren();
+    const item = (label, value, cls) => { const sp = el('span', cls); sp.append(label + ' '); if (value != null) sp.append(el('b', null, value)); meta.append(sp); };
+    item('Rank', hunter.rank);
+    const nr = H.nextRank(hunter);
+    if (!nr) item('Max rank', null);
+    else if (H.trialReady(hunter)) item('Rank-up Trial ready', null, 'ready');
+    else item('Level cap', String(H.levelCap(hunter)));
+    item('Readiness', Math.round(r.overall * 100) + '%');
+    item('Streak', H.dayStreak(hunter) + 'd');
+    const box = $('h-stats'); box.replaceChildren();
+    for (const st of H.STATS) {
+      const d = r.domains[st.domain - 1];
+      const isFocus = r.focus === d && r.overall < 0.999;
+      const b = el('button', 'hstat' + (isFocus ? ' focus' : '')); b.type = 'button';
+      b.setAttribute('aria-pressed', String(prefs.domain === String(st.domain)));
+      b.title = d.name + ' (' + d.w + '% of the exam). Tap to aim every mode at it.';
+      const mini = el('span', 'mini'); const f = el('span'); f.style.width = (d.score * 100) + '%'; mini.append(f);
+      b.append(el('span', 'k', st.key), el('b', null, String(Math.round(d.score * 100))), mini,
+        (() => { const dn = el('span', 'dn', 'D' + st.domain); dn.append(el('span', 'long', ' ' + E.DOMAINS[st.domain - 1].short)); return dn; })());
+      if (isFocus) b.append(el('span', 'ft', 'Focus'));
       b.addEventListener('click', () => {
-        prefs.domain = prefs.domain === String(d.n) ? '0' : String(d.n);
+        prefs.domain = prefs.domain === String(st.domain) ? '0' : String(st.domain);
         store(KEY_O, prefs); renderHome();
       });
       box.append(b);
     }
   }
+  function renderQuests() {
+    const d = H.daily(hunter);
+    $('q-reward').textContent = d.claimed ? 'Complete' : 'Reward +' + 60 * (H.rankIndex(hunter.rank) + 1) + ' XP';
+    $('quests').replaceChildren(...H.DAILY.map((q) => {
+      const v = Math.min(d[q.key], q.goal);
+      const row = el('div', 'quest' + (v >= q.goal ? ' done' : ''));
+      const bar = el('div', 'bar thin accent'); const f = el('span'); f.style.width = (v / q.goal * 100) + '%'; bar.append(f);
+      row.append(el('span', 'chk'), el('span', 'qt', QUEST_TEXT[q.key]), el('span', 'qn', v + '/' + q.goal), bar);
+      return row;
+    }));
+  }
+  $('h-name').addEventListener('click', () => {
+    $('h-rename').hidden = false;
+    const i = $('h-name-input'); i.value = hunter.name; i.focus(); i.select();
+  });
+  $('h-rename').addEventListener('submit', (e) => {
+    e.preventDefault();
+    hunter.name = $('h-name-input').value.trim().slice(0, 24) || 'Hunter';
+    saveHunter(); $('h-rename').hidden = true; renderLobby();
+  });
   function setSeg(id, value) {
     for (const b of $(id).querySelectorAll('button')) b.setAttribute('aria-pressed', String(b.dataset.v === value));
   }
@@ -748,7 +974,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     const b = el('b', null, String(all.m)); $('tally').append(b, document.createTextNode(' / ' + all.total + ' mastered'));
     $('ov-title').textContent = all.total + ' cards across ' + SETS.length + ' sets';
     fillBar($('ov-bar'), all);
-    renderWeek(); renderSound();
+    renderWeek(); renderSound(); applyTheme(); renderLobby(); renderQuests(); saveHunter();
     $('ov-legend').replaceChildren(...[
       ['var(--good)', all.m + ' mastered'], ['var(--learn)', all.l + ' learning'], ['var(--surface-2)', all.n + ' new'],
     ].map(([c, t]) => { const s = el('span'); const i = el('i'); i.style.background = c; s.append(i, t); return s; }));
@@ -769,7 +995,8 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     }
     $('toggle-all').textContent = prefs.sets.length === SETS.length ? 'Clear' : 'Select all';
     setSeg('opt-prompt', prefs.prompt); setSeg('opt-focus', prefs.focus); setSeg('opt-len', prefs.len); setSeg('opt-domain', prefs.domain);
-    renderReadiness();
+    $('loadout-sum').textContent = prefs.sets.length + '/' + SETS.length + ' sets · ' +
+      (prefs.domain === '0' ? 'all domains' : 'domain ' + prefs.domain) + ' · ' + (prefs.len === '0' ? 'all' : prefs.len) + ' per round';
 
     const len = Number(prefs.len);
     const cap = (n) => (len && n > len ? len : n);
@@ -780,6 +1007,10 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     $('n-scn').textContent = cap(poolFor('scn').length) + ' questions';
     const gb = gameBest();
     $('n-game').textContent = (gb ? 'High score ' + gb.toLocaleString() + ' · ' : '') + poolFor('game').length + ' terms in play';
+    const nr = H.nextRank(hunter);
+    $('trial-desc').textContent = !nr ? 'You are rank S. The only trial left is the real exam.'
+      : H.trialReady(hunter) ? '10 scenario questions, 8 to pass. Pass to become a rank ' + nr.r + ' hunter.'
+      : 'Locked until level ' + H.levelCap(hunter) + '. Earn XP in any mode to get there (you are level ' + hunter.level + ').';
     const clues = selectedCards().filter((c) => c.clue).length;
     $('clue-note').textContent = clues ? clues + ' exam-clue and memory-trick cards show up in Flashcards and Browse, not in the quiz modes.' : '';
 
@@ -789,7 +1020,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     else empty.hidden = true;
     for (const m of document.querySelectorAll('.mode')) {
       const mode = m.dataset.mode;
-      m.disabled = mode === 'browse' ? !prefs.sets.length : !poolFor(mode).length;
+      m.disabled = mode === 'trial' ? !H.trialReady(hunter) : !poolFor(mode).length;
     }
   }
 
@@ -811,12 +1042,14 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       return;
     }
     progress = {}; store(KEY_P, progress);
+    Object.assign(hunter, H.newSave(hunter.name)); hunter.days = days; saveHunter();
     b.classList.remove('armed'); b.textContent = 'Progress erased';
     renderHome();
   });
   document.querySelector('.modes').addEventListener('click', (e) => {
     const m = e.target.closest('.mode'); if (!m || m.disabled) return;
     if (m.dataset.mode === 'game') return startGame();
+    if (m.dataset.mode === 'trial') return startSession('trial', E.order(SCN, levelOf).slice(0, 10));
     const len = Number(prefs.len);
     let cards = E.order(poolFor(m.dataset.mode), levelOf);
     if (len) cards = cards.slice(0, len);
@@ -836,7 +1069,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
   $('browse-back').addEventListener('click', goHome);
 
   // ---------- session ----------
-  const MODE_NAME = { flash: 'Flashcards', quiz: 'Multiple choice', type: 'Type the term', scn: 'Scenarios' };
+  const MODE_NAME = { flash: 'Flashcards', quiz: 'Multiple choice', type: 'Type the term', scn: 'Scenarios', trial: 'Rank-up Trial' };
   let session = null;
   function startSession(mode, cards) {
     session = { mode, cards, i: 0, results: [], answered: false, flipped: false, busy: false,
@@ -873,7 +1106,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     stage.classList.remove('enter'); void stage.offsetWidth; stage.classList.add('enter');
     const card = s.cards[s.i];
     if (s.mode === 'flash') renderFlash(stage, card);
-    else if (s.mode === 'quiz' || s.mode === 'scn') renderQuiz(stage, card);
+    else if (s.mode === 'quiz' || s.mode === 'scn' || s.mode === 'trial') renderQuiz(stage, card);
     else renderType(stage, card);
   }
   function next() { session.i++; renderStep(); }
@@ -881,6 +1114,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     if (session.answered) return;
     session.answered = true;
     const mastered = record(card, ok);
+    hunterAnswer(card, ok, session.mode);
     session.results.push({ id: card.id, ok });
     session.prevStreak = session.streak;
     session.streak = ok ? session.streak + 1 : 0;
@@ -1079,6 +1313,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
         const p = progress[card.id]; p.l = E.grade(p.prev, true); p.m = Math.max(0, p.m - 1);
         store(KEY_P, progress);
         session.streak = session.prevStreak + 1; session.best = Math.max(session.best, session.streak);
+        hunter.stats.correct++; gainXp(XP_FOR.type); settleHunter();
         if (p.prev < E.MASTERED && p.l >= E.MASTERED) { session.mastered.push(card.id); toast('Mastered', card.term); sfx('master'); }
         else sfx('hit');
         next();
@@ -1111,21 +1346,34 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     if (s.best >= 3) chips.append(el('span', 'chip warm', 'Best streak ' + s.best));
     const ds = dayStreak();
     if (ds) chips.append(el('span', 'chip', ds + (ds === 1 ? ' day' : '-day streak')));
+    let trialPassed = false;
+    if (s.mode === 'trial') {
+      trialPassed = right >= 8 && s.results.length >= 10 && H.trialReady(hunter);
+      if (trialPassed) {
+        const pr = H.passTrial(hunter);
+        saveHunter(); settleHunter();
+        toast('Rank up', 'You are now rank ' + pr.rank);
+        $('r-sub').textContent = 'Trial passed. You are now a rank ' + pr.rank + ' hunter, and your level cap is ' + H.levelCap(hunter) + '.';
+      } else {
+        $('r-sub').textContent = 'Trial failed: you need 8 of 10. Drill the misses, then try again.';
+      }
+    }
     const act = $('r-actions'); act.replaceChildren();
     if (missed.length) {
       const again = el('button', 'btn go', 'Drill the ' + missed.length + ' missed'); again.type = 'button';
-      again.addEventListener('click', () => startSession(s.mode, E.shuffle(missed)));
+      again.addEventListener('click', () => startSession(s.mode === 'trial' ? 'scn' : s.mode, E.shuffle(missed)));
       act.append(again);
     } else {
       const more = el('button', 'btn go', 'Start another round'); more.type = 'button';
       more.addEventListener('click', () => {
+        if (s.mode === 'trial') return goHome();
         const len = Number(prefs.len);
         let cards = E.order(poolFor(s.mode), levelOf); if (len) cards = cards.slice(0, len);
         if (cards.length) startSession(s.mode, cards); else goHome();
       });
       act.append(more);
     }
-    const home = el('button', 'btn', 'Back to sets'); home.type = 'button'; home.addEventListener('click', goHome);
+    const home = el('button', 'btn', 'Back to the lobby'); home.type = 'button'; home.addEventListener('click', goHome);
     act.append(home);
     $('r-missed-wrap').hidden = !missed.length;
     $('r-missed-label').textContent = 'Missed (' + missed.length + ')';
@@ -1137,7 +1385,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       ring.style.strokeDashoffset = String(C * (1 - pct / 100));
     }));
     countUp(num, right);
-    if (pct >= 80 && s.results.length >= 5) { confetti(); sfx('done'); }
+    if (trialPassed || (pct >= 80 && s.results.length >= 5)) { confetti(); sfx('done'); }
   }
   function itemRow(c) {
     const r = el('div', 'item');
@@ -1226,11 +1474,16 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       btn('Back', '', goHome);
     } else if (kind === 'wave') {
       const bonus = G.shields * 50 * G.wave; G.score += bonus;
+      hunter.stats.rifts++; H.daily(hunter).rift++;
+      if (!G.waveHit) hunter.stats.flawless++;
+      G.waveHit = false;
+      const wx = gainXp(25 * G.wave);
+      settleHunter();
       const regen = G.shields < 3; if (regen) G.shields++;
       box.append(el('span', 'label', 'Wave ' + G.wave + ' cleared'), el('h2', null, 'Network holding'));
       const st = el('div', 'gstats');
       st.append(stat('Score', G.score.toLocaleString()), stat('Shield bonus', '+' + bonus), stat('Accuracy', pctOf(G.right, G.total) + '%'));
-      box.append(st, el('p', null, (regen ? 'One shield restored. ' : 'All shields up. ') + 'Wave ' + (G.wave + 1) + ' has a shorter fuse.'));
+      box.append(st, el('p', null, '+' + wx.gained + ' hunter XP. ' + (regen ? 'One shield restored. ' : 'All shields up. ') + 'Wave ' + (G.wave + 1) + ' has a shorter fuse.'));
       G.wave++; G.idx = 0; gameHud();
       btn('Start wave ' + G.wave, 'go', nextThreat);
       sfx('done');
@@ -1246,7 +1499,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       box.append(el('p', null, missed.length ? 'Drill what got through now and it will stick for the next run.' : 'Nothing got through. Clean defense.'));
       if (missed.length) btn('Drill the ' + missed.length + ' that got through', 'go', () => { stopGame(); startSession('quiz', E.shuffle(missed)); });
       btn('Play again', missed.length ? '' : 'go', startGame);
-      btn('Back to sets', '', goHome);
+      btn('Back to the lobby', '', goHome);
       if (missed.length) {
         extra = el('section');
         const h = el('div', 'head'); h.append(el('span', 'label', 'Got through (' + missed.length + ')'));
@@ -1318,6 +1571,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
     const kFuse = Math.max(0, 1 - (performance.now() - G.t0) / G.dur);
     markChoices($('g-choices'), btn);
     const mastered = record(item, ok);
+    hunterAnswer(item, ok, 'game');
     G.total++; G.idx++;
     const arena = $('arena');
     if (ok) {
@@ -1325,6 +1579,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       const combo = Math.min(5, 1 + Math.floor((G.streak - 1) / 3));
       const pts = Math.round((100 + 150 * kFuse) * combo * (item.kind === 'scn' ? 2 : 1));
       G.score += pts;
+      if (item.kind === 'scn') { hunter.stats.bosses++; gainXp(20); }
       gPop('+' + pts + (combo > 1 ? '\nx' + combo : ''));
       gStamp(item.kind === 'scn' ? 'Boss down' : 'Blocked', 'ok');
       arena.classList.add('block');
@@ -1332,7 +1587,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       gameHud();
       gTimer = setTimeout(gProceed, 750);
     } else {
-      G.streak = 0; G.shields = Math.max(0, G.shields - 1);
+      G.streak = 0; G.shields = Math.max(0, G.shields - 1); G.waveHit = true;
       if (!G.missed.includes(item)) G.missed.push(item);
       gStamp(btn ? 'Breach' : 'Timed out', 'bad');
       arena.classList.remove('block'); void arena.offsetWidth; arena.classList.add('hit');
@@ -1376,7 +1631,7 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
       if (e.key === ' ' || e.key === 'Enter') { e.preventDefault(); flip(); }
       else if (e.key === '1' || e.key === 'ArrowLeft') gradeFlash(false);
       else if (e.key === '2' || e.key === 'ArrowRight') gradeFlash(true);
-    } else if (session.mode === 'quiz' || session.mode === 'scn') {
+    } else if (session.mode === 'quiz' || session.mode === 'scn' || session.mode === 'trial') {
       if (!session.answered && /^[1-4]$/.test(e.key)) {
         const b = document.querySelectorAll('#stage .choice')[Number(e.key) - 1]; if (b) b.click();
       } else if (session.answered && e.key === 'Enter' && e.target.id !== 'next') { e.preventDefault(); next(); }

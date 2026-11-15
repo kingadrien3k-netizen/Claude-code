@@ -1,7 +1,10 @@
 'use strict';
-// Rules for Sec+ Hunter, the terminal RPG (secplus/hunt.js). Pure functions over a
+// Rules for Sec+ Hunter: the terminal RPG (secplus/hunt.js) and the web lobby (index.html). Pure functions over a
 // plain save object so they can be unit-tested; no I/O here.
-const E = require('./engine.js');
+(function (root, factory) {
+  if (typeof module === 'object' && module.exports) module.exports = factory(require('./engine.js'));
+  else root.HunterCore = factory(root.SecEngine);
+})(this, function (E) {
 
 // Hunter ranks by level. Reaching the top level of a rank caps you until you pass
 // that rank's trial (10 scenario questions, 8 to pass).
@@ -197,10 +200,11 @@ function monsterFor(item, rnd = Math.random) {
   return list[Math.floor(rnd() * list.length)];
 }
 
-module.exports = {
+return {
   RANKS, STATS, RIFTS, MONSTERS, BOSSES, DAILY, TITLES, MAX_LEVEL,
   rankIndex, nextRank, levelCap, xpToNext, newSave, migrate,
   xpMult, senseChance, maxHp, critChance, timeLimit, addXp, trialReady, passTrial,
   levelOf, dayKey, dayStreak, daily, dailyComplete, claimDaily, record, domainStats, checkTitles,
   makeQuestion, monsterFor,
 };
+});
