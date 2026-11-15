@@ -58,6 +58,8 @@ an "on fire" streak bonus, a second defender once you hit 10 points, and a saved
 
 # Sec+ Drill (`secplus/`)
 
+**Phone app:** Sec+ Drill installs as a home-screen app (full screen, offline, bottom tab bar). It is served by GitHub Pages from this branch: once Pages is on, open https://kingadrien3k-netizen.github.io/Claude-code/secplus/ on your phone and choose *Add to Home Screen* (iPhone: Share menu in Safari) or *Install app* (Android Chrome). `secplus/manifest.webmanifest` and `secplus/sw.js` handle install and offline; bump `VERSION` in `sw.js` when app files change so installed copies update.
+
 A study app for the 304 CompTIA Security+ cards in the Quizlet folder
 "Sec+ Flashcards (in progress)". Open `secplus/index.html` in any browser; no install or build step.
 
