@@ -80,3 +80,7 @@ Rough, auto-detected from the full mix (kick = low-band onsets on a 16-step grid
 
 Seraph 150's 1909 sample was checked against Fisk "I Couldn't Hear Nobody Pray": no match (best chroma score 0.67 vs 0.85 baseline), so Nobody Pray 142 is likely not a chop reuse.
 Not pulled (emails >5 MB crash the Gmail connector): Testimony 92, GG 94/96/98, No Drop 96, Altar 95, Cornerstone 93, Momma 146, Heaven/Halo 144, piano 144s, Gather, Homecoming, acoustics.
+
+## Songwriting notes
+- Song flow = the "Eden" format: 4-line monorhyme hook, 12-line verses in AABB couplets, one line per bar.
+- Little David (song) is on "Little David 97 (song cut)": same beat, verses stretched to 12 bars (58 bars, 2:26).
