@@ -61,6 +61,8 @@ an "on fire" streak bonus, a second defender once you hit 10 points, and a saved
 A study app for the 304 CompTIA Security+ cards in the Quizlet folder
 "Sec+ Flashcards (in progress)". Open `secplus/index.html` in any browser; no install or build step.
 
+- **Learn** (start here): 9 picture-first lessons, 37 animated diagrams (packets moving, attacks blocked or getting through) with a plain-English caption and a "think of it as" comparison per scene, then a quick check on the matching cards. Content in `secplus/lessons.js`.
+- **Labs** (hands-on, like the exam's performance-based questions): flag attacks in logs, fix firewall rule order and actions against test traffic, order processes, sort controls into buckets, work the risk math. 20 labs in `secplus/labs.js`.
 - **Lobby**: the home page is a hunter status screen (dark mode by default, with a light toggle): rank badge, level and XP, five stats that are your mastery of the five exam domains (tap one to aim every mode at it), a daily quest, and a Rank-up Trial that unlocks at each rank's level cap. Every mode earns XP; the leveling rules are shared with the terminal game (`secplus/hunter-core.js`).
 - **Breach** (arcade): definitions come in as threats with a burning fuse; pick the term to block them, build combos up to x5, and beat a scenario boss each wave. Misses cost a shield and show the right answer; at game over you can drill everything that got through.
 - **Scenarios**: 48 original exam-style questions (in `secplus/scenarios.js`) with an explanation after each answer
@@ -75,6 +77,8 @@ A study app for the 304 CompTIA Security+ cards in the Quizlet folder
 | File | Purpose |
 |---|---|
 | `secplus/cards.js` | The card data, one block per Quizlet set. Add new sets here. |
+| `secplus/lessons.js` | Animated picture lessons (scene data) |
+| `secplus/labs.js` | Hands-on labs and their checkers |
 | `secplus/scenarios.js` | Exam-style scenario questions, tagged by domain |
 | `secplus/engine.js` | Answer checking, distractor choice, ordering, mastery levels, domain readiness |
 | `secplus/index.html` | The app |

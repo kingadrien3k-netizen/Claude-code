@@ -96,3 +96,40 @@ const r = E.readiness(all, (id) => (all.find((x) => x.id === id).domain === 4 ? 
 assert.strictEqual(r.focus.n, 4);
 assert.ok(Math.abs(r.overall - 0.72) < 1e-9, 'domain 4 is 28% of the exam');
 console.log('secplus: domains ' + perDomain.join('/') + ', ' + SCN.length + ' scenarios ok');
+
+// Labs: every answer key passes its own checker; firewall labs start broken.
+const LB = require('../secplus/labs.js');
+for (const lab of LB.LABS) {
+  assert.ok(LB.TYPES[lab.type] && lab.d >= 1 && lab.d <= 5 && lab.why, lab.id);
+  if (lab.type === 'hunt') {
+    assert.ok(LB.checkHunt(lab, new Set(lab.bad), lab.answer).ok, lab.id);
+    assert.ok(!LB.checkHunt(lab, new Set([...lab.bad, ...lab.lines.keys()]), lab.answer).linesOk || lab.bad.length === lab.lines.length, lab.id + ' has normal lines');
+  } else if (lab.type === 'order') {
+    assert.ok(LB.checkOrder(lab, lab.items.map((_, i) => i)).ok, lab.id);
+  } else if (lab.type === 'sort') {
+    assert.ok(LB.checkSort(lab, lab.items.map((it) => it[1])).ok, lab.id);
+    assert.ok(lab.buckets.every((_, b) => lab.items.some((it) => it[1] === b)), lab.id + ' every bucket used');
+  } else if (lab.type === 'calc') {
+    assert.ok(LB.checkCalc(lab, lab.fields.map((f) => String(f.answer))).ok, lab.id);
+  } else if (lab.type === 'firewall') {
+    assert.ok(!LB.checkFirewall(lab, lab.rules).ok, lab.id + ' starts broken');
+    const solved = lab.solution.order.map((i, k) => Object.assign({}, lab.rules[i], { action: lab.solution.actions[i] }));
+    assert.ok(LB.checkFirewall(lab, solved).ok, lab.id + ' solution works');
+  }
+}
+assert.strictEqual(LB.parseNumber('$100,000'), 100000);
+assert.strictEqual(LB.parseNumber('1/20'), 0.05);
+assert.ok(LB.ipMatch('10.0.9.0/24', '10.0.9.15') && !LB.ipMatch('10.0.9.0/24', '10.0.4.20'));
+
+// Lessons: terms exist and every packet/link points at a real node.
+const LESSONS = require('../secplus/lessons.js');
+const termSet = new Set(deck.map((c) => c.term));
+for (const l of LESSONS) {
+  for (const t of l.terms) assert.ok(termSet.has(t), l.id + ' term ' + t);
+  l.scenes.forEach((sc, i) => {
+    assert.ok(sc.caption && sc.think, l.id + ' scene ' + (i + 1));
+    const ids = new Set((sc.nodes || []).map((n) => n.id));
+    for (const x of [...(sc.packets || []), ...(sc.links || [])]) for (const e of [x.from, x.to]) assert.ok(typeof e !== 'string' || ids.has(e), l.id + ' scene ' + (i + 1) + ' node ' + e);
+  });
+}
+console.log('secplus: ' + LB.LABS.length + ' labs and ' + LESSONS.length + ' lessons ok');
