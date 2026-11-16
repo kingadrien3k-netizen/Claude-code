@@ -84,3 +84,4 @@ Not pulled (emails >5 MB crash the Gmail connector): Testimony 92, GG 94/96/98, 
 ## Songwriting notes
 - Song flow = the "Eden" format: 4-line monorhyme hook, 12-line verses in AABB couplets, one line per bar.
 - Little David (song) is on "Little David 97 (song cut)": same beat, verses stretched to 12 bars (58 bars, 2:26).
+- No storytelling raps: write vibe/feeling bars (present tense, hooky, ad-lib friendly), not narrative "met you when... then..." verses.
