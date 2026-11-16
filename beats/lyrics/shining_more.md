@@ -1,7 +1,13 @@
 # "Shining More" — nocap
 From Adrien's own sentences (2026-11-16). v2: v1 sounded like a parody (literal day-recap, nursery rhymes, ad-lib on every line, chant). v2 = reflective, details under the surface, slant-rhyme chains, no ad-libs.
 
-## Hook
+## Hook (v3 — run twice)
+diamonds on me worthless, i'm the one that's shinin'
+waitin' on my moment, i ain't worried 'bout the timin'
+they was talkin' while i'm workin', now they quiet while i'm climbin'
+cold out here, but i'm still shinin', still shinin'
+
+## Hook (old, alt)
 diamonds on me worthless when i'm the one that's shinin' more
 waitin' on a call that might not come, i don't know what i'm waitin' for
 five hundred for the week, but i ain't never felt this sure
@@ -20,6 +26,12 @@ i do my pushups in the dark, ain't no camera for the growth
 faith ain't somethin' that i say, it's the only thing i hold
 peaceful on the outside, but it's burnin' in my soul
 i ain't tryna be a rapper, i'm just sayin' what i know
+
+## Bridge (4, half-sung, slower)
+Lord, i ain't askin' for a lot, just let it come in time
+i been patient with the pain, i been patient with my mind
+if the car don't start, i'ma walk it, i'ma be fine
+'cause the light that's in me don't need no diamonds to shine
 
 ## Where it came from
 - Diamonds line → hook line 1 (his, unchanged)
