@@ -29,3 +29,5 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 - Don't mention credits or how many beats are left.
 - No long bridges or breakdowns. Keep the beat driving the whole way (Pain Rap 05 missed because of this).
 - Always open with a spacey, galaxy-sounding intro like Pain Rap 04. That intro is the feeling.
+- Samples and sounds are fine. Just never recycle a whole beat.
+- Goal: I own the songs I rap on.
