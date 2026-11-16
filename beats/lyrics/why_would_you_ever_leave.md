@@ -5,7 +5,7 @@ Built from Adrien's lines (marked *). Eden flow: 4-line monorhyme hook ("-ee"), 
 You'll end up tryna keep the piece up in the streets *
 Baby, can you stay? * Girl, you all I really need
 Like why would you ever leave? *
-You was with me back when it was ramen noodles, rice and beans
+Baby, we gon' make it, all you gotta do is believe
 
 ## Verse 1
 Met you when I only had a pistol and a prayer
