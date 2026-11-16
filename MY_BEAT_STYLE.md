@@ -31,3 +31,5 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 - Always open with a spacey, galaxy-sounding intro like Pain Rap 04. That intro is the feeling.
 - Samples and sounds are fine. Just never recycle a whole beat.
 - Goal: I own the songs I rap on.
+- Only make a beat when I ask for one. Never start one on your own.
+- Keep one consistent groove the whole beat. No switching it up multiple times (Pain Rap 06 missed because of this).
