@@ -51,3 +51,6 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 - Don't ask "how does it hit" or "do you like it."
 - To see which beats I liked, check my Google Drive "Beats" folder (folder id 1qiDSKHRTHzpuzoleDFOjTPSUefRm6c_G). If I added a beat there, it's a hit. Use the hits to steer the next beat.
 - Keep messages short: name, length, BPM, one line on the vibe. Skip long explanations.
+
+## Saved in my Drive (hits as of Nov 16, 2026)
+Pain Rap 04, Pain Rap 08, Heavenly 01, Street ATL 02, Lovey 01, In The Air Type Beat
