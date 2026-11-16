@@ -19,3 +19,7 @@ My lane: emotional, melodic street rap ("pain rap"). Every beat is new, never re
 
 ## Base prompt
 Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY], airy atmospheric pads and soft vocal-chop textures, deep punchy 808 bass, crisp trap hi-hat rolls and hard clap snare, half-time bounce, [MOOD] late-night mood, [145-152] BPM, polished professional mix with a short intro, full drop, and outro
+
+## How I want beats made
+- One beat at a time. Make one, let me listen, then make the next.
+- Never recycle a beat. Every one is brand new in this style.
