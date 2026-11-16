@@ -13,9 +13,9 @@ and turned it to a prayer
 
 ## Verse 1 (8)
 i found a way, don't have to tote on like Tony Stark *
-used to keep the iron close, now i keep it in my heart
-car still in the shop, but i'm still goin' far
-every scar a lil' reminder, that's a medal, not a mark
+i been MIA so long, my friends, they think i'm gone *
+i ain't dead, i'm in the lab, tryna build somethin' strong
+they ain't heard from me in months, now they hear me on a song
 they gon' know the name before they ever know the face
 i ain't play the game, i just changed the way it's played
 put the pain on the page 'til the page start to pray
