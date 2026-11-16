@@ -1,5 +1,5 @@
 # "Why Would You Ever Leave" — nocap
-Built from Adrien's lines (marked *). Eden flow: 4-line monorhyme hook ("-ee"), 12-line verses in AABB couplets, one line per bar. No beat yet. Underground pluggnb style. Rewritten after studying 1M+ videos (see beats/STUDY.md): rhyme chains instead of couplets, echo ad-libs, repeated openers.
+Built from Adrien's lines (marked *). Eden flow: 4-line monorhyme hook ("-ee"), 12-line verses in AABB couplets, one line per bar. No beat yet. Underground pluggnb style. Rewritten after studying 1M+ videos (see beats/STUDY.md): rhyme chains instead of couplets, echo ad-libs, repeated openers, and Drake-style punchlines (double meanings, flipped clichés).
 
 ## Hook
 You'll end up tryna keep the piece up in the streets *
@@ -8,33 +8,33 @@ Like why would you ever leave? *
 Baby, we gon' make it, all you gotta do is believe
 
 ## Verse 1
-i don't need nobody, girl, you all i need (need)
-put you in the Range, let you lean back in the seat (seat)
-keep a piece on me, but you keep me at peace (peace)
-everybody fake, you the only one that's real to me (me)
-wipe your eyes, baby, ain't no reason to weep (weep)
+keep a piece on me, but you the one that keep me at peace (peace)
+i don't trip on these hoes, girl, i'm steady on my feet (feet)
+they say love is blind, that's why my exes couldn't see (see)
+money talk, so i just let the bands speak for me (me)
+you got me open like the Waffle House, i don't sleep (sleep)
 i'ma give you everything, i'ma give you the keys (keys)
-i ain't goin' nowhere, girl, i'm here to stay (stay)
-tryna get away from the shit i seen today (today)
-every time i'm gone, you be watchin' by the gate (gate)
-ain't no other one, ain't no other face (face)
-i'm just tryna keep you, i'm just tryna keep it safe (safe)
-i'm just tryna hold you, i'm just tryna make it straight (straight)
+bought a Rollie just to show you that i made time (time)
+VVS in the face, so the watch can't lie (lie)
+they ain't wanna ride, now they beggin' for a ride (ride)
+i don't look back unless i'm backin' out the drive (drive)
+i'm just tryna keep you, i'm just tryna keep you mine (mine)
+i'm just tryna hold you, i'ma do you for life (life)
 
 ## Hook
 
 ## Verse 2
-why you actin' brand new? why you cold now? (now)
-why you callin' my phone at 4 a.m. now? (now)
-why you tellin' your friends i ain't around? (round)
-i been on the road, tryna hold it down (down)
-every city, every show, a different town (town)
-but i swear to God, girl, you still my crown (crown)
-you was there on the low when i had to hide (hide)
-bust down on the Rollie, still can't buy time (time)
-look me in my eyes, tell me you mine (mine)
-ride with me, ride with me, all night (night)
-i don't want the world if you ain't by my side (side)
+why you actin' brand new? you ain't new to me now (now)
+why you starin' at your phone like it owe you somethin' now? (now)
+they call me a dog, but i'm never in the pound (pound)
+used to run up a check, now the check run me down (down)
+every city, every show, i'm the talk of the town (town)
+you the only queen, i'm just holdin' your crown (crown)
+i don't do the movies, i ain't got the time to act (act)
+fake love got a refund, i ain't takin' it back (back)
+they was waitin' on my fall, now they followin' my tracks (tracks)
+used to count on people, now i only count stacks (stacks)
 baby, can you stay? (stay) why would you ever leave? (leave)
+you the only one that ever had my back (back)
 
 ## Hook (out)

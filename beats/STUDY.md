@@ -40,3 +40,21 @@ Sources: YouTube (via vidIQ), sorted by views. Lyrics from captions or official 
 - At least one stretch of repeated line openers per verse.
 - Land 2-syllable end rhymes where possible.
 - Concrete details, no storytelling, no clichés. Never copy their lines — techniques only.
+
+## Drake + punchlines (added 2026-11-16)
+Videos: Hotline Bling (2.16B), God's Plan (1.73B), Laugh Now Cry Later (605M), Toosie Slide (416M), POPSTAR (355M), Energy (375M). Lyrics from official video descriptions.
+
+Punchline mechanics:
+1. **Double meaning on one word.** "I'm a popstar, not a doctor" (pop = star / pills). "Distance between us... this isn't a closable gap" (Gap store). "My Visa... can take as many charges as it needs to" (card charges / legal charges). "Platinum just like all of my releases" (card / records).
+2. **Reference chains.** Bodyguards → Kevin Costner → Whitney Houston → Houston, Texas. One reference sets up the next.
+3. **Flip the cliché.** "Petal off a rose like, I love her, her not." Take a saying everyone knows and twist the ending.
+4. **Parallel pairs.** "I want a long life, a legendary one / I want a quick death and an easy one."
+5. **Absurd-but-true exaggeration.** "Got so many opps, I be mistakin' opps for other opps."
+
+The reflective song Adrien sent (TikTok lyric video, "I had to make me a way") does the same thing in a quieter voice:
+- "I bought a watch I don't wear, I got tired of checkin' the time" (watch = flex / patience).
+- "I used to get dressed and still couldn't afford what I wore."
+- "They tell you they love you, but secretly hopin' you blind."
+- Slant-rhyme chains: waitin' / complainin' / traded / situation / entertain it / rearrange it / crazy / dangerous.
+
+Rule: every verse needs at least 3 real punchlines (double meaning, flipped cliché, or reference chain), not just rhymes.
