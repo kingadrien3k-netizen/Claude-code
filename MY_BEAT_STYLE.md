@@ -37,3 +37,4 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 - Only make a beat when I ask for one. Never start one on your own.
 - One switch-up max per beat. Pain Rap 06 switched up 3 times and that was too much.
 - Keep the intro short, about 4 seconds before the drums drop.
+- Beat switches need to hit harder. Pain Rap 08's switch at 0:29 was too weak, just a quick drop-out. Make the switch a real change (new melody layer, 808 pattern change, or a hard drum-out into a bigger drop).
