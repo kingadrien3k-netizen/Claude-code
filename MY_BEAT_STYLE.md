@@ -54,3 +54,4 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 
 ## Saved in my Drive (hits as of Nov 16, 2026)
 Pain Rap 04, Pain Rap 08, Heavenly 01, Street ATL 02, Lovey 01, In The Air Type Beat
+- Angelic 01 - Penthouse missed: too girly (bright glassy plucks, euphoric). Heavenly is fine, but it must keep our grit: minor key, dark-emotional, hard rumbling 808s, street pain feel (like Heavenly 01, Pain Rap 04, Pain Rap 08).
