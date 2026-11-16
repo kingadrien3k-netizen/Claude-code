@@ -33,3 +33,4 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 - Goal: I own the songs I rap on.
 - Only make a beat when I ask for one. Never start one on your own.
 - One switch-up max per beat. Pain Rap 06 switched up 3 times and that was too much.
+- Keep the intro short, about 4 seconds before the drums drop.
