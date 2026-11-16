@@ -55,3 +55,8 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 ## Saved in my Drive (hits as of Nov 16, 2026)
 Pain Rap 04, Pain Rap 08, Heavenly 01, Street ATL 02, Lovey 01, In The Air Type Beat
 - Angelic 01 - Penthouse missed: too girly (bright glassy plucks, euphoric). Heavenly is fine, but it must keep our grit: minor key, dark-emotional, hard rumbling 808s, street pain feel (like Heavenly 01, Pain Rap 04, Pain Rap 08).
+- Heavenly Street 01 missed: doesn't hit like Pain Rap 04. Going darker/eerie moved away from it.
+
+## MASTER PROMPT (the exact one that made Pain Rap 04 - Bells 146) - start from this
+Emotional melodic trap beat, instrumental, soulful pain-rap vibe, nostalgic electric piano chords with a warm bell lead melody, dreamy reverb pads and airy vocal-chop textures, deep rumbling 808 bass, crisp hi-hat rolls and hard clap, half-time bounce, hopeful but hurting late-night mood, 146 BPM, polished professional mix with a short intro, full drop, and outro
+(Change only one small thing per new beat, e.g. a different lead sound. Keep "warm", "hopeful but hurting", "soulful". Avoid "dark", "eerie", "menacing".)
