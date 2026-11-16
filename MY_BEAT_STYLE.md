@@ -14,6 +14,9 @@ My lane: emotional, melodic street rap ("pain rap"). Every beat is new, never re
 ## Favorite so far: Pain Rap 04 - Bells (146 BPM)
 Nostalgic electric piano chords, warm bell lead melody, dreamy reverb pads, airy vocal chops, deep rumbling 808s, hopeful but hurting mood. Lean this way.
 
+## Also a hit: Pain Rap 08 - ATL Underground (160 BPM, F minor)
+Babystaydown vibe. Atlanta underground melodic trap: ethereal sped-up soulful melody loop, dreamy plucks, pitched vocal chops, hard knocking distorted 808s, bouncy skippy hi-hats. Drums in by about 3 seconds, one small switch-up, then it rides.
+
 ## Switch up per beat (one lead sound each)
 - Piano (the original, "In The Air Type Beat")
 - Acoustic guitar
