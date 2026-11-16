@@ -27,3 +27,4 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 - One beat at a time. Make one, let me listen, then make the next.
 - Never recycle a beat. Every one is brand new in this style.
 - Don't mention credits or how many beats are left.
+- No long bridges or breakdowns. Keep the beat driving the whole way (Pain Rap 05 missed because of this).
