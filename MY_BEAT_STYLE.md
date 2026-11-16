@@ -46,3 +46,8 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 - The BOUNCE matters most: Pain Rap 04's groove (146 BPM half-time, rumbling 808s locked with the kick, rolling hats) made me bob my head naturally. Every street ATL beat needs that head-nod bounce, not stiff or corny.
 - Street ATL 01 (158 BPM) missed: too fast and frantic, no head-nod bounce. Keep street beats closer to 146 BPM half-time with the Pain Rap 04 pocket.
 - Doesn't have to be street ATL. "Heavenly" is the vibe: angelic, airy, dreamy, glowing (like Pain Rap 04's galaxy feel), keeping the 04 head-nod bounce.
+
+## Workflow (keep it fast)
+- Don't ask "how does it hit" or "do you like it."
+- To see which beats I liked, check my Google Drive "Beats" folder (folder id 1qiDSKHRTHzpuzoleDFOjTPSUefRm6c_G). If I added a beat there, it's a hit. Use the hits to steer the next beat.
+- Keep messages short: name, length, BPM, one line on the vibe. Skip long explanations.
