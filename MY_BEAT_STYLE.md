@@ -32,4 +32,4 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 - Samples and sounds are fine. Just never recycle a whole beat.
 - Goal: I own the songs I rap on.
 - Only make a beat when I ask for one. Never start one on your own.
-- Keep one consistent groove the whole beat. No switching it up multiple times (Pain Rap 06 missed because of this).
+- One switch-up max per beat. Pain Rap 06 switched up 3 times and that was too much.
