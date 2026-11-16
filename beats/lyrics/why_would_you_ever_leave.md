@@ -1,5 +1,5 @@
 # "Why Would You Ever Leave" — nocap
-Built from Adrien's lines (marked *). Eden flow: 4-line monorhyme hook ("-ee"), 12-line verses in AABB couplets, one line per bar. No beat yet. Underground pluggnb style (BabyStayDown-type): lowercase, melodic, ad-libs in (), vibe bars, no storytelling.
+Built from Adrien's lines (marked *). Eden flow: 4-line monorhyme hook ("-ee"), 12-line verses in AABB couplets, one line per bar. No beat yet. Underground pluggnb style. Rewritten after studying 1M+ videos (see beats/STUDY.md): rhyme chains instead of couplets, echo ad-libs, repeated openers.
 
 ## Hook
 You'll end up tryna keep the piece up in the streets *
@@ -8,33 +8,33 @@ Like why would you ever leave? *
 Baby, we gon' make it, all you gotta do is believe
 
 ## Verse 1
-i'm in my feelings, i'm in my bag (yeah)
-she said "don't leave," i said "i'll be back" (back)
-diamonds on me drippin' like the rain outside
-you the only one that ever seen me cry (cry)
-pull up at 3 a.m., leave the door unlocked
-heart on ice, girl, it's colder than my watch (watch)
-i been movin' quiet, they ain't know my name
-now they want a picture, girl, it ain't the same (nah)
-all-white tee, i'm fly like a dove (fly)
-how they hate on me, but you give me love (love)
-stay down, stay down, baby, don't you leave (no)
-you the only one that make me feel free (free)
+i don't need nobody, girl, you all i need (need)
+put you in the Range, let you lean back in the seat (seat)
+keep a piece on me, but you keep me at peace (peace)
+everybody fake, you the only one that's real to me (me)
+wipe your eyes, baby, ain't no reason to weep (weep)
+i'ma give you everything, i'ma give you the keys (keys)
+i ain't goin' nowhere, girl, i'm here to stay (stay)
+tryna get away from the shit i seen today (today)
+every time i'm gone, you be watchin' by the gate (gate)
+ain't no other one, ain't no other face (face)
+i'm just tryna keep you, i'm just tryna keep it safe (safe)
+i'm just tryna hold you, i'm just tryna make it straight (straight)
 
 ## Hook
 
 ## Verse 2
-lost in the night, i'm lost in your eyes (ooh)
-tell me the truth, girl, don't tell me no lies
-floatin' on my pain like i'm sittin' on a cloud
-stars in the roof, i'ma turn it up loud (loud)
-piece on my hip, but my heart still soft (soft)
-every time you hurt me, i just cut it off (off)
-pink diamonds, purple sky, i'm too gone
-play you on repeat like my favorite song (song)
-i don't trust nobody, i just trust you
-everything i do, girl, i do it for you (you)
+why you actin' brand new? why you cold now? (now)
+why you callin' my phone at 4 a.m. now? (now)
+why you tellin' your friends i ain't around? (round)
+i been on the road, tryna hold it down (down)
+every city, every show, a different town (town)
+but i swear to God, girl, you still my crown (crown)
+you was there on the low when i had to hide (hide)
+bust down on the Rollie, still can't buy time (time)
+look me in my eyes, tell me you mine (mine)
+ride with me, ride with me, all night (night)
+i don't want the world if you ain't by my side (side)
 baby, can you stay? (stay) why would you ever leave? (leave)
-you the only one, you the only one for me
 
 ## Hook (out)
