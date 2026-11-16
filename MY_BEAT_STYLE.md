@@ -41,3 +41,4 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 - Beat switches are NOT required every time. Default is no switch, one steady groove. Only add a switch when I ask, and if I do, make it hit hard.
 - Default lane is STREET Atlanta (Babystaydown, Lil Tony, Fatt Mack street side). Keep it gritty, not soft or "girl beat" sounding, unless I ask for a love/R&B one.
 - The BOUNCE matters most: Pain Rap 04's groove (146 BPM half-time, rumbling 808s locked with the kick, rolling hats) made me bob my head naturally. Every street ATL beat needs that head-nod bounce, not stiff or corny.
+- Street ATL 01 (158 BPM) missed: too fast and frantic, no head-nod bounce. Keep street beats closer to 146 BPM half-time with the Pain Rap 04 pocket.
