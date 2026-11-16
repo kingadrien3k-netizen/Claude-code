@@ -26,3 +26,4 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, [LEAD MELODY],
 ## How I want beats made
 - One beat at a time. Make one, let me listen, then make the next.
 - Never recycle a beat. Every one is brand new in this style.
+- Don't mention credits or how many beats are left.
