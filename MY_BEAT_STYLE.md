@@ -11,6 +11,9 @@ My lane: emotional, melodic street rap ("pain rap"). Every beat is new, never re
 - Sad, heartfelt, late-night mood
 - Short intro, full drop, outro
 
+## Favorite so far: Pain Rap 04 - Bells (146 BPM)
+Nostalgic electric piano chords, warm bell lead melody, dreamy reverb pads, airy vocal chops, deep rumbling 808s, hopeful but hurting mood. Lean this way.
+
 ## Switch up per beat (one lead sound each)
 - Piano (the original, "In The Air Type Beat")
 - Acoustic guitar
