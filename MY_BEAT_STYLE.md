@@ -17,6 +17,9 @@ Nostalgic electric piano chords, warm bell lead melody, dreamy reverb pads, airy
 ## Also a hit: Pain Rap 08 - ATL Underground (160 BPM, F minor)
 Babystaydown vibe. Atlanta underground melodic trap: ethereal sped-up soulful melody loop, dreamy plucks, pitched vocal chops, hard knocking distorted 808s, bouncy skippy hi-hats. Drums in by about 3 seconds, one small switch-up, then it rides.
 
+## Also a hit: Heavenly 01 (146 BPM)
+Angelic choir pads, soft heavenly vocal chops, shimmering harp and twinkling bells, warm electric piano with lush reverb, rumbling 808s locked with the kick, smooth rolling hats, Pain Rap 04 half-time bounce. Drums in by about 3 seconds, one steady groove.
+
 ## Switch up per beat (one lead sound each)
 - Piano (the original, "In The Air Type Beat")
 - Acoustic guitar
