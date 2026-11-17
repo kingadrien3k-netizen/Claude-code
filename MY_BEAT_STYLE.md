@@ -76,3 +76,5 @@ Melodic trap type beat, instrumental, loop-based, one simple repeating 4-bar war
 - Type Beat 02 - Guitar missed: sounded like UK drill. Drill traits to steer away from: sliding/gliding 808s, choppy syncopated drums, triplet hat bounces, dark guitar at 140-146.
   Fix (vidIQ doesn't take "no X"): say "Southern melodic trap", "steady 808 notes that follow the kick pattern", "simple steady hi-hats with light rolls", "classic Southern trap drum pattern".
 - Type Beat 03 - Southern Guitar: intro was liked, the lighter middle section ruined it. vidIQ keeps adding a stripped-down middle (bars 16-32). Default fix: cut it and repeat the full-groove section instead, spliced on exact bar lines (measure tempo first, it's often 145 not 146).
+- Type Beat 03 (no middle) is good for a Southern beat.
+- NEW LANE: ghetto gospel, Florida soul-trap (in the Rod Wave lane, but its own thing): gospel piano, church organ, choir, soulful and emotional, heavy 808s.
