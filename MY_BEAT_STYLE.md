@@ -73,3 +73,5 @@ Note: the words "pain-rap", "hurting" or "interlude" may trip vidIQ's content fi
 ## BIG HIT: Type Beat 01 - 808 Heavy (146 BPM, B minor) - use this prompt as the new master
 Melodic trap type beat, instrumental, loop-based, one simple repeating 4-bar warm electric piano and bell melody loop the whole way, minimal chord changes, loud punchy kick drum and heavy deep 808 bass up front, bass-heavy mix, smooth rolling hi-hats, snappy clap only on the backbeat, laid-back half-time head-nod bounce, drums start within the first few seconds, one steady groove from start to finish, bittersweet late-night mood, B minor, 146 BPM, raw underground mix
 (808 from the first second, hats at ~0:13, no breaks. Only the tail was trimmed.)
+- Type Beat 02 - Guitar missed: sounded like UK drill. Drill traits to steer away from: sliding/gliding 808s, choppy syncopated drums, triplet hat bounces, dark guitar at 140-146.
+  Fix (vidIQ doesn't take "no X"): say "Southern melodic trap", "steady 808 notes that follow the kick pattern", "simple steady hi-hats with light rolls", "classic Southern trap drum pattern".
