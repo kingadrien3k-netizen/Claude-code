@@ -66,3 +66,5 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, nostalgic elec
 Note: the words "pain-rap", "hurting" or "interlude" may trip vidIQ's content filter. Use "heartfelt" / "bittersweet" instead.
 - Bells 146 Bm - Interlude Vibe missed: sounded like a parade/marching band. Avoid "hard clap" on every beat, avoid bright/cheery bells, avoid "hopeful". Keep the clap only on the backbeat and the mood bittersweet, not happy.
 - BUT the intro of Bells 146 Bm (first ~20 seconds: soft romantic keys and bell, light 808, sparse hats) was liked. That soft romantic opening is a good sound to build from.
+- Romantic Drop 01 missed: sounded "Broadway", not like a type beat. The AI gets too musical and theatrical (chord changes, big arrangement, "polished", "romantic", "soulful").
+  Fix: ask for a simple repeating 2-4 bar melody loop like a real type beat, minimal chord changes, raw underground mix, loop-based, the same loop the whole way with drums carrying it. Avoid "polished professional mix", "romantic", "lush", "orchestral".
