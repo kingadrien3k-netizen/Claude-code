@@ -68,3 +68,4 @@ Note: the words "pain-rap", "hurting" or "interlude" may trip vidIQ's content fi
 - BUT the intro of Bells 146 Bm (first ~20 seconds: soft romantic keys and bell, light 808, sparse hats) was liked. That soft romantic opening is a good sound to build from.
 - Romantic Drop 01 missed: sounded "Broadway", not like a type beat. The AI gets too musical and theatrical (chord changes, big arrangement, "polished", "romantic", "soulful").
   Fix: ask for a simple repeating 2-4 bar melody loop like a real type beat, minimal chord changes, raw underground mix, loop-based, the same loop the whole way with drums carrying it. Avoid "polished professional mix", "romantic", "lush", "orchestral".
+- Bass drums missing in Romantic Drop 01. Every beat needs a loud punchy kick + heavy 808 up front in the mix. Ask for "loud punchy kick drum and heavy 808 bass up front, bass-heavy mix". If a beat comes back light, boost the low end (EQ) before sending.
