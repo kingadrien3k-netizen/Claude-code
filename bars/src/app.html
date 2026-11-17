@@ -275,6 +275,13 @@ details.paste[open] summary { margin-bottom: 10px; }
 .favs li { display: flex; gap: 8px; align-items: baseline; font-size: 16px; padding: 8px 10px; background: var(--paper); border-radius: 8px; }
 .favs li span { flex: 1; min-width: 0; }
 .favs li button { border: 0; background: none; color: var(--muted); font-size: 16px; }
+.cow-meta { font-size: 13px; color: var(--muted); margin: 12px 0 6px; }
+.cow-meta b { color: var(--ink); font-family: var(--mono); }
+.opts { list-style: none; padding: 0; margin: 10px 0 0; display: grid; gap: 8px; }
+.opts li { display: flex; gap: 10px; align-items: baseline; padding: 10px 12px; background: var(--paper); border-radius: 8px; font-size: 17px; font-weight: 500; }
+.opts li span { flex: 1; min-width: 0; }
+.opts li small { display: block; font-size: 13px; color: var(--muted); font-weight: 400; margin-top: 2px; }
+.opts li.best { border: 1px solid var(--t3); }
 .notes { margin-top: 18px; padding-top: 12px; border-top: 1px solid var(--line); }
 .notes ul { margin: 6px 0 0; padding-left: 20px; font-size: 14px; display: grid; gap: 4px; }
 .status { font-size: 14px; color: var(--muted); }
@@ -334,6 +341,8 @@ details.paste[open] summary { margin-bottom: 10px; }
           <form id="makeForm">
             <label class="fl" for="artist">Rapper <span class="opt">or paste a song below</span></label>
             <input class="mini big-in" id="artist" type="text" autocomplete="off" placeholder="e.g. Jay Montana" value="Jay Montana" enterkeyhint="next">
+            <label class="fl" for="artistName">Your artist name <span class="opt">the song is written for you</span></label>
+            <input class="mini" id="artistName" type="text" autocomplete="off" value="Baby Lyst" placeholder="Your rap name">
             <label class="fl" for="mood">Mood</label>
             <input class="mini big-in" id="mood" type="text" autocomplete="off" placeholder="e.g. heartbroken, hungry, grateful" enterkeyhint="go">
             <div class="chips" id="moods" style="margin-top:8px"></div>
@@ -351,7 +360,7 @@ details.paste[open] summary { margin-bottom: 10px; }
             <div class="two" style="margin-top:14px">
               <label class="fl" for="shape">Song shape
                 <select id="shape">
-                  <option value="radio" selected>Hook, Verse 1, Verse 2, Hook</option>
+                  <option value="radio" selected>Hook, Verse 1 (12), Verse 2 (12), Hook</option>
                   <option value="full">Full song</option>
                   <option value="sixteen">One 16-bar verse</option>
                   <option value="hook">Hook + short verse</option>
@@ -363,8 +372,21 @@ details.paste[open] summary { margin-bottom: 10px; }
           <p class="fine">Every song is all sauce: swagger, slick punchlines, tight rhymes, no filler. It's written fresh and never reuses lines from the rapper or the song you paste.</p>
         </div>
         <div class="card">
+          <div class="card-head"><h2>Write with me</h2><span class="eyebrow">you lead, I edit</span></div>
+          <p class="muted" style="margin:0 0 10px;font-size:14px">Type your line. You get rhyme words for it right away, and 4 next lines that keep your word count and your flow.</p>
+          <form class="search" id="cowForm">
+            <input class="mini" id="cowIn" type="text" autocomplete="off" placeholder="e.g. What it take to get first place, you gotta be alone" aria-label="Your line">
+            <button class="btn primary" type="submit">Next line</button>
+          </form>
+          <div id="cowOut"></div></div>
+        <div class="card">
           <div class="card-head"><h2>Their style</h2><span class="eyebrow" id="styleWho">waiting</span></div>
           <div id="styleOut"><p class="empty">After you hit Write, this shows what Claude pulled from the rapper's hit songs: the flow, rhymes and delivery your song uses.</p></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Your songs</h2><span class="eyebrow">from your lyrics session</span></div>
+          <div class="saved" id="catalog"></div>
+          <p class="fine">Tap one to open it on the lyric sheet with the rhyme check. Send it to the pad to score it or rap it over a beat.</p>
         </div>
         <div class="card">
           <div class="card-head"><h2>Lines you liked</h2><span class="eyebrow">the bot writes toward these</span></div>
@@ -564,6 +586,7 @@ details.paste[open] summary { margin-bottom: 10px; }
 <div class="toast" id="toast" hidden></div>
 
 <script id="dict" type="application/json">__DICT__</script>
+<script id="catalog-data" type="application/json">__CATALOG__</script>
 <script>
 "use strict";
 /* ================= storage ================= */
@@ -1313,7 +1336,7 @@ $("#moods").addEventListener("click", e => {
 // remember the form for this viewer
 try { if (!localStorage.getItem("barlab.shapev2")) { localStorage.removeItem("barlab.f.shape"); localStorage.setItem("barlab.shapev2", "1"); } } catch (e) {}
 try { if (localStorage.getItem("barlab.f.lang") === '"clean"' && !localStorage.getItem("barlab.langv2")) localStorage.removeItem("barlab.f.lang"); localStorage.setItem("barlab.langv2", "1"); } catch (e) {}
-["artist", "mood", "artistLyrics", "story", "details", "shape", "lang"].forEach(id => {
+["artist", "artistName", "mood", "artistLyrics", "story", "details", "shape", "lang"].forEach(id => {
   const el = $("#" + id); const v = store.get("f." + id, null); if (v !== null) el.value = v;
   el.addEventListener("input", () => { store.set("f." + id, el.value); if (id === "mood") syncChips(); });
   el.addEventListener("change", () => store.set("f." + id, el.value));
@@ -1389,7 +1412,11 @@ const CRAFT = `What makes it good:
 - Vibe of the artist's hits (their slang, their energy, their topics). No boring everyday chores.
 - Hustler mentality all through it: getting it out the mud, flipping a little into a lot, staying down till you come up, never folding, counting up while they sleep, watching your circle. Money talk is tied to the grind and where they came from, not fake rich fantasies.
 - Every bar earns its spot: quotable, slick, hard. No filler and no clichés.
-- Rhymes are the top priority. Every couplet (bars 1-2, 3-4, and so on) ends on a real rhyme: same vowel AND same ending sound (night / ride, cold / soul), not just a similar vowel. Most couplets should be multis where the last two or three syllables match (on me / lonely, ride slow / my soul, the money / so funny). Every bar also needs an internal rhyme. No lazy rhymes like the same word twice or "night / time".
+- Rhymes are the top priority, and they come in CHAINS, not nursery couplets: stay on one end-rhyme sound for 4 to 8 bars in a row, then switch to a new sound (like Gunna's long "-urr" run or Jay Montana's "-ur" then "-o" runs). Every bar's last word must really rhyme with the bar before or after it: same vowel AND same ending sound (night / ride, cold / soul / road), not just a similar vowel. Land two-syllable end rhymes where you can (on me / lonely, the money / so funny). Every bar also needs a rhyme inside the line. No lazy rhymes like the same word twice or "night / time".
+- Punchlines: at least 3 real ones per verse. Double meaning on one word (tote iron like Tony Stark), a flipped cliché, a reference chain, a parallel pair, or a hard plain truth.
+- One stretch of repeated line openers per verse (3 or 4 bars starting the same way, like "I'm just tryna...").
+- Specific details beat general lines: places, numbers, prices, cars, times. No "came from the bottom".
+- Hook: 4 lines that rhyme in the middle AND at the end of each line, run twice.
 - The verses never repeat a word, a phrase or an end word (small words like I, the, my are fine). Only the hook repeats.
 - Keep bars about the same length so it's rappable.`;
 const EXAMPLE = `Quality bar: an original example of the sauce level (swagger, multis, slick lines). Don't reuse any of it:
@@ -1472,12 +1499,17 @@ function rhymeCheck(text) {
     for (let k = 0; k + 2 < ws.length; k++) { const ph = ws.slice(k, k + 3).join(" "); phrases.set(ph, (phrases.get(ph) || 0) + 1); }
   });
   const repeats = [...[...seen].filter(([, n]) => n > 1).map(([w]) => w), ...[...phrases].filter(([, n]) => n > 1).map(([p]) => `"${p}"`)];
+  // rhyme chains: every bar has to rhyme with the bar before or after it in its section
   const misses = [], singles = []; let pairs = 0, multis = 0;
-  sections.forEach(sec => { for (let k = 0; k + 1 < sec.length; k += 2) {
-    pairs++; const a = sec[k], b = sec[k + 1];
-    if (!endsRhyme(a, b)) misses.push([a, b]);
-    else if (tailDepth(a, b) >= 2) multis++; else singles.push([a, b]);
-  } });
+  sections.forEach(sec => {
+    for (let k = 0; k < sec.length; k++) {
+      pairs++;
+      // a rhyme with the bar right before/after (chains) or two away (ABAB) both count
+      const near = [-2, -1, 1, 2].some(d => sec[k + d] && endsRhyme(sec[k + d], sec[k]));
+      if (!near && sec.length > 1) misses.push([sec[k > 0 ? k - 1 : k + 1], sec[k]]);
+    }
+    for (let k = 0; k + 1 < sec.length; k++) if (endsRhyme(sec[k], sec[k + 1])) { if (tailDepth(sec[k], sec[k + 1]) >= 2) multis++; else if (singles.length < 6) singles.push([sec[k], sec[k + 1]]); }
+  });
   // bars with no rhyme inside the line
   const flat = A.bars.filter(b => b.words.length > 3 && !b.words.slice(0, -1).some(t => t.color));
   const vb = vbars.length ? vbars : A.bars;
@@ -1495,7 +1527,7 @@ function rhymeCheck(text) {
 }
 const SHAPES = {
   full: "[Intro] 2-4 bars, [Hook] 8 bars, [Verse 1] 16 bars, [Hook] repeated in full, [Verse 2] 16 bars, [Hook] repeated in full, [Outro] 2-4 bars",
-  radio: "exactly these four sections in this order: [Hook] 8 bars, [Verse 1] 16 bars, [Verse 2] 16 bars, [Hook] the same 8 bars repeated word for word. No intro, no outro, no hook between the verses",
+  radio: "exactly these four sections in this order: [Hook] 4 lines run twice (8 bars), [Verse 1] 12 bars, [Verse 2] 12 bars, [Hook] the same 8 bars repeated word for word. No intro, no outro, no hook between the verses",
   sixteen: "[Verse] 16 bars, no hook",
   hook: "[Hook] 8 bars, [Verse] 8 bars",
 };
@@ -1541,6 +1573,8 @@ ${EXAMPLE}
 
 ${favBlock()}
 
+${voiceBlock()}
+
 Rhyme ideas from Bar Lab's dictionary, grouped by sound. Use them only where they fit the story:
 ${rhymeBank(mood)}
 
@@ -1570,7 +1604,7 @@ function renderSong(text) {
   const lineHTML = l => `<span class="txt">${bars.has(l.i) ? bars.get(l.i).tk.map(t => t.w ? `<span class="w${t.color ? " c" + t.color : ""}${t.m ? " m" : ""}">${esc(t.t)}</span>` : esc(t.t)).join("") : esc(l.raw)}</span><button class="fav" data-line="${esc(l.raw.trim())}" aria-pressed="${favs.includes(l.raw.trim())}" aria-label="Save this line" title="Save this line">♥</button>`;
   $("#songOut").innerHTML = (title ? `<div class="song-title">${esc(title)}</div>` : "") + (story ? `<p class="rmeta" style="margin:-4px 0 14px">${esc(story)}</p>` : "") +
     `<div class="song${colorsOn ? "" : " plain"}">${A.L.map(l => !l.raw.trim() ? "" : SECTION.test(l.raw) ? `<div class="sec">${esc(l.raw.trim().replace(/^\[|\]$/g, ""))}</div>` : `<div class="ly">${lineHTML(l)}</div>`).join("")}</div>` +
-    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> couplets rhyme · <b>${st.check.multis}</b> multis · <b>${st.check.repeats.length}</b> repeats in the verses${st.check.repeats.length ? ` (${esc(st.check.repeats.slice(0, 6).join(", "))})` : ""}. Same color = same rhyme sound.</p>${(() => { const T = styleTargets(st.artist); if (!T || !st.check.style) return ""; const S = st.check.style;
+    (st.check ? `<p class="rmeta" style="margin-top:12px">Rhyme check: <b>${st.check.pairs - st.check.misses.length}/${st.check.pairs}</b> bars rhyme in a chain · <b>${st.check.multis}</b> multis · <b>${st.check.repeats.length}</b> repeats in the verses${st.check.repeats.length ? ` (${esc(st.check.repeats.slice(0, 6).join(", "))})` : ""}. Same color = same rhyme sound.</p>${(() => { const T = styleTargets(st.artist); if (!T || !st.check.style) return ""; const S = st.check.style;
       const pct = (v, t) => Math.max(0, Math.round(100 - Math.abs(v - t) / t * 100));
       const score = Math.round((pct(S.syl, T.sylMedian) + pct(S.internal, T.internal) + pct(S.multiPct || 1, T.multiPct)) / 3);
       return `<p class="rmeta"><b>${esc(T.name)} match: ${score}%</b> · ${S.syl} syllables/bar (his ${T.sylMedian}) · ${S.internal} inside rhymes/bar (his ${T.internal}) · ${S.multiPct}% multis (his ${T.multiPct}%)</p>`; })()}` : "");
@@ -1588,7 +1622,7 @@ function fixPrompt(song, misses, repeats) {
     return `- "${a.raw.trim()}" / "${b.raw.trim()}" don't rhyme${sug ? ` (rhymes for "${a.end.t}": ${sug})` : ""}`;
   }).join("\n");
   const c = st.check || { singles: [], flat: [] };
-  const singleList = c.singles.slice(0, 8).map(([a, b]) => `- "${a.raw.trim()}" / "${b.raw.trim()}" only rhyme on one syllable: make it a 2 or 3 syllable multi`).join("\n");
+  const singleList = c.singles.slice(0, 8).map(([a, b]) => `- "${a.raw.trim()}" / "${b.raw.trim()}" only rhyme on one syllable: make the end a 2-syllable rhyme if it still makes sense`).join("\n");
   const flatList = c.flat.slice(0, 8).map(b => `- "${b.raw.trim()}" has no internal rhyme: add one`).join("\n");
   const T = styleTargets(st.artist);
   const tgt = !T ? [] : [
@@ -1729,6 +1763,71 @@ const applyColors = () => { $("#colorBtn").setAttribute("aria-pressed", colorsOn
 $("#colorBtn").onclick = () => { colorsOn = !colorsOn; store.set("colors", colorsOn); applyColors(); };
 applyColors();
 const favBlock = () => favs.length ? `Lines the listener loved from earlier songs. This is exactly the vibe they want: simple, catchy, melodic and a little hurt. Hit that same feeling, but don't reuse these lines:\n${favs.slice(0, 10).map(f => "- " + f).join("\n")}` : "";
+const CATALOG = JSON.parse(document.getElementById("catalog-data").textContent);
+const artistName = () => ($("#artistName").value || "").trim();
+function voiceBlock() {
+  const me = artistName();
+  const own = CATALOG.filter(c => c.voice).flatMap(c => c.voice).slice(0, 10);
+  return `${me ? `The song is for the artist ${me}. Write it as them, in first person; the hook can drop the name.\n` : ""}${own.length ? `This is how ${me || "the artist"} actually writes. Match this voice (plain, honest, punchlines like "tote iron like Tony Stark"), but don't reuse the lines:\n${own.map(l => "- " + l).join("\n")}` : ""}`;
+}
+$("#catalog").innerHTML = CATALOG.map((c, i) => `<button class="chip" data-cat="${i}">${esc(c.title)}</button>`).join("");
+$("#catalog").addEventListener("click", e => {
+  const b = e.target.closest("[data-cat]"); if (!b || st.busy) return;
+  const c = CATALOG[+b.dataset.cat];
+  st.song = `TITLE: ${c.title}\n${c.text}`; st.artist = $("#artist").value.trim() || "Jay Montana";
+  st.check = rhymeCheck(splitSong(st.song).lines.join("\n")); renderSong(st.song); setBusy(false);
+  $("#styleWho").textContent = artistName() || "your song";
+  $("#styleOut").innerHTML = `<div class="sty"><p class="sum">${esc(c.note || "Your song, from your lyrics session.")}</p></div>`;
+  if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "start" });
+});
+
+/* write with me: keep the artist's words, give rhyme words and next-line options */
+$("#cowForm").addEventListener("submit", async e => {
+  e.preventDefault();
+  const line = $("#cowIn").value.trim(); if (!line) return;
+  const words = line.match(/[A-Za-z][A-Za-z'’]*/g) || [];
+  const A = analyse(line); const b = A.bars[0];
+  const last = words[words.length - 1] || "";
+  const r = findRhymes(last);
+  const ok = x => x.rank < 20000 && x.w.length >= 2 && !x.w.includes("'");
+  const rw = r && !r.missing ? [...r.perfect.filter(ok).slice(0, 14).map(x => x.w), ...r.multis.filter(x => ok(x.e)).slice(0, 6).map(x => x.e.w)] : [];
+  let h = `<p class="cow-meta"><b>${words.length}</b> words · <b>${b ? b.syl : 0}</b> syllables · ends on <b>“${esc(last)}”</b></p>`;
+  h += rw.length ? `<div class="sub">Words with the same sound</div><div class="chips">${rw.map(w => `<span class="chip">${esc(w)}</span>`).join("")}</div>` : `<p class="rmeta">No rhymes found for “${esc(last)}”.</p>`;
+  h += `<div id="cowOpts"><p class="status">Writing 4 next lines…</p></div>`;
+  $("#cowOut").innerHTML = h;
+  if (!sampleFn) { $("#cowOpts").innerHTML = '<p class="rmeta">Next-line options need Claude (open Bar Lab on claude.ai). The rhyme words above still work.</p>'; return; }
+  const prev = (store.get("cowPrev", []) || []).slice(-6);
+  try {
+    const out = await sampleFn.json(`You're co-writing with ${artistName() || "a rapper"}. They lead, you edit. Their line:
+"${line}"
+${prev.length ? `Their lines just before it:\n${prev.map(l => "- " + l).join("\n")}\n` : ""}
+Write 4 options for the NEXT line. Rules:
+- Exactly ${words.length} words, the same as their line, with the same rhythm shape (if they slow down on two words in the middle, put two strong words in the same spot).
+- End on a word that really rhymes with "${last}"${rw.length ? ` (ideas: ${rw.slice(0, 12).join(", ")})` : ""}.
+- Don't start the same way as their line. Keep their voice: plain, honest, ${$("#mood").value.trim() || "hungry"}, in the style of ${$("#artist").value.trim() || "Jay Montana"}.
+- At least one option should be a punchline with a double meaning.
+${langRule()}
+${NO_COPY($("#artist").value.trim() || "the artist")}
+
+Reply with only JSON: {"options": [{"line": "...", "why": "one short reason"}], "best": 0}`, { cache: false, effort: "low" });
+    const opts = Array.isArray(out && out.options) ? out.options.filter(o => o && typeof o.line === "string") : [];
+    const best = Number(out && out.best);
+    $("#cowOpts").innerHTML = opts.length ? `<ul class="opts">${opts.map((o, i) => `<li class="${i === best ? "best" : ""}"><span>${esc(o.line)}${o.why ? `<small>${i === best ? "Strongest. " : ""}${esc(String(o.why))}</small>` : ""}</span><button class="btn small" data-add="${esc(o.line)}">Add</button></li>`).join("")}</ul>` : '<p class="rmeta">No options came back. Try again.</p>';
+    store.set("cowPrev", [...prev, line].slice(-6));
+  } catch (err) {
+    $("#cowOpts").innerHTML = `<p class="rmeta">${esc(ERR[err.code] || "Couldn't reach Claude. Try again.")}</p>`;
+    if (HIDE.has(err.code)) { sampleFn = null; setAvail(); }
+  }
+});
+$("#cowOut").addEventListener("click", e => {
+  const b = e.target.closest("[data-add]"); if (!b) return;
+  const mine = $("#cowIn").value.trim();
+  const lines = pad.value.replace(/\s*$/, "").split("\n");
+  if (!lines.map(l => l.trim()).includes(mine)) lines.push(mine);
+  lines.push(b.dataset.add);
+  pad.value = lines.filter((l, i) => l.trim() || i < lines.length - 1).join("\n").replace(/^\n+/, ""); pad.dispatchEvent(new Event("input"));
+  $("#cowIn").value = b.dataset.add; toast("Both lines are on the pad. Keep going from the new one");
+});
 let songs = store.get("songs", []);
 function saveSong() {
   const { title } = splitSong(st.song);

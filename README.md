@@ -64,6 +64,10 @@ A writing gym for lyrical rap. Open `bars/index.html` in any browser, no install
   (flow, rhyme patterns, delivery, hooks and themes from their hits), with a note on which techniques
   it used. Optionally add your own story and details. Revise it, save it, or send it to the pad.
   Song writing uses Claude, so it works when the page is opened on claude.ai; it never copies real lyrics
+- **Your songs + Write with me**: the nocap / Baby Lyst songs in `beats/lyrics/` are built into the app
+  (open one to see its rhyme check). "Write with me" takes your line, shows rhyme words instantly, and gives
+  4 next lines with the same word count and flow. New songs follow the rules in `beats/STUDY.md`
+  (rhyme chains, 3 punchlines a verse, 12-bar verses, 4-line hook run twice)
 - **Rhyme Engine**: rhymes by sound from a 26,000-word phonetic dictionary: perfect rhymes,
   multisyllable vowel matches, two-word phrase rhymes ("pocket" → "lock it", "rock it") and slant rhymes
 - **The Pad + Breakdown**: write one bar per line; rhyme families are highlighted in color,
