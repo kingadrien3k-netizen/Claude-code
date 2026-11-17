@@ -22,7 +22,7 @@ So any caption can follow any other — skip one you don't like and the next sti
    time fly when you workin' for the life you 'bout to claim
 10. cold outside, but i'm the hottest in the state
     heart cold, flow hot, i'm the weather they can't change
-11. Baby List gon' hit the charts, remember the name
+11. Baby Lyst gon' hit the charts, remember the name
     came up outta nowhere, now i'm everywhere they play
 12. they ain't lend a hand when i was down, now they want a plate
     same ones that ain't believe, now they wanna see the stage

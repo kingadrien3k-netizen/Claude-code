@@ -5,7 +5,7 @@ Built from Adrien's lines (marked *). Eden flow: 4-line monorhyme hook ("-ee"), 
 You'll end up tryna keep the piece up in the streets *
 Baby, can you stay? * Girl, you all I really need
 Like why would you ever leave? *
-Baby List gon' make it, all you gotta do is believe *
+Baby Lyst gon' make it, all you gotta do is believe *
 
 ## Verse 1
 keep a piece on me, but you the one that keep me at peace (peace)
