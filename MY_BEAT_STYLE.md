@@ -64,3 +64,4 @@ Emotional melodic trap beat, instrumental, soulful pain-rap vibe, nostalgic elec
 ## Reference I sent: "Babystaydown type beat interlude" (by another producer)
 146 BPM, B minor, 808 + kick from the first second (no intro), sparse hats most of the way with fast 16th-note hat runs later, drums never stop.
 Note: the words "pain-rap", "hurting" or "interlude" may trip vidIQ's content filter. Use "heartfelt" / "bittersweet" instead.
+- Bells 146 Bm - Interlude Vibe missed: sounded like a parade/marching band. Avoid "hard clap" on every beat, avoid bright/cheery bells, avoid "hopeful". Keep the clap only on the backbeat and the mood bittersweet, not happy.
