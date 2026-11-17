@@ -60,3 +60,7 @@ Pain Rap 04, Pain Rap 08, Heavenly 01, Street ATL 02, Lovey 01, In The Air Type 
 ## MASTER PROMPT (the exact one that made Pain Rap 04 - Bells 146) - start from this
 Emotional melodic trap beat, instrumental, soulful pain-rap vibe, nostalgic electric piano chords with a warm bell lead melody, dreamy reverb pads and airy vocal-chop textures, deep rumbling 808 bass, crisp hi-hat rolls and hard clap, half-time bounce, hopeful but hurting late-night mood, 146 BPM, polished professional mix with a short intro, full drop, and outro
 (Change only one small thing per new beat, e.g. a different lead sound. Keep "warm", "hopeful but hurting", "soulful". Avoid "dark", "eerie", "menacing".)
+
+## Reference I sent: "Babystaydown type beat interlude" (by another producer)
+146 BPM, B minor, 808 + kick from the first second (no intro), sparse hats most of the way with fast 16th-note hat runs later, drums never stop.
+Note: the words "pain-rap", "hurting" or "interlude" may trip vidIQ's content filter. Use "heartfelt" / "bittersweet" instead.
