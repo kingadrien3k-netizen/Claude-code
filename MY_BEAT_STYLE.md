@@ -78,3 +78,7 @@ Melodic trap type beat, instrumental, loop-based, one simple repeating 4-bar war
 - Type Beat 03 - Southern Guitar: intro was liked, the lighter middle section ruined it. vidIQ keeps adding a stripped-down middle (bars 16-32). Default fix: cut it and repeat the full-groove section instead, spliced on exact bar lines (measure tempo first, it's often 145 not 146).
 - Type Beat 03 (no middle) is good for a Southern beat.
 - NEW LANE: ghetto gospel, Florida soul-trap (in the Rod Wave lane, but its own thing): gospel piano, church organ, choir, soulful and emotional, heavy 808s.
+
+## HIT: Ghetto Gospel 01 (145 BPM) - master prompt for the gospel lane
+Ghetto gospel soul trap type beat, instrumental, Florida soulful heartfelt vibe, loop-based, one simple repeating 4-bar gospel piano chord loop with warm church organ and a soft gospel choir pad, minimal chord changes, loud punchy kick drum and heavy deep 808 bass up front following the kick, bass-heavy mix, simple steady hi-hats with light rolls, snappy clap only on the backbeat, laid-back half-time head-nod bounce, drums start within the first few seconds, one steady groove from start to finish, emotional bittersweet prayerful mood, 144 BPM, raw mix
+(Came back with no stripped middle. Only trimmed the intro to 4 bars and the tail.)
