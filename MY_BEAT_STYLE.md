@@ -82,3 +82,4 @@ Melodic trap type beat, instrumental, loop-based, one simple repeating 4-bar war
 ## HIT: Ghetto Gospel 01 (145 BPM) - master prompt for the gospel lane
 Ghetto gospel soul trap type beat, instrumental, Florida soulful heartfelt vibe, loop-based, one simple repeating 4-bar gospel piano chord loop with warm church organ and a soft gospel choir pad, minimal chord changes, loud punchy kick drum and heavy deep 808 bass up front following the kick, bass-heavy mix, simple steady hi-hats with light rolls, snappy clap only on the backbeat, laid-back half-time head-nod bounce, drums start within the first few seconds, one steady groove from start to finish, emotional bittersweet prayerful mood, 144 BPM, raw mix
 (Came back with no stripped middle. Only trimmed the intro to 4 bars and the tail.)
+- Length: wanted Ghetto Gospel 02 at 1:55. Aim for about 1:55 going forward (vidIQ allows up to 180 seconds).
