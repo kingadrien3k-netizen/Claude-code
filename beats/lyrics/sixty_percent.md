@@ -1,42 +1,30 @@
 # "Sixty Percent" — nocap (Baby Lyst)
-Jay Montana style, 4 rhymes in every bar. Inspired by the UnordinaryMind video "Why You Avoid the Things You Actually Love Doing" (scrolling instead of recording, waiting for the perfect night, 60% of something beats 0). Rhyme chains: -ole, -ay, -ee in verse 1; -ack, -itch, -ine, -one in verse 2.
+v2, "Shy Girl" scheme: plain conversational bars, every bar ends on the rhyme. Verse stays on "-o" for 12 bars then switches to "-ay"; chorus is 8 bars all on "-ight". Topic from the UnordinaryMind video "Why You Avoid the Things You Actually Love Doing".
 
-## Hook
-Got the plan, got the band, phone in my hand, stuck where I stand
-No perfect night, flip the light, grab the mic, write it right
-Sixty of somethin' beat a hundred of nothin', fuck frontin', now they understand
-Booth my sanctuary, that's where I'm fine, I'm alive, I'm inside, I'm alright
+## Verse
+Came in from work, threw my keys on the table, I'm finally home
+Told myself I'm finna record, then I picked up my phone
+Two hours later, ain't wrote a line, where the fuck did it go?
+Same shit every night, I swear this the only routine that I know
+It ain't like I don't love it, music the realest thing that I own
+But my brain be tired after shift, so it take the easy road
+I ain't lost the fire, I just be stallin' right before I go
+Like a candle that's too nice, so I never let it glow
+Savin' every song for some Saturday that never show
+Made a list of tracks I gotta finish, now it's homework, though
+Even when the one tellin' me to do it is me, I say no
+So I ripped up the list, now I write whatever, let it flow
+Mornin' time, I set the mic up 'fore I head out to get paid
+Load the beat, name the session, so tonight it's already laid
+Put the phone up for ten minutes, stare at the ceilin', let it fade
+When that itch hit, I'm in the booth, and I ain't comin' out till late
 
-## Verse 1
-Got off, keys in the bowl, threw my coat, phone up, lost in the scroll
-Two hours ghost, ain't wrote a quote, beat on the drive gettin' cold
-Swear it's my soul, only thing I control, but I'm froze, pen heavy like a load
-Tired brain pick the low road, I ain't lose it, just slow at the go
-Savin' it for Saturday, say I'ma wait, then the date slide away
-Put the flame on display, too great to waste, so it dust in the case
-Kept a list of the tapes, now the play feel like grades on a page
-Mind get the order, wanna be free, rebel even when the boss is me
-Tore up the sheet, write what I see, what I bleed, every song is a feast
-Dishes in the sink, let 'em sleep, take a seat, press repeat, it still come back sweet
-Half asleep, half the heat, that's a W, that's a piece I can keep
-Mood ain't a ticket I need, it show up when I'm deep, now I'm spittin' every week
-
-## Verse 2
-Mornin' coffee, mic on the rack, pull up the track, set the stack, so later I just tap
-Door already open, that's the hack, they stuck on the screen, I'm on attack, cashin' racks
-Cell in the drawer, ten minutes flat on my back, bored to the max till I crack
-Then the itch kick in, that's the switch, now I'm lit, every pitch is a hit
-Scrollin' is a ditch, easy slip, now you sittin', whole evenin' missin', you ain't livin'
-Nine to five, then I'm writin' on the side, two shifts, one of 'em mine
-Ain't no clock that's right, so I climb, every rhyme is a dime
-They waitin' on the stars to align, I'm a star, I shine when I decide, by design
-Booth is my home, never alone, every bone in me calm, I'm in the zone
-World so loud, so I build me a throne, made of tone, made of chrome, all my own
-Used to call it a chore, now I know it's the rope out the hole, to the gold
-Scrolled all night, payin' that toll, now they scrollin' on me, I'm the post that they hold
-
-## Hook
-Got the plan, got the band, phone in my hand, stuck where I stand
-No perfect night, flip the light, grab the mic, write it right
-Sixty of somethin' beat a hundred of nothin', fuck frontin', now they understand
-Booth my sanctuary, that's where I'm fine, I'm alive, I'm inside, I'm alright
+## Chorus
+I love this music, but I let my phone steal half my night
+Had the beat up, had the hook, but I ain't never touch the mic
+Waitin' on a perfect day, but that day ain't never in sight
+Sixty percent of somethin' still beat zero, that's right
+Every minute that I scrolled was a minute off my life
+Fuck a perfect moment, I'ma catch it while it's live
+Dishes in the sink, but I'm still goin' in tonight
+Booth the only place in this world where I feel alright
