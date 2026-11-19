@@ -85,3 +85,4 @@ Ghetto gospel soul trap type beat, instrumental, Florida soulful heartfelt vibe,
 - Length: wanted Ghetto Gospel 02 at 1:55. Aim for about 1:55 going forward (vidIQ allows up to 180 seconds).
 - Ghetto Gospel 02 missed: the intro sound carried the whole beat. Want it like Ghetto Gospel 01, where the drop takes over after the intro. For gospel beats, use the 01 master prompt as-is.
 - HIT: Ghetto Gospel 03 (145 BPM, 1:55). Same 01 master prompt with durationSeconds 125, then trimmed to 1:55. 808 from the first second, no breaks. Confirms: for gospel, run the 01 prompt unchanged at 125 seconds.
+- Five Min Lane 01 missed: sounded like ad-break / stock music. Leaving the melody instrument unnamed ("melodic sample loop") made it generic. ALWAYS name the lead sound (gospel piano, electric piano + bell, organ, choir). Stick to the Type Beat 01 or Ghetto Gospel 01 master prompts.
