@@ -605,6 +605,19 @@ section > .head { display: flex; align-items: baseline; justify-content: space-b
 .calcrow.wrong input { border-color: var(--bad); background: var(--bad-soft); }
 .calcrow .fixhint { grid-column: 2; }
 
+/* ---------- one thing a day ---------- */
+.onething { display: grid; gap: 12px; padding: 16px; border-radius: 14px; background: var(--surface); border: 1.5px solid color-mix(in srgb, var(--accent) 60%, var(--line)); box-shadow: var(--shadow); }
+.onething.done { border-color: color-mix(in srgb, var(--good) 55%, var(--line)); }
+.one-top { display: flex; justify-content: space-between; gap: 10px; }
+.one-top .label:first-child { color: var(--accent); }
+.onething.done .one-top .label:last-child { color: var(--good); }
+.one-body { display: grid; grid-template-columns: minmax(0, 210px) minmax(0, 1fr); align-items: center; gap: 14px; }
+.one-pic { border-radius: 10px; background: var(--bg); border: 1px solid var(--line); padding: 4px; }
+.one-pic svg { display: block; width: 100%; height: auto; }
+.onething h3 { font-size: 21px; margin-bottom: 4px; }
+.one-body p { margin: 0; color: var(--muted); font-size: 14px; }
+@media (max-width: 520px) { .one-body { grid-template-columns: minmax(0, 1fr); } .one-pic svg { max-height: 180px; } }
+
 /* ---------- phone app: tab bar, thumb bars, safe areas ---------- */
 :root { padding-top: env(safe-area-inset-top, 0px); }
 .tabbar {
@@ -670,6 +683,16 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
 
   <!-- HOME -->
   <main id="v-home" class="wrap">
+    <section class="onething" id="today" aria-label="Today's one thing">
+      <div class="one-top"><span class="label">Today's one thing</span><span class="label" id="t-day"></span></div>
+      <div class="one-body">
+        <div class="one-pic" id="t-pic"></div>
+        <div><h3 id="t-title"></h3><p id="t-think"></p></div>
+      </div>
+      <div class="row" id="t-actions"></div>
+      <p class="note" id="t-note" style="margin:0"></p>
+    </section>
+
     <section class="lobby" aria-label="Hunter status">
       <div class="lobby-top">
         <div class="emblem" id="h-emblem" data-rank="E"><span class="hex">E</span></div>
@@ -689,6 +712,7 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
       <div class="hstats" id="h-stats"></div>
       <div class="week" id="week"></div>
     </section>
+
 
     <section>
       <div class="head"><span class="label">Daily quest</span><span class="label" id="q-reward"></span></div>
@@ -826,7 +850,7 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
     </div>
     <div style="display:grid;gap:4px"><span class="label" id="ls-domain"></span><h2 id="ls-title" style="font-size:24px"></h2></div>
     <div class="scene" id="ls-scene"></div>
-    <p class="hint" style="margin-top:-8px">Swipe the picture to move between scenes</p>
+    <p class="hint" id="ls-hint" style="margin-top:-8px">Swipe the picture to move between scenes</p>
     <p class="caption" id="ls-caption"></p>
     <div class="think"><span class="label">Think of it as</span><p id="ls-think"></p></div>
     <div class="row thumbbar" id="ls-actions"></div>
@@ -906,6 +930,7 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
 <script src="engine.js"></script>
 <script src="hunter-core.js"></script>
 <script src="lessons.js"></script>
+<script src="daily.js"></script>
 <script src="labs.js"></script>
 <script>
 (function () {
@@ -1183,7 +1208,7 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
     const b = el('b', null, String(all.m)); $('tally').append(b, document.createTextNode(' / ' + all.total + ' mastered'));
     $('ov-title').textContent = all.total + ' cards across ' + SETS.length + ' sets';
     fillBar($('ov-bar'), all);
-    renderWeek(); renderSound(); applyTheme(); renderLobby(); renderQuests(); saveHunter();
+    renderWeek(); renderSound(); applyTheme(); renderLobby(); renderQuests(); renderToday(); saveHunter();
     $('ov-legend').replaceChildren(...[
       ['var(--good)', all.m + ' mastered'], ['var(--learn)', all.l + ' learning'], ['var(--surface-2)', all.n + ' new'],
     ].map(([c, t]) => { const s = el('span'); const i = el('i'); i.style.background = c; s.append(i, t); return s; }));
@@ -1566,6 +1591,12 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
     if (s.best >= 3) chips.append(el('span', 'chip warm', 'Best streak ' + s.best));
     const ds = dayStreak();
     if (ds) chips.append(el('span', 'chip', ds + (ds === 1 ? ' day' : '-day streak')));
+    if (s.daily && !oneDone[s.daily]) {
+      oneDone[s.daily] = true; store(KEY_ONE, oneDone);
+      gainXp(25); settleHunter();
+      toast("Today's one thing: done", '+25 XP. Next one tomorrow');
+      $('r-sub').textContent = (s.daily === todayNum() ? "That's today's one thing done. " : 'Caught up. ') + $('r-sub').textContent;
+    }
     let trialPassed = false;
     if (s.mode === 'trial') {
       trialPassed = right >= 8 && s.results.length >= 10 && H.trialReady(hunter);
@@ -1966,7 +1997,7 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
   }
   function openLesson(i) { LS = { i, s: 0 }; show('lesson'); renderScene(); }
   function lessonStep(d) {
-    if (!LS) return;
+    if (!LS || LS.single) return;
     const l = LESSONS[LS.i];
     if (d > 0 && LS.s === l.scenes.length - 1) return finishLesson();
     LS.s = Math.max(0, Math.min(l.scenes.length - 1, LS.s + d));
@@ -1979,6 +2010,14 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
     $('ls-title').textContent = l.title;
     $('ls-pos').textContent = (LS.s + 1) + ' / ' + l.scenes.length;
     $('ls-bar').firstElementChild.style.width = ((LS.s + 1) / l.scenes.length * 100) + '%';
+    $('lesson-back').textContent = LS.single ? 'Lobby' : 'Lessons';
+    $('ls-hint').hidden = !!LS.single;
+    if (LS.single) {
+      $('ls-domain').textContent = "Today's one thing · Day " + LS.day + ' · D' + l.d + ' ' + E.DOMAINS[l.d - 1].short;
+      $('ls-title').textContent = LS.entry.title;
+      $('ls-pos').textContent = '';
+      $('ls-bar').firstElementChild.style.width = '100%';
+    }
     const box = $('ls-scene');
     const inner = sceneSvg(sc), vb = sceneSvg.box, pad = 6;
     box.innerHTML = '<svg class="sv" viewBox="' + [vb.l - pad, vb.t - pad, vb.r - vb.l + 2 * pad, vb.b - vb.t + 2 * pad].map(f2).join(' ') + '" role="img" aria-label="' + esc(sc.caption) + '">' + inner + '</svg>';
@@ -1986,10 +2025,14 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
     $('ls-caption').textContent = sc.caption;
     $('ls-think').textContent = sc.think;
     const act = $('ls-actions'); act.replaceChildren();
-    const prev = mkBtn('Back', '', () => lessonStep(-1)); prev.disabled = LS.s === 0;
-    act.append(prev, mkBtn(last ? 'Finish + quick check (' + Math.min(8, lessonCards(l).length) + ')' : 'Next', 'go', () => lessonStep(1)));
+    if (LS.single) {
+      act.append(mkBtn('Later', '', goHome), mkBtn('Quiz me (3 questions)', 'go', finishToday));
+    } else {
+      const prev = mkBtn('Back', '', () => lessonStep(-1)); prev.disabled = LS.s === 0;
+      act.append(prev, mkBtn(last ? 'Finish + quick check (' + Math.min(8, lessonCards(l).length) + ')' : 'Next', 'go', () => lessonStep(1)));
+    }
     const terms = $('ls-terms'); terms.replaceChildren();
-    for (const c of lessonCards(l)) {
+    for (const c of (LS.single ? todayCards(LS.entry, l) : lessonCards(l))) {
       const b = el('button', 'optchip', c.term); b.type = 'button';
       b.addEventListener('click', () => {
         const d = $('ls-def'); d.hidden = false; d.replaceChildren(el('b', null, c.term), document.createTextNode(c.def));
@@ -2011,7 +2054,56 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
     if (cards.length) startSession('quiz', cards); else goHome();
   }
   $('learn-back').addEventListener('click', goHome);
-  $('lesson-back').addEventListener('click', showLearn);
+  $('lesson-back').addEventListener('click', () => (LS && LS.single ? goHome() : showLearn()));
+
+  // ---------- one thing a day ----------
+  const DY = window.SecDaily;
+  const KEY_ONE = 'secplus.oneaday.v1';
+  const oneDone = load(KEY_ONE, {});
+  const todayNum = () => Math.max(1, DY.dayNumber(new Date()));
+  const lessonIndex = (id) => LESSONS.findIndex((l) => l.id === id);
+  function todayCards(entry, lesson) {
+    const out = [];
+    for (const t of entry.terms.concat(lesson ? lesson.terms : [])) {
+      const c = BY_TERM.get(t);
+      if (c && !c.clue && !out.includes(c)) out.push(c);
+      if (out.length === 3) break;
+    }
+    return out;
+  }
+  function oneStreak() {
+    let n = todayNum(), k = 0;
+    if (!oneDone[n]) n--;
+    while (n >= 1 && oneDone[n]) { k++; n--; }
+    return k;
+  }
+  function renderToday() {
+    const n = todayNum(), e = DY.forDay(n), l = LESSONS[lessonIndex(e.lesson)], sc = l.scenes[e.scene], done = !!oneDone[n];
+    $('t-day').textContent = 'Day ' + n + (done ? ' · done' : '');
+    $('t-title').textContent = e.title;
+    $('t-think').textContent = sc.think;
+    const inner = sceneSvg(sc), vb = sceneSvg.box;
+    $('t-pic').innerHTML = '<svg class="sv" viewBox="' + [vb.l - 6, vb.t - 6, vb.r - vb.l + 12, vb.b - vb.t + 12].map(f2).join(' ') + '" aria-hidden="true">' + inner + '</svg>';
+    const act = $('t-actions'); act.replaceChildren();
+    act.append(done ? mkBtn('Review it', '', () => openToday(n)) : mkBtn('Learn it · 2 minutes', 'go', () => openToday(n)));
+    if (n > 1 && !oneDone[n - 1]) act.append(mkBtn('Catch up: ' + DY.forDay(n - 1).title, '', () => openToday(n - 1)));
+    const st = oneStreak();
+    $('t-note').textContent = done
+      ? 'Done for today. Your next one unlocks tomorrow.' + (st > 1 ? ' Learning streak: ' + st + ' days.' : '')
+      : st ? 'Learning streak: ' + st + (st === 1 ? ' day' : ' days') + '. Keep it going.' : 'One picture, one idea, three questions. About two minutes.';
+    $('today').classList.toggle('done', done);
+  }
+  function openToday(n) {
+    const e = DY.forDay(n);
+    LS = { i: lessonIndex(e.lesson), s: e.scene, single: true, day: n, entry: e };
+    show('lesson'); renderScene();
+  }
+  function finishToday() {
+    const n = LS.day, cards = todayCards(LS.entry, LESSONS[LS.i]);
+    LS = null;
+    startSession('quiz', E.shuffle(cards));
+    session.daily = n;
+  }
 
   // ---------- Labs: hands-on, PBQ style ----------
   const LB = window.SecLabs;
@@ -2304,7 +2396,7 @@ button, .lrow, .optchip, .choice, .logline { -webkit-tap-highlight-color: transp
     if (e.metaKey || e.ctrlKey || e.altKey) return;
     if (e.key === 'Escape') {
       if (view === 'study') $('end').click(); else if (view === 'game') exitGame();
-      else if (view === 'lesson') showLearn(); else if (view === 'lab') showLabs(); else if (view !== 'home') goHome();
+      else if (view === 'lesson') (LS && LS.single ? goHome() : showLearn()); else if (view === 'lab') showLabs(); else if (view !== 'home') goHome();
       return;
     }
     if (view === 'lesson' && e.target.tagName !== 'INPUT') {

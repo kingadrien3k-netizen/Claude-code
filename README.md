@@ -63,6 +63,7 @@ an "on fire" streak bonus, a second defender once you hit 10 points, and a saved
 A study app for the 304 CompTIA Security+ cards in the Quizlet folder
 "Sec+ Flashcards (in progress)". Open `secplus/index.html` in any browser; no install or build step.
 
+- **Today's one thing**: the top of the lobby shows one concept per day (a 37-day path through the lessons, `secplus/daily.js`, Day 1 = 2026-11-19): one animated picture, a plain explanation, 3 questions, a learning streak, and a catch-up button for yesterday. A noon (US Eastern) phone reminder teaches the same day's concept.
 - **Learn** (start here): 9 picture-first lessons, 37 animated diagrams (packets moving, attacks blocked or getting through) with a plain-English caption and a "think of it as" comparison per scene, then a quick check on the matching cards. Content in `secplus/lessons.js`.
 - **Labs** (hands-on, like the exam's performance-based questions): flag attacks in logs, fix firewall rule order and actions against test traffic, order processes, sort controls into buckets, work the risk math. 20 labs in `secplus/labs.js`.
 - **Lobby**: the home page is a hunter status screen (dark mode by default, with a light toggle): rank badge, level and XP, five stats that are your mastery of the five exam domains (tap one to aim every mode at it), a daily quest, and a Rank-up Trial that unlocks at each rank's level cap. Every mode earns XP; the leveling rules are shared with the terminal game (`secplus/hunter-core.js`).

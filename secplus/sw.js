@@ -1,8 +1,8 @@
 // Offline support for the installed app: app files are cached on install and
 // served cache-first; fonts are cached the first time they load.
 // Bump VERSION whenever any app file changes so phones pick up the update.
-const VERSION = 'secplus-v1';
-const APP = ['./', './index.html', './cards.js', './engine.js', './scenarios.js', './hunter-core.js', './lessons.js', './labs.js',
+const VERSION = 'secplus-v2';
+const APP = ['./', './index.html', './cards.js', './engine.js', './scenarios.js', './hunter-core.js', './lessons.js', './daily.js', './labs.js',
   './manifest.webmanifest', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-maskable-512.png', './icons/apple-touch-icon.png'];
 
 self.addEventListener('install', (e) => {

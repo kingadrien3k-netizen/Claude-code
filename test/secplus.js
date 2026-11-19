@@ -133,3 +133,19 @@ for (const l of LESSONS) {
   });
 }
 console.log('secplus: ' + LB.LABS.length + ' labs and ' + LESSONS.length + ' lessons ok');
+
+// One thing a day: plan refers to real lesson scenes and cards; calendar math.
+const DY = require('../secplus/daily.js');
+for (const e of DY.PLAN) {
+  const l = LESSONS.find((x) => x.id === e.lesson);
+  assert.ok(l && l.scenes[e.scene], 'daily ' + e.title + ' scene');
+  const quiz = new Set(e.terms.filter((t) => termSet.has(t) && !deck.find((c) => c.term === t).clue));
+  assert.strictEqual(quiz.size, e.terms.length, 'daily ' + e.title + ' terms are real, non-clue cards');
+  assert.ok(quiz.size >= 1);
+}
+assert.strictEqual(DY.PLAN.length, LESSONS.reduce((a, l) => a + l.scenes.length, 0), 'one day per scene');
+assert.strictEqual(DY.dayNumber(new Date(2026, 10, 19, 23, 59)), 1);
+assert.strictEqual(DY.dayNumber(new Date(2026, 10, 20, 0, 1)), 2);
+assert.strictEqual(DY.forDay(1).title, 'The CIA triad');
+assert.strictEqual(DY.forDay(DY.PLAN.length + 1), DY.forDay(1), 'plan repeats after the last day');
+console.log('secplus: ' + DY.PLAN.length + '-day plan ok');
