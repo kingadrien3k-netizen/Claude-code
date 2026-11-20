@@ -1,0 +1,31 @@
+{
+  "keywords": ["gta"],
+  "chain": "solana",
+
+  "startingCash": 300,
+  "positionPct": 0.2,
+  "maxPositionUsd": 120,
+  "maxOpenPositions": 4,
+  "slippagePct": 0.03,
+  "rugSlippagePct": 0.5,
+
+  "minLiquidityUsd": 5000,
+  "minMarketCap": 10000,
+  "maxMarketCap": 2000000,
+  "maxAgeHours": 48,
+  "requireNameMatch": true,
+
+  "takeProfitMultiple": 3,
+  "takeProfitFraction": 0.5,
+  "trailingStopPct": 0.25,
+  "stopLossPct": 0.5,
+  "rugLiquidityUsd": 1500,
+  "maxHoldHours": 12,
+  "stopAt": "23:30",
+
+  "pollSeconds": 30,
+
+  "useGrok": true,
+  "grokModel": "grok-4",
+  "grokMinScore": 6
+}
