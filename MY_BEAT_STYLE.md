@@ -111,3 +111,4 @@ Southern soulful melodic trap type beat, instrumental, signature sound, loop-bas
 ## Paperwork rule
 - Every time I add a new beat to my Drive "Beats" folder, add it to "Beat Paperwork - Proof of Creation and Usage Rights" (vidIQ ID, source link, prompt, edits, date). Check the Beats folder for new beats at the start of every session and whenever I ask for a beat. The master copy is BEAT_PAPERWORK.md in this repo.
 - Babylyst SIG 02 missed: organ as the LEAD melody sounded like an Independence Day / patriotic anthem. Keep the organ as a soft pad UNDERNEATH only. The lead should stay electric piano + warm bell (like SIG 01 / Southern Bounce 01). For "no recycle" changes, change the bell melody shape, the vocal chop, or the drum bounce, not the lead instrument.
+- Update: still using Babylyst SIG 02 (organ-led) for a song idea. The organ-lead anthem sound works for some songs; just don't make it the default.
