@@ -95,3 +95,15 @@ Ghetto gospel soul trap type beat, instrumental, Florida soulful heartfelt vibe,
 ## PERFECT: Southern Bounce 01 (145 BPM, 1:55) - master prompt for sad/bounce beats
 Southern emotional melodic trap beat, instrumental, soulful heartfelt vibe, loop-based, nostalgic warm electric piano chords with a warm bell lead melody and soft gospel organ pad, dreamy reverb, deep rumbling 808 bass locked with the kick, crisp hi-hat rolls and hard clap on the backbeat, bouncy half-time head-nod groove, full drums and 808 start within the first few seconds, one steady groove from start to finish, sad but hopeful late-night mood, 146 BPM, raw mix
 (durationSeconds 125. Drums came in at 0:03. Only edits: cut a 2-bar gap on the beat and trimmed to 1:55. This = Pain Rap 04 bounce + Southern gospel feel, no drill.)
+
+## ★ BABYLYST SIG STYLE (my signature: Southern Bounce + Ghetto Gospel + Swag ATL in one)
+Every SIG beat is brand new, never recycled. Same DNA, new melody each time.
+- Bounce: Southern Bounce 01 / Pain Rap 04 half-time head-nod at 146 BPM, rumbling 808 locked to a loud kick, crisp hat rolls, hard backbeat clap
+- Soul: warm electric piano + warm bell lead, with a gospel organ and soft choir pad underneath (from Ghetto Gospel)
+- Swag: one subtle pitched-up soul vocal chop and a little rimshot/shaker bounce (from Swag ATL), kept light
+- Mood: sad but hopeful, prayerful with a confident street edge
+- Rules: full drums in the first few seconds, one steady groove, no stripped middle, about 1:55, Southern (never drill)
+
+SIG master prompt:
+Southern soulful melodic trap type beat, instrumental, signature sound, loop-based, nostalgic warm electric piano chords with a warm bell lead melody, gospel church organ and soft choir pad underneath, one subtle soulful pitched-up vocal chop, deep rumbling 808 bass locked with a loud punchy kick, crisp hi-hat rolls, hard clap on the backbeat, light rimshot and shaker bounce, bouncy half-time head-nod groove, full drums and 808 start within the first few seconds, one steady groove from start to finish, sad but hopeful prayerful mood with a confident street edge, 146 BPM, raw mix
+(To keep it from recycling: change ONE thing per beat, like the bell melody shape, key, or which gospel layer leads.)
