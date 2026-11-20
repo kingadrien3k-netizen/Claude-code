@@ -107,3 +107,6 @@ Every SIG beat is brand new, never recycled. Same DNA, new melody each time.
 SIG master prompt:
 Southern soulful melodic trap type beat, instrumental, signature sound, loop-based, nostalgic warm electric piano chords with a warm bell lead melody, gospel church organ and soft choir pad underneath, one subtle soulful pitched-up vocal chop, deep rumbling 808 bass locked with a loud punchy kick, crisp hi-hat rolls, hard clap on the backbeat, light rimshot and shaker bounce, bouncy half-time head-nod groove, full drums and 808 start within the first few seconds, one steady groove from start to finish, sad but hopeful prayerful mood with a confident street edge, 146 BPM, raw mix
 (To keep it from recycling: change ONE thing per beat, like the bell melody shape, key, or which gospel layer leads.)
+
+## Paperwork rule
+- Every time I add a new beat to my Drive "Beats" folder, add it to "Beat Paperwork - Proof of Creation and Usage Rights" (vidIQ ID, source link, prompt, edits, date). Check the Beats folder for new beats at the start of every session and whenever I ask for a beat. The master copy is BEAT_PAPERWORK.md in this repo.
