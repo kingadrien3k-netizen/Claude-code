@@ -1,30 +1,30 @@
 # "Sixty Percent" — nocap (Baby Lyst)
-v2, "Shy Girl" scheme: plain conversational bars, every bar ends on the rhyme. Verse stays on "-o" for 12 bars then switches to "-ay"; chorus is 8 bars all on "-ight". Topic from the UnordinaryMind video "Why You Avoid the Things You Actually Love Doing".
+v3, Jay Montana tap-in: every bar is 8 words, with the rhyme on word 4 and word 8. Verse chains "-o" for 12 bars, then "-ay"; chorus is all "-ight". Topic from the UnordinaryMind video "Why You Avoid the Things You Actually Love Doing".
 
 ## Verse
-Came in from work, threw my keys on the table, I'm finally home
-Told myself I'm finna record, then I picked up my phone
-Two hours later, ain't wrote a line, where the fuck did it go?
-Same shit every night, I swear this the only routine that I know
-It ain't like I don't love it, music the realest thing that I own
-But my brain be tired after shift, so it take the easy road
-I ain't lost the fire, I just be stallin' right before I go
-Like a candle that's too nice, so I never let it glow
-Savin' every song for some Saturday that never show
-Made a list of tracks I gotta finish, now it's homework, though
-Even when the one tellin' me to do it is me, I say no
-So I ripped up the list, now I write whatever, let it flow
-Mornin' time, I set the mic up 'fore I head out to get paid
-Load the beat, name the session, so tonight it's already laid
-Put the phone up for ten minutes, stare at the ceilin', let it fade
-When that itch hit, I'm in the booth, and I ain't comin' out till late
+Clocked out, came home, thumb on my phone
+Two hours went ghost, beat sittin' there cold
+Swear it's my soul, only thing I control
+Brain stuck on low, after work, movin' slow
+Still got the glow, just slow to roll
+Wait on Saturday though, that day never show
+Kept it on hold, wrapped up, never sold
+List start to grow, now it's homework, bro
+I tell myself go, mind rebel, say no
+Tore up the note, now I just flow
+Sink full, dishes soak, still in my zone
+I'm on sixty though, beat zero, I know
+Mornin', 'fore the day, mic set in place
+Beat loaded and saved, so tonight, no delay
+Put the phone away, ten minutes, ceilin' gaze
+Itch come my way, I'm boothin' till late
 
 ## Chorus
-I love this music, but I let my phone steal half my night
-Had the beat up, had the hook, but I ain't never touch the mic
-Waitin' on a perfect day, but that day ain't never in sight
-Sixty percent of somethin' still beat zero, that's right
-Every minute that I scrolled was a minute off my life
-Fuck a perfect moment, I'ma catch it while it's live
-Dishes in the sink, but I'm still goin' in tonight
-Booth the only place in this world where I feel alright
+Love this shit, right? Phone took my night
+Beat up, hook tight, never did I write
+Waitin' for perfect light, ain't nothin' in sight
+Sixty of it, right? Better than none, aight
+Every scroll's a bite, eatin' at my life
+Fuck the perfect time, I catch it live
+Dishes stacked, I'm fine, still goin' in tonight
+Booth where I shine, only place I'm alright
