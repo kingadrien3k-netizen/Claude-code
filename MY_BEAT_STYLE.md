@@ -88,3 +88,5 @@ Ghetto gospel soul trap type beat, instrumental, Florida soulful heartfelt vibe,
 - Five Min Lane 01 missed: sounded like ad-break / stock music. Leaving the melody instrument unnamed ("melodic sample loop") made it generic. ALWAYS name the lead sound (gospel piano, electric piano + bell, organ, choir). Stick to the Type Beat 01 or Ghetto Gospel 01 master prompts.
 - Type Beat 04 missed: sounded girly, and the first ~40 seconds were a lighter section that felt like a long intro before the real beat. Same prompt as Type Beat 01 but a different result, so the keys+bells prompt is hit-or-miss.
   Rule: the FULL beat (full 808 + drums + melody) must hit within the first ~5 seconds and stay full. If vidIQ returns a light verse section first, cut to the full section. Gospel prompt has been the most reliable (01 and 03 both hit).
+- Swag ATL 01 (150 BPM, Lil Tony flex lane): good.
+- Next request: sad beat, go easy on samples/vocal chops. Lead with a played instrument (piano) instead.
