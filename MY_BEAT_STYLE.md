@@ -91,3 +91,7 @@ Ghetto gospel soul trap type beat, instrumental, Florida soulful heartfelt vibe,
 - Swag ATL 01 (150 BPM, Lil Tony flex lane): good.
 - Next request: sad beat, go easy on samples/vocal chops. Lead with a played instrument (piano) instead.
 - Sad Piano 01 missed: sounded UK drill AGAIN. "Sad minor-key piano" + "rolling hi-hats" at 145 = drill. For sad beats: say "Southern soul trap", "warm soulful piano" (not "minor-key"), "simple steady hi-hats" (not rolling/triplet), and build off the Ghetto Gospel 01 prompt, which never comes out drill.
+
+## PERFECT: Southern Bounce 01 (145 BPM, 1:55) - master prompt for sad/bounce beats
+Southern emotional melodic trap beat, instrumental, soulful heartfelt vibe, loop-based, nostalgic warm electric piano chords with a warm bell lead melody and soft gospel organ pad, dreamy reverb, deep rumbling 808 bass locked with the kick, crisp hi-hat rolls and hard clap on the backbeat, bouncy half-time head-nod groove, full drums and 808 start within the first few seconds, one steady groove from start to finish, sad but hopeful late-night mood, 146 BPM, raw mix
+(durationSeconds 125. Drums came in at 0:03. Only edits: cut a 2-bar gap on the beat and trimmed to 1:55. This = Pain Rap 04 bounce + Southern gospel feel, no drill.)
