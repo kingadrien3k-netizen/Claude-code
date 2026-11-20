@@ -90,3 +90,4 @@ Ghetto gospel soul trap type beat, instrumental, Florida soulful heartfelt vibe,
   Rule: the FULL beat (full 808 + drums + melody) must hit within the first ~5 seconds and stay full. If vidIQ returns a light verse section first, cut to the full section. Gospel prompt has been the most reliable (01 and 03 both hit).
 - Swag ATL 01 (150 BPM, Lil Tony flex lane): good.
 - Next request: sad beat, go easy on samples/vocal chops. Lead with a played instrument (piano) instead.
+- Sad Piano 01 missed: sounded UK drill AGAIN. "Sad minor-key piano" + "rolling hi-hats" at 145 = drill. For sad beats: say "Southern soul trap", "warm soulful piano" (not "minor-key"), "simple steady hi-hats" (not rolling/triplet), and build off the Ghetto Gospel 01 prompt, which never comes out drill.
