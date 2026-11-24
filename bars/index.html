@@ -384,6 +384,13 @@ canvas#ftWave { width: 100%; height: 140px; display: block; border-radius: 8px; 
 .qsheet .qline .r { color: var(--t3); font-weight: 700; }
 .qsheet .qline.off .r { color: var(--t5); }
 .qmeta { font-size: 13px; color: var(--muted); margin: 10px 0; }
+.caps { display: grid; gap: 10px; margin-top: 16px; }
+.cap { display: flex; gap: 10px; align-items: center; padding: 12px 14px; border-radius: 12px; background: var(--paper); border: 1px solid var(--line); }
+.cap-lines { flex: 1; min-width: 0; }
+.cap .qline { font-size: 18px; line-height: 1.55; overflow-wrap: anywhere; }
+.cap .qline .r { color: var(--t3); font-weight: 700; }
+.cap .qline.off .r { color: var(--t5); }
+.cap-tools { display: grid; gap: 6px; justify-items: center; }
 nav.tabs:not(.open) .mt { display: none; }
 .moretab { border: 0; background: none; padding: 8px 14px; border-radius: 999px; font-weight: 600; color: var(--muted); }
 nav.tabs.open .moretab { color: var(--ink); }
@@ -466,10 +473,9 @@ nav.tabs.open .moretab { color: var(--ink); }
   <section class="view" id="v-quick" hidden>
     <div class="quickwrap">
       <div class="card">
-        <div class="card-head"><h2>Quick lyrics</h2><span class="eyebrow">pick the feel · tap write</span></div>
+        <div class="card-head"><h2>Quick bars</h2><span class="eyebrow">pick the feel · get bars</span></div>
         <div class="genres" id="genres"></div>
-        <input class="mini" id="qTopic" type="text" autocomplete="off" placeholder="What's it about? (optional)" style="margin-top:12px">
-        <button class="btn primary big" id="qGo">Write it</button>
+        <button class="btn primary big" id="qGo">Give me bars</button>
         <div id="qOut"></div>
       </div>
     </div>
@@ -2290,11 +2296,32 @@ const GENRES = [
 let qGenre = store.get("qGenre", "motivational"), qLast = null;
 $("#genres").innerHTML = GENRES.map(g => `<button class="genre" type="button" data-genre="${g.id}" aria-pressed="${g.id === qGenre}"><b>${esc(g.name)}</b><span>${esc(g.feel.split(":")[0])}</span></button>`).join("");
 $("#genres").addEventListener("click", e => { const b = e.target.closest("[data-genre]"); if (!b) return; qGenre = b.dataset.genre; store.set("qGenre", qGenre); $$("#genres .genre").forEach(x => x.setAttribute("aria-pressed", x === b)); });
-$("#qTopic").value = store.get("qTopic", ""); $("#qTopic").addEventListener("input", () => store.set("qTopic", $("#qTopic").value));
 function voiceLines(g) {
   const lines = []; CATALOG.filter(c => g.voice.includes(c.title)).forEach(c => c.text.split("\n").filter(l => l && !/^\[/.test(l)).slice(0, 6).forEach(l => lines.push(l.replace(/\s*\([^)]*\)\s*$/, ""))));
   return lines.slice(0, 8);
 }
+// the artist's own IG caption bars: the format to match
+function captionSamples() {
+  const c = CATALOG.find(x => /caption/i.test(x.title)); if (!c) return [];
+  const l = c.text.split("\n").filter(x => x && !/^\[/.test(x));
+  const out = []; for (let i = 0; i + 1 < l.length && out.length < 4; i += 2) out.push(l[i] + " / " + l[i + 1]);
+  return out;
+}
+const qHL = line => { const c = qCheckLine(line); let h = esc(line); [c.a, c.b].filter(Boolean).forEach(w => { const re = new RegExp(`\\b(${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})\\b(?![^<]*>)`); h = h.replace(re, '<span class="r">$1</span>'); }); return { h, ok: c.ok }; };
+function qCaps(caps, done) {
+  const g = GENRES.find(x => x.id === qGenre) || GENRES[0];
+  $("#qOut").innerHTML = `<div class="caps">${caps.map((lines, i) => `<div class="cap"><div class="cap-lines">${lines.map(l => { const x = qHL(l); return `<div class="qline${x.ok ? "" : " off"}">${x.h}</div>`; }).join("")}</div>${done ? `<div class="cap-tools"><button class="btn small" data-qcopy="${i}">Copy</button><button class="fav" data-line="${esc(lines.join(" / "))}" aria-pressed="${favs.includes(lines.join(" / "))}" aria-label="Save" title="Save">♥</button></div>` : ""}</div>`).join("")}</div>
+    ${done ? `<div class="row" style="margin-top:12px"><button class="btn primary" id="qAgain">More ${esc(g.name)} bars</button><button class="btn" id="qCopyAll">Copy all</button></div>` : ""}`;
+  if (!done) return;
+  const copy = async t => { try { await navigator.clipboard.writeText(t); toast("Copied"); } catch (e) { toast("Select the text to copy it"); } };
+  $("#qOut").onclick = e => {
+    const c = e.target.closest("[data-qcopy]"); if (c) copy(caps[+c.dataset.qcopy].join("\n"));
+    const f = e.target.closest(".fav"); if (f) { const line = f.dataset.line, k = favs.indexOf(line); if (k >= 0) favs.splice(k, 1); else { favs.unshift(line); favs = favs.slice(0, 20); toast("Saved to lines you liked"); } store.set("favs", favs); renderFavs(); f.setAttribute("aria-pressed", k < 0); }
+  };
+  $("#qAgain").onclick = () => qWrite();
+  $("#qCopyAll").onclick = () => copy(caps.map(c => c.join("\n")).join("\n\n"));
+}
+const parseCaps = text => text.split(/\n\s*\n/).map(b => b.split("\n").map(l => l.replace(/^\s*(\d+[.)]|[-•])\s*/, "").replace(/\*\*/g, "").trim()).filter(l => l && !/^(here|caption)/i.test(l))).filter(b => b.length);
 function qCheckLine(l) {
   const ws = l.replace(/\([^)]*\)/g, "").match(/[A-Za-z][A-Za-z'’]*/g) || [];
   const v = w => { const e = w && lookupWord(w); const I = e && info(e); return I ? I.v[I.ls] : null; };
@@ -2322,9 +2349,26 @@ function qRender(text, done) {
   $("#qPad").onclick = () => { pad.value = body.join("\n").trim(); pad.dispatchEvent(new Event("input")); if ($("#songTitle")) { $("#songTitle").value = title; store.set("f.songTitle", title); } setView("write"); window.scrollTo(0, 0); toast("It's on the Song tab"); };
   $("#qCopy").onclick = async () => { try { await navigator.clipboard.writeText((title ? title + "\n\n" : "") + body.join("\n").trim()); toast("Copied"); } catch (e) { toast("Select the text to copy it"); } };
 }
-async function qWrite(extend) {
+async function qWrite() {
   const out = $("#qOut"); if (!needAI(out)) return;
-  const g = GENRES.find(x => x.id === qGenre) || GENRES[0]; const topic = $("#qTopic").value.trim(); const me = artistName() || "Baby Lyst";
+  const g = GENRES.find(x => x.id === qGenre) || GENRES[0]; const me = artistName() || "Baby Lyst";
+  const voice = voiceLines(g), samples = captionSamples();
+  const seen = store.get("qSeen", []).slice(-30);
+  const prompt = `Write 8 Instagram caption bars for ${me}, a rapper, in the "${g.name}" feel: ${g.feel}.
+Each caption is 2 lines that stand alone: quotable, hard, easy to post under a picture. Mix it up: punchlines, double meanings, flexes of attitude, real talk. No topic needed, just bars.
+Setup for every line: at most 8 words, and the rhyme lands on word 4 AND word 8 (like "Clocked out, came home, thumb on my phone"). The 2 lines of a caption rhyme with each other.
+${samples.length ? `This is ${me}'s own caption style (match the vibe, don't reuse):\n${samples.map(s => "- " + s).join("\n")}\n` : ""}${voice.length ? `Lines ${me} wrote in this feel (voice only, don't reuse):\n${voice.slice(0, 4).map(l => "- " + l).join("\n")}\n` : ""}${seen.length ? `Don't repeat these earlier ones:\n${seen.map(l => "- " + l).join("\n")}\n` : ""}Explicit is fine, never slurs. Never copy existing songs or captions.
+Format: just the 8 captions, 2 lines each, with a blank line between captions. No numbers, no titles, nothing else.`;
+  out.innerHTML = `<p class="status">Getting ${esc(g.name)} bars…</p>`;
+  try {
+    const r = await sampleFn(prompt, { cache: false, effort: "low", onText: ({ text }) => qCaps(parseCaps(text), false) });
+    const caps = parseCaps(r.text); qCaps(caps, true); limitCleared();
+    store.set("qSeen", [...seen, ...caps.map(c => c[0])].slice(-30));
+  } catch (e) { if (e.text) qCaps(parseCaps(e.text), true); else aiFail(out, e); }
+}
+async function qWriteSong_old(extend) {
+  const out = $("#qOut"); if (!needAI(out)) return;
+  const g = GENRES.find(x => x.id === qGenre) || GENRES[0]; const topic = ""; const me = artistName() || "Baby Lyst";
   const voice = voiceLines(g);
   const prompt = extend ? `Here's a short rap song written for ${me} in the "${g.name}" feel (${g.feel}):
 
