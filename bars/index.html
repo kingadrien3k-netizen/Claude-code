@@ -365,6 +365,10 @@ mark.flag { background: none; color: inherit; text-decoration: underline wavy va
 #tipbox { position: fixed; z-index: 40; pointer-events: none; background: var(--ink); color: var(--paper); font-size: 12px; padding: 6px 8px; border-radius: 6px; max-width: 260px; }
 canvas#ftWave { width: 100%; height: 140px; display: block; border-radius: 8px; background: var(--paper); border: 1px solid var(--line); margin-top: 14px; }
 
+.limitbar { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: center; padding: 10px 14px; margin: -4px 0 14px; border-radius: 10px; border: 1px solid var(--warn); background: color-mix(in srgb, var(--warn) 12%, var(--panel)); font-size: 14px; }
+.limitbar b { color: var(--warn); }
+.limitbar span { flex: 1; min-width: 200px; }
+
 /* chat */
 .chatwrap { max-width: 860px; margin: 0 auto; }
 .chatcard { display: flex; flex-direction: column; gap: 12px; }
@@ -435,6 +439,7 @@ canvas#ftWave { width: 100%; height: 140px; display: block; border-radius: 8px; 
     </nav>
   </header>
   <div class="ctxbar" id="ctxbar"></div>
+  <div class="limitbar" id="limitbar" hidden></div>
 
   <!-- CHAT -->
   <section class="view" id="v-chat" hidden>
@@ -1656,6 +1661,7 @@ function setAvail() {
 }
 function failed(e) {
   if (HIDE.has(e.code)) { sampleFn = null; setAvail(); return; }
+  if (e.code === "rate_limited" && typeof limitHit === "function") { limitHit(e); note("Usage limit reached. Your song request is saved: tap Retry in the banner at the top after your usage resets."); return; }
   if (e.code !== "cancelled") note((ERR[e.code] || "Something went wrong reaching Claude. Try again.") + ` <span class="opt">(${esc(String(e.code || "error"))})</span>`);
 }
 (async () => {
@@ -1960,7 +1966,7 @@ async function runSong(prompt, isFix, pass = 0) {
   if (window.matchMedia("(max-width: 920px)").matches) $("#songOut").scrollIntoView({ behavior: "smooth", block: "center" });
   try {
     const r = await sampleFn(prompt, { signal: st.ctl.signal, cache: false, effort: "low", onText: ({ text }) => { started = true; renderSong(text); } });
-    st.song = r.text;
+    st.song = r.text; if (typeof limitCleared === "function") limitCleared();
     st.check = rhymeCheck(splitSong(r.text).lines.join("\n")); renderSong(r.text);
     if (r.truncated) note("The song got cut off. Try a shorter song shape.");
     if (!isFix && !r.truncated) {
@@ -2218,9 +2224,14 @@ async function sendChat(text) {
   try {
     const r = await sampleFn(msgs, { signal: chat.ctl.signal, ...(canTools ? { tools } : { cache: false }), effort: "low",
       onText: ({ text }) => { chat.turns[idx].content = text; const el = $$("#chatLog .msg.bot").pop(); if (el) el.innerHTML = md(text); $("#chatLog").scrollTop = $("#chatLog").scrollHeight; } });
-    chat.turns[idx].content = r.text;
+    chat.turns[idx].content = r.text; if (typeof limitCleared === "function") limitCleared();
     if (used.length) chat.turns[idx].note = `checked with Bar Lab: ${[...new Set(used)].join(", ").replace(/_/g, " ")}`;
   } catch (e) {
+    if (e.code === "rate_limited") {
+      chat.turns.splice(idx - 1, 2); $("#chatIn").value = text;
+      limitHit(e, () => { const t = $("#chatIn").value.trim() || text; $("#chatIn").value = ""; sendChat(t); }, "Send chat message");
+      setChatBusy(false); store.set("chat", chat.turns); renderChat(); return;
+    }
     chat.turns[idx].content = e.text || (e.code === "cancelled" ? "Stopped." : (ERR[e.code] || "Couldn't reach Claude. Try again."));
     if (HIDE.has(e.code)) { sampleFn = null; setAvail(); }
   } finally { setChatBusy(false); store.set("chat", chat.turns); renderChat(); }
@@ -2233,6 +2244,28 @@ $("#chatNew").onclick = () => { if (chat.busy) return; chat.turns = []; store.se
 renderChat();
 
 /* ================= LYRIC LAB ================= */
+/* usage limit: keep the request, pause AI tools, one tap to retry after the reset */
+const LIMIT = { at: store.get("limit.at", 0), redo: null, what: "" };
+document.addEventListener("click", e => {
+  const b = e.target.closest("#docGo, #thrGo, #storyPlan, #storyCheck, #nrFix, #dnaGo, #dnaMine, #dnaWrite, #ftCoach, [data-mapleaf], #againBtn");
+  if (b) { LIMIT.redo = () => b.isConnected ? b.click() : null; LIMIT.what = (b.textContent || "").trim().slice(0, 40); }
+}, true);
+document.addEventListener("submit", e => {
+  const f = e.target.closest("#emoForm, #mapForm, #cowForm, #makeForm, #reviseForm");
+  if (f) { LIMIT.redo = () => f.isConnected && f.requestSubmit(); LIMIT.what = f.id === "emoForm" ? "Translate" : f.id === "mapForm" ? "Map it" : f.id === "cowForm" ? "Next line" : f.id === "reviseForm" ? "Revise" : "Write my song"; }
+}, true);
+function resetHint(msg) { const m = String(msg || "").match(/(\d{1,2}(:\d{2})?\s*(am|pm)|in \d+\s*(minutes?|hours?|h|m)\b|tomorrow)/i); return m ? m[0] : ""; }
+function limitHit(e, redo, what) {
+  LIMIT.at = Date.now(); store.set("limit.at", LIMIT.at);
+  if (redo) { LIMIT.redo = redo; LIMIT.what = what || LIMIT.what; }
+  const when = resetHint(e && e.message);
+  const bar = $("#limitbar"); bar.hidden = false;
+  bar.innerHTML = `<span><b>Claude usage limit reached</b> at ${new Date(LIMIT.at).toLocaleTimeString([], { hour: "numeric", minute: "2-digit" })}${when ? `. Resets ${esc(when)}` : ""}. Your request is saved. AI tools pause until your usage resets; the rhyme engine, Sound Matcher, Never Repeat, Stats, versions and the Flow Tester measurements keep working.</span>` +
+    `${LIMIT.redo ? `<button class="btn small primary" id="limitRetry">Retry${LIMIT.what ? `: ${esc(LIMIT.what)}` : ""}</button>` : ""}<button class="btn small" id="limitHide">Hide</button>`;
+  const r = $("#limitRetry"); if (r) r.onclick = () => { bar.hidden = true; const fn = LIMIT.redo; LIMIT.redo = null; fn && fn(); };
+  $("#limitHide").onclick = () => { bar.hidden = true; };
+}
+function limitCleared() { if (LIMIT.at) { LIMIT.at = 0; store.set("limit.at", 0); $("#limitbar").hidden = true; } }
 const LL = { dna: store.get("dna.active", null), dnaList: store.get("dna.list", []), mine: null, lastDna: null };
 const songText = () => pad.value;
 function addToSong(text) {
@@ -2253,6 +2286,7 @@ function needAI(out) {
   return false;
 }
 function aiFail(out, e) {
+  if (e && e.code === "rate_limited") { limitHit(e); out.innerHTML = `<p class="rmeta">Usage limit reached. Your request is saved: tap <b>Retry</b> in the banner at the top after your usage resets.</p>`; return; }
   out.innerHTML = `<p class="rmeta">${esc(ERR[e.code] || (e.code === "invalid_json" ? "The answer came back garbled. Try again." : "Couldn't reach Claude. Try again."))}</p>`;
   if (HIDE.has(e.code)) { sampleFn = null; setAvail(); }
 }
@@ -2263,7 +2297,7 @@ function AI_BASE() {
 Rules: everything you write is original. Never quote, copy or lightly reword existing lyrics, and never imitate a specific artist's distinctive style. Keep the artist's own voice, slang and meaning. Explicit language is fine; never use slurs.
 The artist's usual bar setup is up to 8 words with the rhyme on word 4 and word 8. Use it when you write bars unless told otherwise.${LL.dna ? `\nThe artist's chosen Emotion DNA to aim for: ${dnaLine(LL.dna)}.` : ""}${$("#songStory") && $("#songStory").value.trim() ? `\nThe song they're working on is about: ${$("#songStory").value.trim()}` : ""}`;
 }
-async function ai(prompt) { return sampleFn.json(prompt, { cache: false, effort: "low" }); }
+async function ai(prompt) { const r = await sampleFn.json(prompt, { cache: false, effort: "low" }); limitCleared(); return r; }
 const arr = a => Array.isArray(a) ? a.filter(x => x != null) : [];
 const str = x => typeof x === "string" ? x : (x == null ? "" : String(x));
 
@@ -2792,6 +2826,7 @@ Reply with only JSON: {"bars": ["8 bars"], "note": "one sentence on how the emot
 };
 $("#dnaWriteOut").addEventListener("click", e => { const b = e.target.closest("[data-jumpdoc]"); if (b) { $("#docIn").value = b.dataset.jumpdoc; setView("tools"); setTool("doctor"); window.scrollTo(0, 0); } });
 renderDnaList();
+if (LIMIT.at && Date.now() - LIMIT.at < 5 * 3600e3) limitHit({}); else if (LIMIT.at) limitCleared();
 
 /* ---------- D. Flow Tester ---------- */
 $("#ftBpm").value = bpm;
