@@ -129,3 +129,4 @@ Ghetto gospel street trap type beat, instrumental, Florida soulful heartfelt vib
 About 142 BPM, G# minor, roughly 85% of the energy in the sub bass (under 80 Hz), quiet tucked-back hats, bouncy 2-bar 808 pattern.
 Made: 808 Heavy Cold 01 (140 BPM, 1:55). Came back steady with no breaks (75% sub energy). Only trimmed the outro.
 - 808 Heavy Cold 01: too clappy, needs more bounce. Next: softer clap/snap tucked back, bounce coming from a bouncy syncopated kick + 808 pattern with swing and hi-hat triplet bounces (Pain Rap 04 / Southern Bounce feel), still 808-heavy.
+- Intros (Nov 24): starting full-blast from second 1 is "too hype." Want a short CALM intro first (melody/keys only, no 808 or drums, about 4 bars / 4-7 seconds), then the drop. Fix: filter the first 4 bars (high-pass to strip the 808 and kick, a little softer) so the beat drops in at bar 5. This replaces the "full in the first second" rule.
