@@ -131,3 +131,6 @@ Made: 808 Heavy Cold 01 (140 BPM, 1:55). Came back steady with no breaks (75% su
 - 808 Heavy Cold 01: too clappy, needs more bounce. Next: softer clap/snap tucked back, bounce coming from a bouncy syncopated kick + 808 pattern with swing and hi-hat triplet bounces (Pain Rap 04 / Southern Bounce feel), still 808-heavy.
 - Intros (Nov 24): starting full-blast from second 1 is "too hype." Want a short CALM intro first (melody/keys only, no 808 or drums, about 4 bars / 4-7 seconds), then the drop. Fix: filter the first 4 bars (high-pass to strip the 808 and kick, a little softer) so the beat drops in at bar 5. This replaces the "full in the first second" rule.
 - Liked: the 1-bar moment at 0:58 in Southern Bounce 04 where the 808 drops back and the keys come forward. Extended it to 4 bars on request. A short keys-forward 808 drop-back (about 4 bars) mid-beat is GOOD. It's long empty breaks that are bad.
+
+## Reference: "Please Don't Judge Me" (Fatt Mack visualizer)
+About 152 BPM, steady 8th-note hats with triplet bounce, roughly 70% of the energy in the sub bass, around F# minor / E major, calm ~12 s intro then steady the whole way.
