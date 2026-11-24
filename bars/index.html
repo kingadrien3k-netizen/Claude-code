@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Bar Lab</title>
+<title>Lyric Lab</title>
 <meta name="claude:viewport-fit-sides" content="cover">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -61,9 +61,10 @@
   color-scheme: dark;
 }
 /* bright rhyme colors for reading lyrics on dark */
-:root { --t1: #ffd84d; --t2: #ff7ac0; --t3: #5ee38f; --t4: #6cb8ff; --t5: #ffa24c; --t6: #c09cff; --t7: #3fe0d8; --t8: #ff6b6b; }
-/* Bar Lab is dark-only: the same dark palette wins whatever theme the viewer picked. */
-:root, :root[data-theme="light"] {
+:root { --t1: #ffd84d; --t2: #ff7ac0; --t3: #5ee38f; --t4: #6cb8ff; --t5: #ffa24c; --t6: #c09cff; --t7: #3fe0d8; --t8: #ff6b6b; --bar: #8c9dff; --bar-2: #4a5590; --mark: #e8eaf6; }
+:root[data-theme="light"] { --t1: #8a6a00; --t2: #b0306f; --t3: #1d7a45; --t4: #1f5fa8; --t5: #a65200; --t6: #6a3fc0; --t7: #0d7a78; --t8: #b42f2f; --bar: #2941d1; --bar-2: #b8c2ef; --mark: #15172b; color-scheme: light; }
+/* Lyric Lab is dark by default; the theme switch in the header sets data-theme="light" for the light palette. */
+:root:not([data-theme="light"]) {
   --paper: #0f111c; --panel: #161929; --ink: #e8eaf6; --muted: #9298b8; --line: #272c45;
   --rule: #222842; --margin: #b9443c; --accent: #8c9dff; --accent-ink: #0f111c; --accent-soft: #1f2645;
   --good: #4cc982; --warn: #e3a54a; --bad: #ef6b6b; --strip: #080a12; --strip-ink: #eef0fa; --strip-muted: #8a90b0;
@@ -89,7 +90,7 @@ header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-cont
 .brand h1 { font-family: var(--display); font-weight: 400; font-size: clamp(40px, 7vw, 64px); line-height: .9; margin: 0; letter-spacing: .01em; }
 .brand h1 span { color: var(--accent); }
 .brand p { margin: 0; color: var(--muted); max-width: 42ch; text-wrap: balance; }
-nav.tabs { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; }
+nav.tabs { overflow-x: auto; max-width: 100%; display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; }
 @media (max-width: 560px) { nav.tabs { width: 100%; justify-content: space-between; } nav.tabs button { padding: 8px 10px !important; font-size: 14px; } }
 nav.tabs button { border: 0; background: none; padding: 8px 18px; border-radius: 999px; font-weight: 600; color: var(--muted); }
 nav.tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); }
@@ -293,6 +294,77 @@ details.paste[open] summary { margin-bottom: 10px; }
 .status { font-size: 14px; color: var(--muted); }
 .saved { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 
+/* lyric lab */
+.themebtn { align-self: flex-start; }
+.ctxbar { display: flex; flex-wrap: wrap; gap: 6px 14px; align-items: center; font-size: 13px; color: var(--muted); margin: -4px 0 14px; }
+.ctxbar b { color: var(--ink); font-weight: 600; }
+.ctxbar .pill { font-family: var(--mono); font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--accent-soft); color: var(--accent); border: 0; }
+.tip { font-size: 14px; margin: 0 0 10px; }
+.tool { max-width: 900px; }
+#toolTabs { overflow-x: auto; flex-wrap: nowrap; }
+#toolTabs button { white-space: nowrap; }
+.res { margin-top: 16px; display: grid; gap: 12px; }
+.res h3 { font-family: var(--mono); font-size: 12px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); margin: 6px 0 0; font-weight: 600; }
+.rcard { padding: 12px 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 10px; display: grid; gap: 6px; }
+.rcard .bars { font-size: 17px; font-weight: 600; white-space: pre-line; line-height: 1.6; }
+.rcard .why { font-size: 14px; color: var(--muted); }
+.rcard .lab { font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); font-weight: 600; }
+.rcard .row { justify-content: space-between; }
+.tag { display: inline-block; font-family: var(--mono); font-size: 11px; padding: 1px 7px; border-radius: 999px; border: 1px solid var(--line); color: var(--muted); }
+.tag.bad { border-color: var(--bad); color: var(--bad); } .tag.warn { border-color: var(--warn); color: var(--warn); } .tag.good { border-color: var(--good); color: var(--good); }
+mark.flag { background: none; color: inherit; text-decoration: underline wavy var(--warn); text-underline-offset: 4px; }
+.orig { font-size: 17px; line-height: 1.7; white-space: pre-line; padding: 12px 14px; border-radius: 10px; background: var(--paper); border: 1px dashed var(--line); }
+.mapgrid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 14px; }
+.mapgrid .cell { padding: 10px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); min-width: 0; }
+.mapgrid .cell h4 { margin: 0 0 6px; font-family: var(--mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+.mapgrid .center { display: grid; place-items: center; background: var(--accent); border-color: var(--accent); }
+.mapgrid .center b { font-family: var(--display); font-size: clamp(24px, 6vw, 40px); color: var(--accent-ink); text-transform: uppercase; overflow-wrap: anywhere; text-align: center; font-weight: 400; }
+.mapgrid .chip { font-size: 13px; }
+@media (max-width: 600px) { .mapgrid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); } .mapgrid .center { grid-column: 1 / -1; order: -1; padding: 16px; } }
+.outline { display: grid; grid-template-columns: minmax(0, 1fr); gap: 6px; margin-top: 12px; }
+.outline .sec-row { min-width: 0; }
+.outline .sec-row { display: flex; gap: 10px; align-items: baseline; padding: 6px 10px; border-radius: 8px; background: var(--paper); font-size: 14px; cursor: pointer; border: 1px solid var(--line); }
+.outline .sec-row b { font-family: var(--mono); font-size: 12px; min-width: 70px; }
+.outline .sec-row span { flex: 1; min-width: 0; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.arc { display: flex; gap: 6px; overflow-x: auto; padding: 6px 0; }
+.arc .step { flex: 0 0 auto; min-width: 130px; max-width: 220px; padding: 10px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); font-size: 13px; }
+.arc .step b { display: block; font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); }
+.arc .step .emo { font-weight: 600; color: var(--accent); font-size: 14px; margin: 2px 0; }
+.verlist { list-style: none; margin: 10px 0 0; padding: 0; display: grid; gap: 6px; max-height: 280px; overflow-y: auto; }
+.verlist li { display: flex; gap: 8px; align-items: center; font-size: 14px; padding: 6px 8px; border-radius: 8px; background: var(--paper); border: 1px solid var(--line); }
+.verlist li span { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.verlist li.active { border-color: var(--accent); }
+.diff { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 8px; margin-top: 10px; font-size: 14px; }
+.diff div { padding: 8px; border-radius: 8px; background: var(--paper); border: 1px solid var(--line); min-width: 0; overflow-wrap: anywhere; }
+.diff p { margin: 0; padding: 1px 4px; border-radius: 4px; min-height: 1.4em; }
+.diff .del { background: color-mix(in srgb, var(--bad) 22%, transparent); }
+.diff .add { background: color-mix(in srgb, var(--good) 22%, transparent); }
+.tiles { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; }
+.tile { padding: 12px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); display: grid; gap: 2px; }
+.tile .k { font-family: var(--mono); font-size: 11px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+.tile .v { font-family: var(--display); font-size: 34px; line-height: 1.05; font-variant-numeric: tabular-nums; }
+.tile .s { font-size: 12px; color: var(--muted); display: flex; gap: 6px; align-items: center; flex-wrap: wrap; }
+.charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; margin-top: 16px; }
+.chart { padding: 12px; border-radius: 10px; background: var(--paper); border: 1px solid var(--line); min-width: 0; }
+.chart h3 { margin: 0 0 10px; font-size: 14px; font-weight: 600; }
+.chart .sub2 { font-size: 12px; color: var(--muted); margin: -6px 0 10px; }
+.hbars { display: grid; gap: 6px; }
+.hbar { display: grid; grid-template-columns: 96px minmax(0, 1fr) 40px; gap: 8px; align-items: center; font-size: 13px; cursor: default; }
+.hbar .tr { height: 14px; background: var(--bar-2); border-radius: 0 4px 4px 0; position: relative; }
+.hbar .tr i { position: absolute; left: 0; top: 0; bottom: 0; background: var(--bar); border-radius: 0 4px 4px 0; }
+.hbar .tr .mk { position: absolute; top: -3px; bottom: -3px; width: 3px; background: var(--mark); border-radius: 2px; }
+.hbar .vv { text-align: right; font-family: var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.hbar.sel .tr { outline: 2px solid var(--accent); outline-offset: 2px; }
+.cols { display: flex; align-items: flex-end; gap: 2px; height: 140px; border-bottom: 1px solid var(--line); }
+.cols i { flex: 1; background: var(--bar); border-radius: 4px 4px 0 0; min-width: 3px; }
+.cols i:hover { background: var(--accent); }
+.axisnote { display: flex; justify-content: space-between; font-size: 11px; color: var(--muted); font-family: var(--mono); margin-top: 4px; }
+.legend { display: flex; gap: 14px; font-size: 12px; color: var(--muted); margin-bottom: 8px; flex-wrap: wrap; }
+.legend span::before { content: ""; display: inline-block; width: 12px; height: 8px; border-radius: 2px; margin-right: 6px; vertical-align: middle; background: var(--bar); }
+.legend span.m::before { width: 3px; height: 12px; background: var(--mark); }
+#tipbox { position: fixed; z-index: 40; pointer-events: none; background: var(--ink); color: var(--paper); font-size: 12px; padding: 6px 8px; border-radius: 6px; max-width: 260px; }
+canvas#ftWave { width: 100%; height: 140px; display: block; border-radius: 8px; background: var(--paper); border: 1px solid var(--line); margin-top: 14px; }
+
 /* chat */
 .chatwrap { max-width: 860px; margin: 0 auto; }
 .chatcard { display: flex; flex-direction: column; gap: 12px; }
@@ -347,17 +419,22 @@ details.paste[open] summary { margin-bottom: 10px; }
 <div class="wrap">
   <header class="top">
     <div class="brand">
-      <h1>BAR<span>LAB</span></h1>
-      <p>Your ghostwriter: rhymes, rewords, next lines and full songs in your setup, checked by a real rhyme engine.</p>
+      <h1>LYRIC<span>LAB</span></h1>
+      <p>Write it, doctor it, test it, track it. A songwriting studio that makes you a better writer.</p>
     </div>
+    <button class="btn small themebtn" id="themeBtn" type="button" aria-label="Switch light or dark mode">Light mode</button>
     <nav class="tabs" role="tablist" aria-label="Sections">
       <button role="tab" id="t-chat" aria-selected="false" data-view="chat">Chat</button>
-      <button role="tab" id="t-studio" aria-selected="false" data-view="studio">Studio</button>
-      <button role="tab" id="t-write" aria-selected="true" data-view="write">Write</button>
+      <button role="tab" id="t-write" aria-selected="true" data-view="write">Song</button>
+      <button role="tab" id="t-tools" aria-selected="false" data-view="tools">Tools</button>
+      <button role="tab" id="t-dna" aria-selected="false" data-view="dna">DNA</button>
       <button role="tab" id="t-flow" aria-selected="false" data-view="flow">Flow</button>
+      <button role="tab" id="t-stats" aria-selected="false" data-view="stats">Stats</button>
+      <button role="tab" id="t-studio" aria-selected="false" data-view="studio">Studio</button>
       <button role="tab" id="t-drills" aria-selected="false" data-view="drills">Drills</button>
     </nav>
   </header>
+  <div class="ctxbar" id="ctxbar"></div>
 
   <!-- CHAT -->
   <section class="view" id="v-chat" hidden>
@@ -482,6 +559,9 @@ details.paste[open] summary { margin-bottom: 10px; }
             <div class="row"><h2>The Pad</h2><span class="sample-tag" id="sampleTag" hidden>Sample verse: write over it</span></div>
             <div class="row">
               <span class="eyebrow" id="padCount">0 bars</span>
+              <button class="btn small" data-jump="doctor">Bar Doctor</button>
+              <button class="btn small" data-jump="flow">Test flow</button>
+              <button class="btn small" data-jump="stats">Stats</button>
               <button class="btn small" id="matchBtn" title="Find rhymes for the end of the line above your cursor">Rhyme the line above</button>
               <button class="btn small" id="sampleBtn">Sample</button>
               <button class="btn small" id="clearBtn">Clear</button>
@@ -508,7 +588,120 @@ details.paste[open] summary { margin-bottom: 10px; }
           <div class="card-head"><h2>Bar Coach</h2><span class="eyebrow">updates as you write</span></div>
           <div id="coach"></div>
         </div>
+        <div class="card">
+          <div class="card-head"><h2>Song Story Builder</h2><span class="eyebrow">structure + storyline</span></div>
+          <div class="two">
+            <label class="fl" for="songTitle">Song title<input class="mini" id="songTitle" type="text" autocomplete="off" placeholder="Untitled"></label>
+            <label class="fl" for="songStory">What it's about<input class="mini" id="songStory" type="text" autocomplete="off" placeholder="one line: the story or feeling"></label>
+          </div>
+          <div class="sub" style="margin-top:12px">Add a section</div>
+          <div class="chips" id="secAdd">
+            <button class="chip" data-sec="Intro">Intro</button><button class="chip" data-sec="Hook">Hook</button><button class="chip" data-sec="Verse 1">Verse 1</button>
+            <button class="chip" data-sec="Verse 2">Verse 2</button><button class="chip" data-sec="Bridge">Bridge</button><button class="chip" data-sec="Outro">Outro</button>
+          </div>
+          <div class="outline" id="outline"></div>
+          <div class="row" style="margin-top:10px"><button class="btn small primary" id="storyPlan">Plan the story</button><button class="btn small" id="storyCheck">Check my storyline</button></div>
+          <div id="storyOut"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Never Repeat</h2><span class="eyebrow">vocabulary tracker</span></div>
+          <div id="nrOut"></div>
+          <button class="btn small primary" id="nrFix" style="margin-top:10px">Suggest fresh alternatives</button>
+          <div id="nrAi"></div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Version History</h2><span class="eyebrow" id="verStatus">autosaves as you write</span></div>
+          <div class="row"><input class="mini" id="verName" type="text" placeholder="Name this version (optional)" style="flex:1;min-width:0"><button class="btn small primary" id="verSave">Save version</button></div>
+          <ul class="verlist" id="verList"></ul>
+          <div id="verCompare"></div>
+        </div>
       </div>
+    </div>
+  </section>
+
+  <!-- TOOLS -->
+  <section class="view" id="v-tools" hidden>
+    <div class="subtabs" role="tablist" aria-label="Tools" id="toolTabs">
+      <button role="tab" aria-selected="true" data-tool="doctor">Bar Doctor</button>
+      <button role="tab" aria-selected="false" data-tool="sound">Sound Matcher</button>
+      <button role="tab" aria-selected="false" data-tool="emotion">Emotion Translator</button>
+      <button role="tab" aria-selected="false" data-tool="three">Three Ways</button>
+      <button role="tab" aria-selected="false" data-tool="map">Word Map</button>
+    </div>
+    <div class="card tool" data-tool-panel="doctor">
+      <div class="card-head"><h2>Bar Doctor</h2><button class="btn small" data-use-song="docIn">Use my song</button></div>
+      <p class="muted tip">Paste one bar or a whole verse. You get weak spots, predictable rhymes, stronger metaphors and 3 rewrites that keep your meaning.</p>
+      <textarea class="mini tall" id="docIn" placeholder="Paste your bar or verse…"></textarea>
+      <button class="btn primary big" id="docGo">Diagnose</button>
+      <div id="docOut"></div>
+    </div>
+    <div class="card tool" data-tool-panel="sound" hidden>
+      <div class="card-head"><h2>Sound Matcher</h2><span class="eyebrow">search by sound, not spelling</span></div>
+      <form class="search" id="sndForm"><input class="mini" id="sndIn" type="text" autocomplete="off" placeholder="word or phrase, e.g. alone, pocket, by myself"><button class="btn primary" type="submit">Match</button></form>
+      <div id="sndOut"></div>
+    </div>
+    <div class="card tool" data-tool-panel="emotion" hidden>
+      <div class="card-head"><h2>Emotion Translator</h2><span class="eyebrow">feeling → bars</span></div>
+      <form id="emoForm">
+        <input class="mini" id="emoIn" type="text" autocomplete="off" placeholder="an emotion or situation, e.g. my brother switched on me">
+        <div class="chips" style="margin-top:8px" id="emoChips">
+          <button class="chip" type="button" data-emo="betrayal">Betrayal</button><button class="chip" type="button" data-emo="heartbreak">Heartbreak</button>
+          <button class="chip" type="button" data-emo="financial struggles">Money struggles</button><button class="chip" type="button" data-emo="ambition">Ambition</button>
+          <button class="chip" type="button" data-emo="loneliness">Loneliness</button><button class="chip" type="button" data-emo="success">Success</button>
+        </div>
+        <button class="btn primary big" type="submit">Translate</button>
+      </form>
+      <div id="emoOut"></div>
+    </div>
+    <div class="card tool" data-tool-panel="three" hidden>
+      <div class="card-head"><h2>Three Ways to Say It</h2></div>
+      <p class="muted tip">Same message, three approaches: more personal, more clever, more aggressive.</p>
+      <textarea class="mini" id="thrIn" placeholder="Your bar…"></textarea>
+      <button class="btn primary big" id="thrGo">Give me three ways</button>
+      <div id="thrOut"></div>
+    </div>
+    <div class="card tool" data-tool-panel="map" hidden>
+      <div class="card-head"><h2>Word Association Map</h2></div>
+      <form class="search" id="mapForm"><input class="mini" id="mapIn" type="text" autocomplete="off" placeholder="one word, e.g. rain, loyalty, mirror"><button class="btn primary" type="submit">Map it</button></form>
+      <div id="mapOut"></div>
+    </div>
+  </section>
+
+  <!-- DNA -->
+  <section class="view" id="v-dna" hidden>
+    <div class="flow">
+      <div class="col">
+        <div class="card">
+          <div class="card-head"><h2>Emotion DNA</h2><span class="eyebrow">signature feature</span></div>
+          <p class="muted tip">Paste lyrics you love. Lyric Lab maps their emotional makeup, the situations and techniques behind it, and the rhyme and vowel patterns. Then you write your own from that feeling. It never copies their lines or their style.</p>
+          <textarea class="mini tall" id="dnaIn" placeholder="Paste lyrics…"></textarea>
+          <div class="row" style="margin-top:10px"><button class="btn primary" id="dnaGo">Analyze</button><button class="btn small" id="dnaMine">Analyze my song</button></div>
+          <div id="dnaOut"></div>
+        </div>
+      </div>
+      <div class="col">
+        <div class="card">
+          <div class="card-head"><h2>Your profiles</h2></div>
+          <ul class="verlist" id="dnaList"></ul>
+          <p class="fine">The active profile steers every tool: Bar Doctor, Emotion Translator, Three Ways, the Song Story Builder and the Chat.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><h2>Write from this DNA</h2></div>
+          <p class="muted tip" style="margin:0 0 10px">Original bars built from the emotional mix of the active profile.</p>
+          <button class="btn primary big" id="dnaWrite">Write 8 bars</button>
+          <div id="dnaWriteOut"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="view" id="v-stats" hidden>
+    <div class="card">
+      <div class="card-head"><h2>Writer Statistics</h2>
+        <label class="row eyebrow" for="statSrc" style="gap:6px">Show <select id="statSrc" class="btn small"><option value="song">This song</option><option value="all">All my songs</option></select></label>
+      </div>
+      <div id="statOut"></div>
     </div>
   </section>
 
@@ -524,6 +717,17 @@ details.paste[open] summary { margin-bottom: 10px; }
         <div class="guide" id="fGuide">The beat counts you in for one bar, then the prompter moves to the next line on every bar.</div>
       </div>
       <div class="col">
+        <div class="card">
+          <div class="card-head"><h2>Flow Tester</h2><span class="eyebrow">upload a take</span></div>
+          <p class="muted tip">Record yourself rapping your song with your phone's voice memo app, then upload it here. It measures your timing, pauses, pacing and breaths against the beat.</p>
+          <input class="mini" id="ftFile" type="file" accept="audio/*,video/*" aria-label="Your recording">
+          <div class="two" style="margin-top:10px">
+            <label class="fl" for="ftBpm">Beat tempo (BPM)<input class="mini" id="ftBpm" type="number" min="50" max="200" value="90"></label>
+            <label class="fl" for="ftSrc">Lyrics<select id="ftSrc"><option value="song">My song</option><option value="none">No lyrics</option></select></label>
+          </div>
+          <button class="btn primary big" id="ftGo">Analyze my take</button>
+          <div id="ftOut"></div>
+        </div>
         <div class="card">
           <div class="card-head"><h2>Finding the pocket</h2></div>
           <ol class="steps-howto">
@@ -1113,7 +1317,7 @@ $("#dropRhymes").addEventListener("click", e => { const c = e.target.closest("[d
 
 /* ================= tabs ================= */
 let view = "write";
-function setView(v) {
+var setView = function (v) {
   view = v;
   $$("nav.tabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.view === v));
   $$(".view").forEach(s => s.hidden = s.id !== "v-" + v);
@@ -1928,7 +2132,7 @@ TOOLS
 - Use find_rhymes for rhyme words; it's Bar Lab's pronunciation dictionary, so trust it over guessing.
 - Before you send bars, run check_bars on them and fix any bar it flags (over 8 words, or word 4 not rhyming with the last word), unless the artist asked for a different setup.
 
-FORMAT
+${LL.dna ? `EMOTION DNA: the artist chose this emotional mix to aim for: ${dnaLine(LL.dna)}. Themes: ${arr(LL.dna.themes).join(", ")}.\n\n` : ""}FORMAT
 Plain text. Use **bold** for the rhyme words in bars and for option numbers. Keep each reply as short as the request allows.`;
 }
 function md(text) {
@@ -2027,6 +2231,673 @@ $("#chatQuick").addEventListener("click", e => { const b = e.target.closest("[da
 $("#chatStop").onclick = () => chat.ctl && chat.ctl.abort();
 $("#chatNew").onclick = () => { if (chat.busy) return; chat.turns = []; store.set("chat", []); renderChat(); $("#chatIn").focus(); };
 renderChat();
+
+/* ================= LYRIC LAB ================= */
+const LL = { dna: store.get("dna.active", null), dnaList: store.get("dna.list", []), mine: null, lastDna: null };
+const songText = () => pad.value;
+function addToSong(text) {
+  pad.value = pad.value.replace(/\s*$/, "") + (pad.value.trim() ? "\n" : "") + String(text).trim();
+  pad.dispatchEvent(new Event("input")); toast("Added to your song");
+}
+document.addEventListener("click", e => {
+  const b = e.target.closest("[data-add-song]"); if (b) { addToSong(b.dataset.addSong); return; }
+  const u = e.target.closest("[data-use-song]"); if (u) { $("#" + u.dataset.useSong).value = songText().trim(); toast("Loaded your song"); return; }
+  const j = e.target.closest("[data-jump]");
+  if (j) { const t = j.dataset.jump; if (t === "doctor") { $("#docIn").value = songText().trim(); setView("tools"); setTool("doctor"); } else setView(t); window.scrollTo(0, 0); }
+});
+const addBtn = (t, label = "Add to song") => `<button class="btn small" data-add-song="${esc(t)}">${label}</button>`;
+const loading = (out, msg) => { out.innerHTML = `<p class="status">${msg}</p>`; };
+function needAI(out) {
+  if (sampleFn) return true;
+  out.innerHTML = `<p class="rmeta">${sampleFn === null ? "This part needs Claude. Open Lyric Lab on claude.ai and allow it when asked. Everything Bar Lab measures on its own still works." : "Connecting to Claude… try again in a second."}</p>`;
+  return false;
+}
+function aiFail(out, e) {
+  out.innerHTML = `<p class="rmeta">${esc(ERR[e.code] || (e.code === "invalid_json" ? "The answer came back garbled. Try again." : "Couldn't reach Claude. Try again."))}</p>`;
+  if (HIDE.has(e.code)) { sampleFn = null; setAvail(); }
+}
+const DNA_KEYS = ["pain", "ambition", "betrayal", "reflection", "confidence", "heartbreak", "motivation", "nostalgia"];
+const dnaLine = d => DNA_KEYS.map(k => `${k} ${Math.round(+d.dna[k] || 0)}`).join(", ");
+function AI_BASE() {
+  return `You're a songwriting coach inside Lyric Lab, helping ${artistName() || "a rapper"} become a better writer, not writing for them.
+Rules: everything you write is original. Never quote, copy or lightly reword existing lyrics, and never imitate a specific artist's distinctive style. Keep the artist's own voice, slang and meaning. Explicit language is fine; never use slurs.
+The artist's usual bar setup is up to 8 words with the rhyme on word 4 and word 8. Use it when you write bars unless told otherwise.${LL.dna ? `\nThe artist's chosen Emotion DNA to aim for: ${dnaLine(LL.dna)}.` : ""}${$("#songStory") && $("#songStory").value.trim() ? `\nThe song they're working on is about: ${$("#songStory").value.trim()}` : ""}`;
+}
+async function ai(prompt) { return sampleFn.json(prompt, { cache: false, effort: "low" }); }
+const arr = a => Array.isArray(a) ? a.filter(x => x != null) : [];
+const str = x => typeof x === "string" ? x : (x == null ? "" : String(x));
+
+/* tooltip for charts */
+const tipbox = document.createElement("div"); tipbox.id = "tipbox"; tipbox.hidden = true; document.body.appendChild(tipbox);
+document.addEventListener("mousemove", e => {
+  const t = e.target.closest && e.target.closest("[data-tip]");
+  if (!t) { tipbox.hidden = true; return; }
+  tipbox.textContent = t.dataset.tip; tipbox.hidden = false;
+  const x = Math.min(e.clientX + 12, innerWidth - tipbox.offsetWidth - 8), y = Math.max(8, e.clientY - tipbox.offsetHeight - 10);
+  tipbox.style.left = x + "px"; tipbox.style.top = y + "px";
+});
+
+/* theme */
+let theme = store.get("theme", "dark");
+function applyTheme() { document.documentElement.setAttribute("data-theme", theme); $("#themeBtn").textContent = theme === "dark" ? "Light mode" : "Dark mode"; }
+$("#themeBtn").onclick = () => { theme = theme === "dark" ? "light" : "dark"; store.set("theme", theme); applyTheme(); };
+applyTheme();
+
+/* context bar: what every tool is working on */
+function renderCtx() {
+  const A = analysis; const title = ($("#songTitle").value || "").trim() || (A && A.bars[0] ? A.bars[0].raw.slice(0, 40) : "");
+  $("#ctxbar").innerHTML = `<span>Song: <b>${esc(title || "empty")}</b>${A ? ` · ${A.bars.length} bars` : ""}</span>` +
+    `<span>DNA: ${LL.dna ? `<button class="pill" data-jump="dna">${esc(LL.dna.title || "profile")}</button>` : `<button class="pill" data-jump="dna">none yet</button>`}</span>` +
+    `<span>Setup: <b>8 words · rhyme on 4 &amp; 8</b></span>`;
+}
+
+/* ---------- tools tabs ---------- */
+function setTool(t) {
+  $$("#toolTabs button").forEach(b => b.setAttribute("aria-selected", b.dataset.tool === t));
+  $$("[data-tool-panel]").forEach(p => p.hidden = p.dataset.toolPanel !== t);
+  store.set("tool", t);
+}
+$$("#toolTabs button").forEach(b => b.onclick = () => setTool(b.dataset.tool));
+setTool(store.get("tool", "doctor"));
+
+/* ---------- A. Bar Doctor ---------- */
+const PREDICTABLE = new Set("night light right fight tonight me see free be real feel deal money honey funny pain rain game fame name time mind grind shine line love above heart start apart cold gold soul go flow show know dream team life wife fly high sky cry die try street feet beat heat".split(" "));
+const FILLER = new Set(["yeah", "uh", "like", "just", "really", "very", "literally", "basically", "stuff", "things", "thing", "got", "gonna"]);
+function doctorLocal(text) {
+  const A = analyse(text); const flags = [];
+  for (let i = 0; i + 1 < A.bars.length; i++) {
+    const a = A.bars[i].end, b = A.bars[i + 1].end;
+    if (a && b && a.w !== b.w && PREDICTABLE.has(a.w) && PREDICTABLE.has(b.w) && a.I && b.I && a.I.tv[0] === b.I.tv[0]) flags.push({ quote: a.t, type: "predictable rhyme", fix: `“${a.w} / ${b.w}” has been rhymed a million times. Try a two-syllable rhyme on the same sound.` });
+  }
+  A.cliches.forEach(c => flags.push({ quote: c, type: "cliché", fix: "Say the specific picture instead of the saying." }));
+  const counts = {}; A.bars.forEach(b => b.words.forEach(t => { if (FILLER.has(t.w)) counts[t.w] = (counts[t.w] || 0) + 1; }));
+  Object.entries(counts).filter(([, n]) => n >= 2).forEach(([w, n]) => flags.push({ quote: w, type: "filler", fix: `“${w}” shows up ${n} times. Swap some for something specific.` }));
+  return flags;
+}
+function highlight(text, quotes) {
+  let h = esc(text);
+  quotes.filter(q => q && q.length > 1).sort((a, b) => b.length - a.length).forEach(q => {
+    const e = esc(q).replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    h = h.replace(new RegExp(`(^|[^\\w])(${e})(?=[^\\w]|$)`, "i"), (m, p1, p2) => `${p1}<mark class="flag">${p2}</mark>`);
+  });
+  return h;
+}
+$("#docGo").onclick = async () => {
+  const text = $("#docIn").value.trim(), out = $("#docOut"); if (!text) { $("#docIn").focus(); return; }
+  const local = doctorLocal(text);
+  const localHTML = local.length ? `<h3>Bar Lab noticed right away</h3>${local.map(f => `<div class="rcard"><div><span class="tag warn">${esc(f.type)}</span> <b>${esc(f.quote)}</b></div><div class="why">${esc(f.fix)}</div></div>`).join("")}` : "";
+  out.innerHTML = `<div class="res"><div class="orig">${highlight(text, local.map(f => f.quote))}</div>${localHTML}<p class="status" id="docWait">Diagnosing…</p></div>`;
+  if (!sampleFn) { const w = $("#docWait"); const d = document.createElement("div"); w.replaceWith(d); needAI(d); return; }
+  try {
+    const r = await ai(`${AI_BASE()}
+
+Diagnose these bars like a tough but supportive writing coach.
+BARS:
+<<<
+${text.slice(0, 4000)}
+>>>
+Bar Lab's rhyme engine already flagged: ${JSON.stringify(local.map(f => f.type + ": " + f.quote))}
+
+Find weak word choices, predictable rhymes, missed wordplay and flat images. Keep the meaning and emotion.
+Reply with only JSON:
+{"working": "one sentence on what already works",
+ "issues": [{"quote": "exact words from the bars", "type": "weak word | predictable rhyme | cliché | flat image | wordplay chance", "fix": "short suggestion", "why": "why the fix is stronger"}],
+ "metaphors": [{"idea": "a stronger, original metaphor for something in the bars", "why": "why it lands"}],
+ "rewrites": [{"label": "name of the approach", "bars": "the rewrite, one bar per line, same number of bars", "why": "why it works better"}]}
+3 to 6 issues, 2 or 3 metaphors, exactly 3 rewrites.`);
+    const issues = arr(r.issues), mets = arr(r.metaphors), rws = arr(r.rewrites);
+    out.innerHTML = `<div class="res">
+      <div class="orig">${highlight(text, [...local.map(f => f.quote), ...issues.map(i => str(i.quote))])}</div>
+      ${r.working ? `<div class="rcard"><span class="tag good">working</span><div>${esc(str(r.working))}</div></div>` : ""}
+      ${localHTML}
+      ${issues.length ? `<h3>Weak spots</h3>${issues.map(i => `<div class="rcard"><div><span class="tag ${/predictable|clich/.test(str(i.type)) ? "bad" : "warn"}">${esc(str(i.type))}</span> <b>${esc(str(i.quote))}</b></div><div>${esc(str(i.fix))}</div><div class="why">${esc(str(i.why))}</div></div>`).join("")}` : ""}
+      ${mets.length ? `<h3>Stronger metaphors</h3>${mets.map(m => `<div class="rcard"><div class="bars">${esc(str(m.idea))}</div><div class="why">${esc(str(m.why))}</div></div>`).join("")}` : ""}
+      ${rws.length ? `<h3>Rewrites</h3>${rws.map(w => `<div class="rcard"><div class="lab">${esc(str(w.label))}</div><div class="bars">${esc(str(w.bars))}</div><div class="why">${esc(str(w.why))}</div><div class="row">${addBtn(str(w.bars))}<button class="btn small" data-doc-again="${esc(str(w.bars))}">Doctor this one</button></div></div>`).join("")}` : ""}
+    </div>`;
+  } catch (e) { const w = $("#docWait"); if (w) w.remove(); const d = document.createElement("div"); out.querySelector(".res").appendChild(d); aiFail(d, e); }
+};
+$("#docOut").addEventListener("click", e => { const b = e.target.closest("[data-doc-again]"); if (b) { $("#docIn").value = b.dataset.docAgain; $("#docGo").click(); window.scrollTo({ top: $("#docIn").getBoundingClientRect().top + scrollY - 80, behavior: "smooth" }); } });
+
+/* ---------- B. Sound Matcher (all local) ---------- */
+let SM = null;
+function buildSM() {
+  SM = { cons: new Map(), onset: new Map() };
+  for (const e of ENTRIES) {
+    if (e.rank > 20000 || e.w.includes("'")) continue;
+    const I = info(e); if (!I) continue;
+    const consTail = e.ph.slice(I.vi[I.ls]).filter(p => !isV(p)).join(" ");
+    push(SM.cons, consTail + "|" + I.tv.length, e);
+    push(SM.onset, e.ph[0] + "|" + I.v[I.ls], e);
+  }
+}
+const vName = v => v === "@" ? "uh" : v.toLowerCase();
+function soundMatch(q) {
+  if (!SM) buildSM();
+  const r = findRhymes(q); if (!r || r.missing) return r;
+  const T = r.T; const words = r.words; const lastE = lookupWord(words[words.length - 1]);
+  const used = new Set([...r.perfect.map(e => e.w), ...words]);
+  const ok = e => e.rank < 20000 && !used.has(e.w) && !e.w.includes("'");
+  const take = (list, n) => { const out = []; for (const e of list) { if (out.length >= n) break; if (ok(e)) { out.push(e.w); used.add(e.w); } } return out; };
+  const tailPh = ph => { const I = phInfo(ph); return ph.slice(I.vi[I.ls]); };
+  const consKey = tailPh(lastE ? lastE.ph : []).filter(p => !isV(p)).join(" ") + "|" + T.tv.length;
+  const sameVowels = take((IDX.lastv.get(T.tv.join("-")) || []).slice().sort((a, b) => a.rank - b.rank), 30);
+  const sameCons = take((SM.cons.get(consKey) || []).filter(e => info(e).tv[0] !== T.tv[0] && e.w.length >= 4 && /[aeiouy].*[aeiouy]|^[^aeiouy]*[aeiouy][^aeiouy]*$/.test(e.w) && e.rank < 12000).sort((a, b) => a.rank - b.rank), 24);
+  const near = take(r.slant, 24);
+  const multis = r.multis.filter(x => ok(x.e)).slice(0, 24).map(x => { used.add(x.e.w); return x.e.w; });
+  const combos = r.combos.slice(0, 14).map(c => c.w);
+  const first = lookupWord(words[0]); const fI = first && info(first);
+  const together = fI ? take((SM.onset.get(first.ph[0] + "|" + fI.v[fI.ls]) || []).slice().sort((a, b) => a.rank - b.rank), 14).map(w => `${words.join(" ")} ${w}`) : [];
+  return { r, sound: T.tv.map(vName).join(" · "), cons: consKey.split("|")[0].toLowerCase().replace(/ /g, "-") || "none",
+    groups: [["Perfect rhymes", "same vowel and same ending", r.perfect.filter(e => e.rank < 20000).slice(0, 30).map(e => e.w)],
+      ["Multisyllabic matches", "the last vowels all line up", multis], ["Unexpected combos", "two-word endings that match every vowel", combos],
+      ["Near rhymes", "same vowel, related ending", near], ["Same vowel sounds", "assonance: vowels match, consonants change", sameVowels],
+      ["Same consonant sounds", "consonance: consonants match, vowel changes", sameCons], ["Sounds good together", "same starting sound and vowel, so they bounce when performed", together]] };
+}
+$("#sndForm").addEventListener("submit", e => {
+  e.preventDefault(); const q = $("#sndIn").value.trim(), out = $("#sndOut"); if (!q) return;
+  const m = soundMatch(q);
+  if (!m) { out.innerHTML = ""; return; }
+  if (m.missing) { out.innerHTML = `<p class="rmeta">“${esc(m.missing.join(", "))}” isn't in the dictionary. Try a common spelling.</p>`; return; }
+  out.innerHTML = `<p class="rmeta">Vowel sound <b>${esc(m.sound)}</b> · ending consonants <b>${esc(m.cons)}</b>. Tap any word to add it to your song.</p>` +
+    m.groups.filter(g => g[2].length).map(g => `<div class="rgroup"><h3>${g[0]} <small>${g[1]}</small></h3><div class="chips">${g[2].map(w => `<button class="chip" data-add-song="${esc(w)}">${esc(w)}</button>`).join("")}</div></div>`).join("");
+});
+
+/* ---------- C. Emotion Translator ---------- */
+$("#emoChips").addEventListener("click", e => { const b = e.target.closest("[data-emo]"); if (b) { $("#emoIn").value = b.dataset.emo; } });
+$("#emoForm").addEventListener("submit", async e => {
+  e.preventDefault(); const q = $("#emoIn").value.trim(), out = $("#emoOut"); if (!q) { $("#emoIn").focus(); return; }
+  if (!needAI(out)) return; loading(out, "Translating the feeling…");
+  try {
+    const r = await ai(`${AI_BASE()}
+
+Turn this emotion or situation into material for original bars: "${q}".
+Make it feel lived-in and true, not generic. Specific moments beat big statements.
+Reply with only JSON:
+{"situations": ["5 realistic, specific situations that carry this feeling"],
+ "expressions": ["5 creative ways to say the feeling without naming it"],
+ "metaphors": [{"line": "an original metaphor", "meaning": "what it says underneath"}],
+ "doubleMeanings": [{"word": "a word", "meanings": ["meaning one", "meaning two"], "line": "a bar that uses both"}],
+ "concepts": [{"title": "song concept name", "idea": "one-sentence song idea"}],
+ "openers": ["4 opening bars"],
+ "hooks": ["2 hook ideas, each 2 bars, bars separated by /"]}
+Give 4 metaphors, 3 double meanings, 3 concepts.`);
+    const list = (title, items, fn) => items.length ? `<h3>${title}</h3>${items.map(fn).join("")}` : "";
+    out.innerHTML = `<div class="res">
+      ${list("Real situations", arr(r.situations), x => `<div class="rcard"><div>${esc(str(x))}</div></div>`)}
+      ${list("Ways to say it", arr(r.expressions), x => `<div class="rcard"><div class="row"><div class="bars">${esc(str(x))}</div>${addBtn(str(x), "Add")}</div></div>`)}
+      ${list("Metaphors", arr(r.metaphors), x => `<div class="rcard"><div class="bars">${esc(str(x.line))}</div><div class="why">${esc(str(x.meaning))}</div><div>${addBtn(str(x.line))}</div></div>`)}
+      ${list("Double meanings", arr(r.doubleMeanings), x => `<div class="rcard"><div class="lab">${esc(str(x.word))}: ${arr(x.meanings).map(m => esc(str(m))).join(" / ")}</div><div class="bars">${esc(str(x.line))}</div><div>${addBtn(str(x.line))}</div></div>`)}
+      ${list("Song concepts", arr(r.concepts), x => `<div class="rcard"><div class="lab">${esc(str(x.title))}</div><div>${esc(str(x.idea))}</div></div>`)}
+      ${list("Opening lines", arr(r.openers), x => `<div class="rcard"><div class="row"><div class="bars">${esc(str(x))}</div>${addBtn(str(x), "Add")}</div></div>`)}
+      ${list("Hooks", arr(r.hooks), x => { const h = str(x).split(/\s*\/\s*/).join("\n"); return `<div class="rcard"><div class="bars">${esc(h)}</div><div>${addBtn(h)}</div></div>`; })}
+    </div>`;
+  } catch (err) { aiFail(out, err); }
+});
+
+/* ---------- F. Three Ways ---------- */
+const wc = t => (t.replace(/\([^)]*\)/g, "").match(/[A-Za-z][A-Za-z'’]*/g) || []).length;
+$("#thrGo").onclick = async () => {
+  const bar = $("#thrIn").value.trim(), out = $("#thrOut"); if (!bar) { $("#thrIn").focus(); return; }
+  if (!needAI(out)) return; loading(out, "Writing three ways…");
+  try {
+    const r = await ai(`${AI_BASE()}
+
+Rewrite this bar three different ways. Keep the original message in all three; change only the approach.
+Bar: "${bar}"
+Reply with only JSON:
+{"emotional": {"bar": "more emotional and personal", "why": "what changed"},
+ "clever": {"bar": "more clever, heavier wordplay", "why": "the wordplay explained"},
+ "aggressive": {"bar": "more aggressive and confident", "why": "what changed"}}`);
+    const card = (k, t) => { const x = r[k] || {}; const b = str(x.bar); return b ? `<div class="rcard"><div class="lab">${t}</div><div class="bars">${esc(b)}</div><div class="why">${esc(str(x.why))}</div><div class="row"><span class="tag">${wc(b)} words</span>${addBtn(b)}</div></div>` : ""; };
+    out.innerHTML = `<div class="res">${card("emotional", "1 · Emotional and personal")}${card("clever", "2 · Clever wordplay")}${card("aggressive", "3 · Aggressive and confident")}</div>`;
+  } catch (e) { aiFail(out, e); }
+};
+
+/* ---------- E. Word Association Map ---------- */
+$("#mapForm").addEventListener("submit", async e => {
+  e.preventDefault(); const w = $("#mapIn").value.trim(), out = $("#mapOut"); if (!w) return;
+  const m = soundMatch(w.split(/\s+/).pop());
+  const rhymes = m && !m.missing ? m.groups[0][2].slice(0, 6) : [], vowels = m && !m.missing ? m.groups[4][2].slice(0, 6) : [];
+  const cell = (title, items) => `<div class="cell"><h4>${title}</h4><div class="chips">${items.map(x => `<button class="chip" data-mapleaf="${esc(str(x))}">${esc(str(x))}</button>`).join("") || '<span class="muted" style="font-size:13px">…</span>'}</div></div>`;
+  const draw = d => {
+    out.innerHTML = `<div class="mapgrid">
+      ${cell("Emotions", d.emotions)}${cell("Situations", d.situations)}${cell("Memories &amp; concepts", d.memories)}
+      ${cell("Objects", d.objects)}<div class="cell center"><b>${esc(w)}</b></div>${cell("Metaphors", d.metaphors)}
+      ${cell("Related words", d.related)}${cell("Rhymes", rhymes)}${cell("Same vowel sound", vowels)}
+    </div><p class="fine">Tap any connection to turn it into bars with “${esc(w)}”.</p><div id="mapBars"></div>`;
+  };
+  draw({ emotions: [], situations: [], memories: [], objects: [], metaphors: [], related: [] });
+  if (!sampleFn) { $("#mapBars").innerHTML = '<p class="rmeta">The rhymes and vowel sounds are from Bar Lab. The rest of the map needs Claude (open Lyric Lab on claude.ai).</p>'; return; }
+  try {
+    const r = await ai(`${AI_BASE()}
+
+Build a word association map for "${w}" to help a rapper find fresh angles.
+Reply with only JSON: {"emotions": [5], "situations": [5], "memories": [5 memories or concepts], "objects": [5], "metaphors": [4 short metaphors], "related": [6 related words]}
+Every item is a short phrase of 1 to 5 words. Make them specific and real, not generic.`);
+    const g = k => arr(r[k]).slice(0, 6).map(str);
+    draw({ emotions: g("emotions"), situations: g("situations"), memories: g("memories"), objects: g("objects"), metaphors: g("metaphors"), related: g("related") });
+  } catch (err) { const d = $("#mapBars"); if (d) aiFail(d, err); }
+});
+$("#mapOut").addEventListener("click", async e => {
+  const b = e.target.closest("[data-mapleaf]"); if (!b) return;
+  const w = $("#mapIn").value.trim(), leaf = b.dataset.mapleaf, out = $("#mapBars");
+  if (!needAI(out)) return; loading(out, `Turning “${esc(leaf)}” into bars…`);
+  try {
+    const r = await ai(`${AI_BASE()}
+
+Write 3 original bars that connect "${w}" and "${leaf}". Each bar stands alone.
+Reply with only JSON: {"bars": ["bar one", "bar two", "bar three"]}`);
+    out.innerHTML = `<div class="res"><h3>${esc(w)} + ${esc(leaf)}</h3>${arr(r.bars).map(x => `<div class="rcard"><div class="row"><div class="bars">${esc(str(x))}</div>${addBtn(str(x), "Add")}</div></div>`).join("")}</div>`;
+  } catch (err) { aiFail(out, err); }
+});
+
+/* ---------- G. Song Story Builder ---------- */
+["songTitle", "songStory"].forEach(id => { const el = $("#" + id); el.value = store.get("f." + id, ""); el.addEventListener("input", () => { store.set("f." + id, el.value); renderCtx(); }); });
+$("#secAdd").addEventListener("click", e => {
+  const b = e.target.closest("[data-sec]"); if (!b) return;
+  pad.value = pad.value.replace(/\s*$/, "") + (pad.value.trim() ? "\n\n" : "") + `[${b.dataset.sec}]\n`;
+  pad.dispatchEvent(new Event("input")); pad.focus(); pad.setSelectionRange(pad.value.length, pad.value.length);
+});
+function sectionsOf(text) {
+  const out = []; let cur = { name: "Untitled", lines: [], start: 0 };
+  text.split("\n").forEach((l, i) => {
+    if (SECTION.test(l)) { if (cur.lines.length || cur.name !== "Untitled") out.push(cur); cur = { name: l.trim().replace(/^\[|\]$|:$/g, ""), lines: [], start: i }; }
+    else if (l.trim()) cur.lines.push(l.trim());
+  });
+  if (cur.lines.length || cur.name !== "Untitled") out.push(cur);
+  return out;
+}
+function renderOutline() {
+  const secs = sectionsOf(songText());
+  $("#outline").innerHTML = secs.length ? secs.map(s => `<div class="sec-row" data-line="${s.start}"><b>${esc(s.name)}</b><span>${s.lines.length} bars · ${esc(s.lines[0] || "empty")}</span></div>`).join("")
+    : '<p class="rmeta">Add sections like [Hook] and [Verse 1] to your song and they show up here.</p>';
+}
+$("#outline").addEventListener("click", e => {
+  const r = e.target.closest("[data-line]"); if (!r) return;
+  const lines = pad.value.split("\n"); const pos = lines.slice(0, +r.dataset.line).join("\n").length + (+r.dataset.line ? 1 : 0);
+  pad.focus(); pad.setSelectionRange(pos, pos + (lines[+r.dataset.line] || "").length);
+});
+function renderArc(steps) {
+  return `<div class="arc">${steps.map(s => `<div class="step"><b>${esc(str(s.section))}</b><div class="emo">${esc(str(s.emotion))}</div><div>${esc(str(s.summary || s.idea || s.purpose))}</div>${s.note ? `<div class="why" style="margin-top:4px">${esc(str(s.note))}</div>` : ""}</div>`).join("")}</div>`;
+}
+$("#storyPlan").onclick = async () => {
+  const out = $("#storyOut"); if (!needAI(out)) return; loading(out, "Planning the story…");
+  try {
+    const r = await ai(`${AI_BASE()}
+
+Plan the emotional storyline for a song. Title: "${$("#songTitle").value.trim() || "untitled"}". About: "${$("#songStory").value.trim() || "the artist's life right now"}".
+Sections: Intro, Hook, Verse 1, Verse 2, Bridge, Outro. Keep one consistent emotional story that builds.
+Reply with only JSON: {"arc": [{"section": "Intro", "emotion": "one or two words", "summary": "what happens or what's said here, one sentence"}], "throughline": "the one feeling that ties it together"}`);
+    out.innerHTML = `${r.throughline ? `<p class="rmeta" style="margin-top:12px">Throughline: <b>${esc(str(r.throughline))}</b></p>` : ""}${renderArc(arr(r.arc))}<button class="btn small" id="storyLabels">Add these sections to my song</button>`;
+    $("#storyLabels").onclick = () => {
+      const have = new Set(sectionsOf(songText()).map(s => s.name.toLowerCase()));
+      arr(r.arc).forEach(s => { const n = str(s.section); if (n && !have.has(n.toLowerCase())) pad.value = pad.value.replace(/\s*$/, "") + `\n\n[${n}]\n`; });
+      pad.dispatchEvent(new Event("input")); toast("Sections added");
+    };
+  } catch (e) { aiFail(out, e); }
+};
+$("#storyCheck").onclick = async () => {
+  const out = $("#storyOut"), text = songText().trim();
+  if (!text) { out.innerHTML = '<p class="rmeta">Write some bars first.</p>'; return; }
+  if (!needAI(out)) return; loading(out, "Reading your storyline…");
+  try {
+    const r = await ai(`${AI_BASE()}
+
+Read this song and check that its emotional storyline holds together from section to section.
+<<<
+${text.slice(0, 6000)}
+>>>
+Reply with only JSON: {"arc": [{"section": "section name", "emotion": "one or two words", "summary": "one sentence", "note": "only if something breaks the story here, else empty"}], "consistent": true, "fixes": ["up to 3 specific suggestions to make the story hold together"]}`);
+    out.innerHTML = `<p class="rmeta" style="margin-top:12px">${r.consistent ? '<span class="tag good">story holds together</span>' : '<span class="tag warn">story drifts</span>'}</p>${renderArc(arr(r.arc))}${arr(r.fixes).length ? `<ul class="tips" style="margin-top:8px">${arr(r.fixes).map(f => `<li class="warn">${esc(str(f))}</li>`).join("")}</ul>` : ""}`;
+  } catch (e) { aiFail(out, e); }
+};
+
+/* ---------- H. Never Repeat ---------- */
+const PREDICTABLE_PAIRS = [["night", "light"], ["me", "see"], ["real", "feel"], ["money", "honey"], ["pain", "rain"], ["fame", "game"], ["heart", "start"], ["love", "above"], ["time", "mind"], ["cold", "gold"], ["fly", "high"], ["dream", "team"], ["street", "beat"], ["go", "flow"], ["life", "knife"]];
+function neverRepeat(text) {
+  const A = analyse(text);
+  const counts = new Map(), ends = new Map(), grams = new Map();
+  A.bars.forEach(b => {
+    const ws = b.words.map(t => t.ent ? t.ent.w : t.w);
+    ws.forEach(w => { if (!STOP.has(w) && w.length >= 3) counts.set(w, (counts.get(w) || 0) + 1); });
+    for (let k = 0; k + 2 < ws.length; k++) { const g = ws.slice(k, k + 3).join(" "); grams.set(g, (grams.get(g) || 0) + 1); }
+    if (b.end && b.end.I) { const k = soundName(b.end.I); ends.set(k, (ends.get(k) || 0) + 1); }
+  });
+  const n = A.bars.length || 1;
+  const endWords = A.bars.map(b => b.end && b.end.w).filter(Boolean);
+  const predictable = PREDICTABLE_PAIRS.filter(([a, b]) => endWords.includes(a) && endWords.includes(b)).map(p => p.join(" / "));
+  return {
+    words: [...counts].filter(([, c]) => c >= 2).sort((a, b) => b[1] - a[1]).slice(0, 12),
+    endings: [...ends].filter(([, c]) => c / n > .3 && c >= 4).sort((a, b) => b[1] - a[1]),
+    phrases: [...grams].filter(([, c]) => c >= 2).sort((a, b) => b[1] - a[1]).slice(0, 8),
+    predictable: [...predictable, ...A.cliches], bars: n,
+  };
+}
+function renderNR() {
+  const r = neverRepeat(songText()); LL.nr = r;
+  const sec = (title, items, fmt) => `<div class="sub" style="margin-top:10px">${title}</div>` + (items.length ? `<div class="chips">${items.map(fmt).join("")}</div>` : '<span class="tag good">clean</span>');
+  $("#nrOut").innerHTML = !songText().trim() ? '<p class="rmeta">Write some bars and the tracker starts counting.</p>' :
+    sec("Repeated words", r.words, ([w, c]) => `<span class="chip">${esc(w)} <sup>×${c}</sup></span>`) +
+    sec("Overused rhyme endings", r.endings, ([w, c]) => `<span class="chip">“${esc(w)}” <sup>${c} of ${r.bars} bars</sup></span>`) +
+    sec("Repeated phrases", r.phrases, ([w, c]) => `<span class="chip">${esc(w)} <sup>×${c}</sup></span>`) +
+    sec("Predictable combos", r.predictable, w => `<span class="chip">${esc(w)}</span>`);
+}
+$("#nrFix").onclick = async () => {
+  const out = $("#nrAi"), r = LL.nr || neverRepeat(songText());
+  const items = [...r.words.map(([w]) => w), ...r.phrases.map(([p]) => p), ...r.predictable].slice(0, 12);
+  if (!items.length) { out.innerHTML = '<p class="rmeta">Nothing repeats enough to fix. Clean.</p>'; return; }
+  if (!needAI(out)) return; loading(out, "Finding fresh alternatives…");
+  const vowelHints = r.words.slice(0, 8).map(([w]) => { const e = lookupWord(w), I = e && info(e); if (!I) return null; const same = (IDX.lastv.get(I.tv.join("-")) || []).filter(x => x.rank < 15000 && x.w !== w && !x.w.includes("'")).slice(0, 10).map(x => x.w); return `${w}: ${same.join(", ")}`; }).filter(Boolean).join("\n");
+  try {
+    const x = await ai(`${AI_BASE()}
+
+The artist's song repeats these words, phrases and combos: ${JSON.stringify(items)}.
+SONG:
+<<<
+${songText().slice(0, 5000)}
+>>>
+Words with the same vowel sound from Bar Lab's dictionary (use them to keep the rhyme scheme):
+${vowelHints}
+For each item, suggest fresh alternatives that keep the meaning, the rhyme scheme and the vowel sound. Show the bar rewritten.
+Reply with only JSON: {"fixes": [{"item": "the repeated thing", "alternatives": ["2-4 options"], "example": {"old": "a bar from the song that uses it", "new": "that bar with an alternative"}}]}`);
+    out.innerHTML = `<div class="res">${arr(x.fixes).map(f => `<div class="rcard"><div class="lab">${esc(str(f.item))}</div><div class="chips">${arr(f.alternatives).map(a => `<span class="chip">${esc(str(a))}</span>`).join("")}</div>${f.example && f.example.new ? `<div class="why">${esc(str(f.example.old))}</div><div class="bars">${esc(str(f.example.new))}</div><div class="row"><button class="btn small" data-swap-old="${esc(str(f.example.old))}" data-swap-new="${esc(str(f.example.new))}">Swap into song</button></div>` : ""}</div>`).join("")}</div>`;
+  } catch (e) { aiFail(out, e); }
+};
+$("#nrAi").addEventListener("click", e => {
+  const b = e.target.closest("[data-swap-old]"); if (!b) return;
+  const old = b.dataset.swapOld.trim(); const lines = pad.value.split("\n"); const i = lines.findIndex(l => l.trim() === old);
+  if (i < 0) { toast("That bar changed. Add it by hand"); return; }
+  saveVersion("Before swap"); lines[i] = b.dataset.swapNew; pad.value = lines.join("\n"); pad.dispatchEvent(new Event("input")); toast("Swapped. The old version is saved");
+});
+
+/* ---------- I. Version History ---------- */
+let versions = store.get("versions", []); let lastAuto = 0; let compareSel = [];
+function saveVersion(label, auto) {
+  const text = songText(); if (!text.trim()) return;
+  if (versions[0] && versions[0].text === text) { if (!auto && label) { versions[0].label = label; store.set("versions", versions); renderVersions(); } return; }
+  versions.unshift({ id: Date.now(), at: Date.now(), text, label: label || "", title: ($("#songTitle").value || "").trim(), auto: !!auto });
+  versions = versions.slice(0, 60); store.set("versions", versions); renderVersions();
+}
+function ago(t) { const s = Math.round((Date.now() - t) / 1000); return s < 60 ? "just now" : s < 3600 ? `${Math.round(s / 60)} min ago` : s < 86400 ? `${Math.round(s / 3600)} h ago` : new Date(t).toLocaleDateString(); }
+function lineDelta(a, b) { const A = new Set(a.split("\n").map(x => x.trim()).filter(Boolean)), B = b.split("\n").map(x => x.trim()).filter(Boolean); const add = B.filter(x => !A.has(x)).length; const Bs = new Set(B); const del = [...A].filter(x => !Bs.has(x)).length; return `+${add} −${del}`; }
+function renderVersions() {
+  $("#verList").innerHTML = versions.length ? versions.map((v, i) => `<li class="${compareSel.includes(v.id) ? "active" : ""}"><span>${esc(v.label || (v.auto ? "Autosave" : "Saved"))} · ${ago(v.at)} · ${versions[i + 1] ? lineDelta(versions[i + 1].text, v.text) : "first"}</span><button class="btn small" data-vcmp="${v.id}">${compareSel.includes(v.id) ? "Selected" : "Compare"}</button><button class="btn small" data-vres="${v.id}">Restore</button></li>`).join("")
+    : '<li><span class="muted">No versions yet. They save automatically as you write.</span></li>';
+}
+function lcsDiff(a, b) {
+  const A = a.split("\n"), B = b.split("\n"), n = A.length, m = B.length;
+  const L = Array.from({ length: n + 1 }, () => new Uint16Array(m + 1));
+  for (let i = n - 1; i >= 0; i--) for (let j = m - 1; j >= 0; j--) L[i][j] = A[i].trim() === B[j].trim() ? L[i + 1][j + 1] + 1 : Math.max(L[i + 1][j], L[i][j + 1]);
+  const left = [], right = []; let i = 0, j = 0;
+  while (i < n || j < m) {
+    if (i < n && j < m && A[i].trim() === B[j].trim()) { left.push(["", A[i]]); right.push(["", B[j]]); i++; j++; }
+    else if (j < m && (i >= n || L[i][j + 1] >= L[i + 1][j])) { left.push(["", ""]); right.push(["add", B[j]]); j++; }
+    else { left.push(["del", A[i]]); right.push(["", ""]); i++; }
+  }
+  return [left, right];
+}
+function showCompare() {
+  if (compareSel.length < 2) { $("#verCompare").innerHTML = compareSel.length ? '<p class="rmeta">Pick one more version to compare.</p>' : ""; return; }
+  const [a, b] = compareSel.map(id => versions.find(v => v.id === id)).sort((x, y) => x.at - y.at);
+  const [l, r] = lcsDiff(a.text, b.text);
+  const col = (v, rows) => `<div><div class="sub">${esc(v.label || "Version")} · ${ago(v.at)}</div>${rows.map(([c, t]) => `<p class="${c}">${esc(t)}</p>`).join("")}</div>`;
+  $("#verCompare").innerHTML = `<div class="diff">${col(a, l)}${col(b, r)}</div>`;
+}
+$("#verList").addEventListener("click", e => {
+  const c = e.target.closest("[data-vcmp]"), r = e.target.closest("[data-vres]");
+  if (c) { const id = +c.dataset.vcmp; compareSel = compareSel.includes(id) ? compareSel.filter(x => x !== id) : [...compareSel, id].slice(-2); renderVersions(); showCompare(); }
+  if (r) { const v = versions.find(x => x.id === +r.dataset.vres); if (!v) return; saveVersion("Before restore"); pad.value = v.text; pad.dispatchEvent(new Event("input")); toast("Restored. Your previous draft is saved too"); }
+});
+$("#verSave").onclick = () => { saveVersion($("#verName").value.trim() || "Saved"); $("#verName").value = ""; toast("Version saved"); };
+setInterval(() => { if (Date.now() - lastAuto > 60000 && versions[0] && versions[0].text !== songText() && songText().trim()) { lastAuto = Date.now(); saveVersion("", true); $("#verStatus").textContent = "autosaved " + new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" }); } }, 15000);
+if (!versions.length && songText().trim()) saveVersion("Start", true);
+renderVersions();
+
+/* ---------- J. Writer Statistics ---------- */
+function statsFor(texts) {
+  let bars = [], content = 0, rhyming = 0, internal = 0, multiBars = 0, similes = 0, words = [], ends = new Map();
+  texts.forEach(t => {
+    const A = analyse(t); bars = bars.concat(A.bars);
+    A.bars.forEach(b => {
+      b.words.forEach(x => { if (x.key) content++; if (x.color) { rhyming++; if (!x.isEnd) internal++; } if (!STOP.has(x.w)) words.push(x.w); });
+      if (b.multi >= 2) multiBars++;
+      similes += (b.raw.toLowerCase().match(/\blike (a|an|the|my|i|it|you|we|they|he|she)\b|\bas \w+ as\b|\bthan\b/g) || []).length;
+      if (b.end && b.end.I) { const k = soundName(b.end.I); ends.set(k, (ends.get(k) || 0) + 1); }
+    });
+  });
+  const n = bars.length || 1; const syl = bars.map(b => b.syl); const mean = syl.reduce((a, b) => a + b, 0) / n;
+  const sd = Math.sqrt(syl.reduce((a, b) => a + (b - mean) ** 2, 0) / n);
+  const wcounts = new Map(); words.forEach(w => wcounts.set(w, (wcounts.get(w) || 0) + 1));
+  return { n: bars.length, bars, density: content ? rhyming / content : 0, internal: internal / n, multis: multiBars / n, sylMean: mean, sylSd: sd, syl,
+    repeated: [...wcounts].filter(([, c]) => c >= 2).sort((a, b) => b[1] - a[1]), vocab: words.length ? new Set(words).size / words.length : 0,
+    wordplay: similes / n, ends: [...ends].sort((a, b) => b[1] - a[1]) };
+}
+function grade(v, lo, hi) { return v >= hi ? ["good", "strong"] : v >= lo ? ["warn", "solid"] : ["bad", "low"]; }
+function hbars(items, max, opts = {}) {
+  return `<div class="hbars">${items.map(it => `<div class="hbar${it.sel ? " sel" : ""}" data-tip="${esc(it.tip || `${it.label}: ${it.value}`)}"${it.key ? ` data-dnakey="${it.key}"` : ""}><span>${esc(it.label)}</span><span class="tr"><i style="width:${Math.max(1, Math.round(it.value / max * 100))}%"></i>${it.mark != null ? `<span class="mk" style="left:calc(${Math.min(100, Math.round(it.mark / max * 100))}% - 1px)"></span>` : ""}</span><span class="vv">${opts.fmt ? opts.fmt(it.value) : it.value}</span></div>`).join("")}</div>`;
+}
+function renderStats() {
+  const out = $("#statOut"); const src = $("#statSrc").value;
+  const texts = src === "all" ? [songText(), ...CATALOG.map(c => c.text), ...songs.map(s => splitSong(s.text).lines.join("\n"))].filter(t => t && t.trim()) : [songText()];
+  const S = statsFor(texts);
+  if (!S.n) { out.innerHTML = '<p class="empty">Write some bars on the Song tab and your stats show up here.</p>'; return; }
+  const avg = src === "song" && CATALOG.length ? statsFor(CATALOG.map(c => c.text)) : null;
+  const pct = v => Math.round(v * 100) + "%";
+  const tile = (k, v, g, note) => `<div class="tile"><span class="k">${k}</span><span class="v">${v}</span><span class="s"><span class="tag ${g[0]}">${g[1]}</span>${note ? esc(note) : ""}</span></div>`;
+  const tiles = [
+    tile("Rhyme density", pct(S.density), grade(S.density, .25, .4), avg ? `your avg ${pct(avg.density)}` : ""),
+    tile("Internal rhymes / bar", S.internal.toFixed(1), grade(S.internal, 1, 2), avg ? `avg ${avg.internal.toFixed(1)}` : ""),
+    tile("Multisyllabic bars", pct(S.multis), grade(S.multis, .25, .45), avg ? `avg ${pct(avg.multis)}` : ""),
+    tile("Syllable variety", "±" + S.sylSd.toFixed(1), S.sylSd > 5 ? ["warn", "uneven"] : S.sylSd < 1 ? ["warn", "flat"] : ["good", "controlled"], `${S.sylMean.toFixed(1)} per bar`),
+    tile("Repeated words", String(S.repeated.length), S.repeated.length > 8 ? ["bad", "a lot"] : S.repeated.length > 3 ? ["warn", "some"] : ["good", "fresh"], ""),
+    tile("Vocabulary variety", pct(S.vocab), grade(S.vocab, .65, .8), avg ? `avg ${pct(avg.vocab)}` : ""),
+    tile("Wordplay markers / bar", S.wordplay.toFixed(2), grade(S.wordplay, .1, .25), "similes and comparisons"),
+  ].join("");
+  const sylMax = Math.max(...S.syl, 1);
+  const cols = S.syl.slice(0, 64).map((v, i) => `<i style="height:${Math.round(v / sylMax * 100)}%" data-tip="Bar ${i + 1}: ${v} syllables"></i>`).join("");
+  const endItems = S.ends.slice(0, 8).map(([k, c]) => ({ label: `“${k}”`, value: c, tip: `${c} bars end on “${k}”` }));
+  const topRep = S.repeated.slice(0, 8).map(([w, c]) => ({ label: w, value: c, tip: `“${w}” used ${c} times` }));
+  const secRows = src === "song" ? sectionsOf(songText()).filter(s => s.lines.length).map(s => { const x = statsFor([s.lines.join("\n")]); return { label: s.name, value: Math.round(x.density * 100), tip: `${s.name}: ${Math.round(x.density * 100)}% of words rhyme` }; }) : [];
+  out.innerHTML = `<div class="tiles">${tiles}</div>
+    <div class="charts">
+      <div class="chart"><h3>Syllables per bar</h3><p class="sub2">${S.n} bars · average ${S.sylMean.toFixed(1)}. Even heights mean a steady flow.</p><div class="cols">${cols}</div><div class="axisnote"><span>bar 1</span><span>bar ${Math.min(S.n, 64)}</span></div></div>
+      <div class="chart"><h3>Vowel patterns at the end of bars</h3><p class="sub2">Which rhyme sounds you lean on.</p>${endItems.length ? hbars(endItems, endItems[0].value) : '<p class="rmeta">No end rhymes yet.</p>'}</div>
+      ${secRows.length ? `<div class="chart"><h3>Rhyme density by section</h3><p class="sub2">Percent of words that rhyme in each section.</p>${hbars(secRows, 100, { fmt: v => v + "%" })}</div>` : ""}
+      <div class="chart"><h3>Most repeated words</h3><p class="sub2">Fix these on the Song tab with Never Repeat.</p>${topRep.length ? hbars(topRep, topRep[0].value, { fmt: v => "×" + v }) : '<p class="rmeta">Nothing repeats. Fresh.</p>'}</div>
+    </div>`;
+}
+$("#statSrc").onchange = renderStats;
+
+/* ---------- 11. Emotion DNA ---------- */
+function dnaChart(d, mine, sel) {
+  const items = DNA_KEYS.map(k => ({ key: k, label: k[0].toUpperCase() + k.slice(1), value: Math.round(+d.dna[k] || 0), mark: mine ? Math.round(+mine.dna[k] || 0) : null, sel: k === sel,
+    tip: `${k}: ${Math.round(+d.dna[k] || 0)}${mine ? ` · your song ${Math.round(+mine.dna[k] || 0)}` : ""}` }));
+  return `${mine ? `<div class="legend"><span>${esc(d.title || "Lyrics")}</span><span class="m">Your song</span></div>` : ""}${hbars(items, 100)}`;
+}
+function renderDna(d, target) {
+  const out = target || $("#dnaOut"); LL.lastDna = d;
+  const why = d.why || {};
+  out.innerHTML = `<div class="res">
+    <div class="row" style="justify-content:space-between"><h3 style="margin:0">${esc(d.title || "Emotion DNA")}</h3><div class="row"><button class="btn small primary" id="dnaUse">Use as my target</button></div></div>
+    <div class="chart">${dnaChart(d, LL.mine)}<p class="fine">Tap a bar to see what creates that feeling.</p><div id="dnaWhy" class="rcard" hidden></div></div>
+    ${d.measured ? `<div class="rcard"><div class="lab">Rhyme &amp; sound, measured by Bar Lab</div><div class="why">${esc(d.measured)}</div></div>` : ""}
+    ${arr(d.themes).length ? `<h3>Major themes</h3><div class="chips">${arr(d.themes).map(t => `<span class="chip">${esc(str(t))}</span>`).join("")}</div>` : ""}
+    ${arr(d.situations).length ? `<h3>Situations that create the feeling</h3>${arr(d.situations).map(s => `<div class="rcard"><div>${esc(str(s))}</div></div>`).join("")}` : ""}
+    ${arr(d.techniques).length ? `<h3>Why it hits</h3>${arr(d.techniques).map(t => `<div class="rcard"><div class="lab">${esc(str(t.name))}</div><div>${esc(str(t.how))}</div></div>`).join("")}` : ""}
+    ${d.wordChoices ? `<div class="rcard"><div class="lab">Word choices</div><div>${esc(str(d.wordChoices))}</div></div>` : ""}
+    ${d.soundNotes ? `<div class="rcard"><div class="lab">Rhyme and vowel patterns</div><div>${esc(str(d.soundNotes))}</div></div>` : ""}
+  </div>`;
+  out.querySelector(".hbars").addEventListener("click", e => {
+    const b = e.target.closest("[data-dnakey]"); if (!b) return; const k = b.dataset.dnakey;
+    out.querySelectorAll(".hbar").forEach(x => x.classList.toggle("sel", x === b));
+    const w = $("#dnaWhy"); w.hidden = false; w.innerHTML = `<div class="lab">${esc(k)} · ${Math.round(+d.dna[k] || 0)}</div><div>${esc(str(why[k]) || "No note for this one.")}</div>`;
+  });
+  $("#dnaUse").onclick = () => { LL.dna = d; store.set("dna.active", d); renderDnaList(); renderCtx(); toast("Every tool now writes toward this DNA"); };
+}
+function measuredLine(fp) { return fp ? `${fp.avgSyllablesPerBar} syllables a bar, ${fp.rhymeDensityPct}% of words rhyme, ${fp.barsWithMultisPct}% of bars carry a multisyllable rhyme, ${fp.internalRhymes} internal rhymes, favorite end sounds ${fp.favoriteEndRhymeSounds.map(x => `“${x}”`).join(", ")}, scheme ${fp.rhymeScheme}.` : ""; }
+async function analyzeDNA(text, isMine) {
+  const fp = fingerprint(text);
+  const r = await ai(`${AI_BASE()}
+
+Analyze the EMOTIONAL composition of these lyrics so the artist can learn from it. Describe everything in your own words. Never quote the lyrics, and don't describe the artist's personal style; focus on broad emotional themes and general songwriting techniques.
+<<<
+${text.slice(0, 6000)}
+>>>
+Bar Lab measured the sound: ${measuredLine(fp) || "not enough bars to measure"}
+Reply with only JSON:
+{"title": "a short name for this emotional profile",
+ "dna": {"pain": 0, "ambition": 0, "betrayal": 0, "reflection": 0, "confidence": 0, "heartbreak": 0, "motivation": 0, "nostalgia": 0},
+ "why": {"pain": "one sentence: what situation, word choice or sound creates this feeling here, no quotes"},
+ "themes": ["3 to 6 broad themes"],
+ "situations": ["4 to 6 kinds of situations that create the feeling, described generally"],
+ "techniques": [{"name": "technique", "how": "how it builds emotion, in general terms"}],
+ "wordChoices": "how word choices carry the feeling, in general terms",
+ "soundNotes": "how rhyme and vowel patterns shape the mood"}
+Scores are 0 to 100. Fill "why" for all 8 categories. Give 4 to 6 techniques.`);
+  if (!r || !r.dna) throw { code: "invalid_json" };
+  return { ...r, dna: { ...r.dna }, measured: measuredLine(fp), at: Date.now(), mine: !!isMine };
+}
+$("#dnaGo").onclick = async () => {
+  const text = $("#dnaIn").value.trim(), out = $("#dnaOut"); if (!text) { $("#dnaIn").focus(); return; }
+  if (!needAI(out)) return; loading(out, "Reading the emotional DNA…");
+  try { const d = await analyzeDNA(text); LL.dnaList = [d, ...LL.dnaList].slice(0, 20); store.set("dna.list", LL.dnaList); renderDnaList(); renderDna(d); }
+  catch (e) { aiFail(out, e); }
+};
+$("#dnaMine").onclick = async () => {
+  const text = songText().trim(), out = $("#dnaOut"); if (!text) { out.innerHTML = '<p class="rmeta">Write your song on the Song tab first.</p>'; return; }
+  if (!needAI(out)) return; loading(out, "Reading your song's DNA…");
+  try { LL.mine = { ...(await analyzeDNA(text, true)), title: "Your song" }; renderDna(LL.lastDna || LL.dna || LL.mine); toast("Your song is the white marker on each bar"); }
+  catch (e) { aiFail(out, e); }
+};
+function renderDnaList() {
+  $("#dnaList").innerHTML = LL.dnaList.length ? LL.dnaList.map((d, i) => `<li class="${LL.dna && LL.dna.at === d.at ? "active" : ""}"><span>${esc(d.title || "Profile")} · ${DNA_KEYS.slice().sort((a, b) => (+d.dna[b] || 0) - (+d.dna[a] || 0)).slice(0, 2).join(" + ")}</span><button class="btn small" data-dnaopen="${i}">Open</button></li>`).join("")
+    : '<li><span class="muted">No profiles yet. Paste lyrics and analyze.</span></li>';
+}
+$("#dnaList").addEventListener("click", e => { const b = e.target.closest("[data-dnaopen]"); if (b) renderDna(LL.dnaList[+b.dataset.dnaopen]); });
+$("#dnaWrite").onclick = async () => {
+  const out = $("#dnaWriteOut"), d = LL.dna || LL.lastDna;
+  if (!d) { out.innerHTML = '<p class="rmeta">Analyze some lyrics first, then tap “Use as my target”.</p>'; return; }
+  if (!needAI(out)) return; loading(out, "Writing from the DNA…");
+  try {
+    const r = await ai(`${AI_BASE()}
+
+Write 8 completely original bars driven by this emotional mix: ${dnaLine(d)}.
+Themes to draw from (broad, not copied): ${arr(d.themes).join(", ")}.
+Situations that create the feeling: ${arr(d.situations).join("; ")}.
+Use the artist's own life angle${$("#songStory").value.trim() ? `: ${$("#songStory").value.trim()}` : ""}. Don't imitate any specific artist.
+Reply with only JSON: {"bars": ["8 bars"], "note": "one sentence on how the emotional mix shows up"}`);
+    const bars = arr(r.bars).map(str).join("\n");
+    out.innerHTML = `<div class="res"><div class="rcard"><div class="bars">${esc(bars)}</div><div class="why">${esc(str(r.note))}</div><div class="row">${addBtn(bars)}<button class="btn small" data-jumpdoc="${esc(bars)}">Send to Bar Doctor</button></div></div></div>`;
+  } catch (e) { aiFail(out, e); }
+};
+$("#dnaWriteOut").addEventListener("click", e => { const b = e.target.closest("[data-jumpdoc]"); if (b) { $("#docIn").value = b.dataset.jumpdoc; setView("tools"); setTool("doctor"); window.scrollTo(0, 0); } });
+renderDnaList();
+
+/* ---------- D. Flow Tester ---------- */
+$("#ftBpm").value = bpm;
+let ftData = null;
+async function analyzeTake(file, tempo, lyrics) {
+  const ctx2 = new (window.AudioContext || window.webkitAudioContext)();
+  const buf = await ctx2.decodeAudioData(await file.arrayBuffer()); ctx2.close && ctx2.close();
+  const sr = buf.sampleRate, ch = buf.numberOfChannels, len = buf.length;
+  const data = new Float32Array(len); for (let c = 0; c < ch; c++) { const d = buf.getChannelData(c); for (let i = 0; i < len; i++) data[i] += d[i] / ch; }
+  const hop = Math.round(sr * .01), F = Math.floor(len / hop), env = new Float32Array(F);
+  for (let f = 0; f < F; f++) { let s = 0; for (let i = f * hop; i < (f + 1) * hop; i++) s += data[i] * data[i]; env[f] = Math.sqrt(s / hop); }
+  const sm = new Float32Array(F); for (let f = 0; f < F; f++) { let s = 0, n = 0; for (let k = -2; k <= 2; k++) if (env[f + k] !== undefined) { s += env[f + k]; n++; } sm[f] = s / n; }
+  const sorted = Array.from(sm).sort((a, b) => a - b); const peak = sorted[Math.floor(F * .98)] || 1e-9; const floor = sorted[Math.floor(F * .15)] || 0;
+  const silence = floor + (peak - floor) * .12;
+  // pauses: 250ms+ under the silence line
+  const pauses = []; let st = -1;
+  for (let f = 0; f <= F; f++) { const quiet = f < F && sm[f] < silence; if (quiet && st < 0) st = f; if (!quiet && st >= 0) { if (f - st >= 25) pauses.push([st / 100, f / 100]); st = -1; } }
+  const firstV = Array.from(sm).findIndex(v => v >= silence), lastV = F - 1 - Array.from(sm).reverse().findIndex(v => v >= silence);
+  const inner = pauses.filter(p => p[0] > firstV / 100 && p[1] < lastV / 100);
+  // syllable onsets: rises in the envelope
+  const onsets = []; let last = -100;
+  for (let f = 3; f < F - 1; f++) {
+    const rise = sm[f] - sm[f - 3];
+    if (rise > (peak - floor) * .07 && sm[f] > silence * 1.3 && sm[f] >= sm[f + 1] * .98 && f - last >= 9) { onsets.push(f / 100); last = f; }
+  }
+  const voiced = Math.max(.1, (lastV - firstV) / 100 - inner.reduce((a, p) => a + (p[1] - p[0]), 0));
+  const res = { dur: len / sr, voiced, onsets, pauses: inner, env: sm, peak, silence, first: firstV / 100, last: lastV / 100, rate: onsets.length / voiced };
+  // phrases between pauses -> timing consistency
+  const iois = []; for (let i = 1; i < onsets.length; i++) { const gap = onsets[i] - onsets[i - 1]; if (!inner.some(p => p[0] >= onsets[i - 1] && p[1] <= onsets[i])) iois.push(gap); }
+  const m = iois.reduce((a, b) => a + b, 0) / (iois.length || 1); const cv = iois.length ? Math.sqrt(iois.reduce((a, b) => a + (b - m) ** 2, 0) / iois.length) / m : 0;
+  res.cv = cv;
+  if (tempo) {
+    const six = 60 / tempo / 4; let best = { off: 0, err: 1e9 };
+    for (let k = 0; k < 40; k++) { const off = six * k / 40; let e = 0; onsets.forEach(t => { const d = ((t - off) % six + six) % six; e += Math.min(d, six - d); }); if (e < best.err) best = { off, err: e }; }
+    res.grid = { six, off: best.off, bar: six * 16 };
+    const devs = onsets.map(t => { const d = ((t - best.off) % six + six) % six; return Math.min(d, six - d) * 1000; });
+    res.devMs = devs.reduce((a, b) => a + b, 0) / (devs.length || 1); res.onGrid = devs.filter(d => d <= 30).length / (devs.length || 1);
+    res.barsPerformed = (res.last - res.first) / res.grid.bar;
+    res.breathAtBarEnd = inner.length ? inner.filter(p => { const pos = ((p[0] - best.off) % res.grid.bar + res.grid.bar) % res.grid.bar; return pos > res.grid.bar * .7 || pos < res.grid.bar * .1; }).length / inner.length : 1;
+    res.sylPerBar = res.rate * res.grid.bar;
+  }
+  if (lyrics && lyrics.trim()) { const A = analyse(lyrics); res.lyricBars = A.bars.length; res.lyricSyl = A.bars.reduce((a, b) => a + b.syl, 0); res.lyricMean = A.mean; }
+  return res;
+}
+function drawTake(r) {
+  const cv = $("#ftWave"); const dpr = devicePixelRatio || 1; const W = cv.clientWidth, H = cv.clientHeight; cv.width = W * dpr; cv.height = H * dpr;
+  const g = cv.getContext("2d"); g.scale(dpr, dpr); const cs = getComputedStyle(document.documentElement);
+  const col = n => cs.getPropertyValue(n).trim(); const x = t => t / r.dur * W;
+  g.fillStyle = col("--accent-soft"); r.pauses.forEach(p => g.fillRect(x(p[0]), 0, x(p[1]) - x(p[0]), H));
+  if (r.grid) { g.strokeStyle = col("--line"); g.lineWidth = 1; for (let t = r.grid.off; t < r.dur; t += r.grid.bar) { g.beginPath(); g.moveTo(x(t), 0); g.lineTo(x(t), H); g.stroke(); } }
+  g.strokeStyle = col("--muted"); g.lineWidth = 1.5; g.beginPath(); for (let f = 0; f < r.env.length; f++) { const y = H - 6 - (r.env[f] / r.peak) * (H - 24); f ? g.lineTo(x(f / 100), y) : g.moveTo(x(0), y); } g.stroke();
+  g.fillStyle = col("--accent"); r.onsets.forEach(t => g.fillRect(x(t) - 1, 4, 2, 10));
+}
+$("#ftGo").onclick = async () => {
+  const f = $("#ftFile").files[0], out = $("#ftOut");
+  if (!f) { out.innerHTML = '<p class="rmeta">Pick your recording first.</p>'; return; }
+  loading(out, "Listening to your take…");
+  try {
+    const tempo = +$("#ftBpm").value || 0, lyrics = $("#ftSrc").value === "song" ? songText() : "";
+    const r = await analyzeTake(f, tempo, lyrics); ftData = r;
+    const tips = [];
+    if (r.grid) {
+      if (r.onGrid < .55) tips.push(["warn", `Only ${Math.round(r.onGrid * 100)}% of your syllables land near the beat grid. Clap the 2 and 4 while you rap, and lock the rhyme words onto the snare.`]);
+      else tips.push(["good", `${Math.round(r.onGrid * 100)}% of syllables sit on the grid. That's in the pocket.`]);
+      if (r.breathAtBarEnd < .6 && r.pauses.length) tips.push(["warn", `Most of your breaths land mid-bar. Try breathing in the last beat of a bar so lines don't get cut in half.`]);
+      if (r.lyricMean && r.sylPerBar) { const d = r.sylPerBar - r.lyricMean; if (Math.abs(d) > 3) tips.push(["warn", d > 0 ? `You're rapping about ${Math.round(r.sylPerBar)} syllables a bar, but your lyrics average ${Math.round(r.lyricMean)}. You may be rushing.` : `You're rapping about ${Math.round(r.sylPerBar)} syllables a bar, but your lyrics average ${Math.round(r.lyricMean)}. Some words may be getting swallowed or dragged.`]); }
+    }
+    if (r.cv > .55) tips.push(["warn", "Your pacing speeds up and slows down a lot inside phrases. If that's not on purpose, keep the rhythm steadier between the rhyme words."]);
+    else tips.push(["good", "Your pacing inside phrases is steady."]);
+    const stat = (k, v) => `<div class="tile"><span class="k">${k}</span><span class="v" style="font-size:26px">${v}</span></div>`;
+    out.innerHTML = `<canvas id="ftWave" aria-label="Your take: loudness over time, beat lines and pauses"></canvas>
+      <p class="fine">Line: your loudness. Ticks: detected syllables. Shaded: pauses. Vertical lines: bar lines at ${tempo || "?"} BPM.</p>
+      <div class="tiles" style="margin-top:10px">
+        ${stat("Syllables / sec", r.rate.toFixed(1))}
+        ${r.grid ? stat("On the grid", Math.round(r.onGrid * 100) + "%") : ""}
+        ${r.grid ? stat("Timing drift", Math.round(r.devMs) + " ms") : ""}
+        ${stat("Pauses", String(r.pauses.length))}
+        ${r.grid ? stat("Breaths at bar end", Math.round(r.breathAtBarEnd * 100) + "%") : ""}
+        ${stat("Flow consistency", r.cv < .35 ? "steady" : r.cv < .55 ? "mixed" : "loose")}
+      </div>
+      <ul class="tips" style="margin-top:12px">${tips.map(t => `<li class="${t[0]}">${esc(t[1])}</li>`).join("")}</ul>
+      <button class="btn small primary" id="ftCoach" style="margin-top:10px">Coach my delivery</button><div id="ftCoachOut"></div>
+      <p class="fine">These are estimates from the recording's loudness. A quiet room and a close mic give the best read.</p>`;
+    drawTake(r);
+    $("#ftCoach").onclick = async () => {
+      const o = $("#ftCoachOut"); if (!needAI(o)) return; loading(o, "Listening back…");
+      try {
+        const c = await ai(`${AI_BASE()}
+
+Bar Lab measured the artist's recorded take: ${JSON.stringify({ tempo, syllablesPerSecond: +r.rate.toFixed(2), syllablesPerBarPerformed: r.sylPerBar && +r.sylPerBar.toFixed(1), onGridPct: r.grid && Math.round(r.onGrid * 100), timingDriftMs: r.devMs && Math.round(r.devMs), pauses: r.pauses.length, breathsAtBarEndPct: r.grid && Math.round(r.breathAtBarEnd * 100), pacingVariation: +r.cv.toFixed(2), lyricBars: r.lyricBars, lyricSyllablesPerBar: r.lyricMean && +r.lyricMean.toFixed(1) })}
+${lyrics.trim() ? `Their lyrics:\n<<<\n${lyrics.slice(0, 3000)}\n>>>` : ""}
+Give delivery advice that keeps their identity as an artist: don't change their style, help them do it cleaner.
+Reply with only JSON: {"keep": "what's working and is theirs", "tips": ["3 to 5 specific delivery tips: where to breathe, which words to stretch or clip, how to sit on the beat"]}`);
+        o.innerHTML = `<div class="res"><div class="rcard"><span class="tag good">keep</span><div>${esc(str(c.keep))}</div></div>${arr(c.tips).map(t => `<div class="rcard"><div>${esc(str(t))}</div></div>`).join("")}</div>`;
+      } catch (e) { aiFail(o, e); }
+    };
+  } catch (e) { out.innerHTML = `<p class="rmeta">Couldn't read that file. Try an .m4a, .mp3 or .wav voice memo.</p>`; }
+};
+addEventListener("resize", () => { if (ftData && $("#ftWave")) drawTake(ftData); });
+
+/* ---------- keep everything in sync with the song ---------- */
+function syncSong() { renderOutline(); renderNR(); renderCtx(); if (view === "stats") renderStats(); }
+pad.addEventListener("input", () => { clearTimeout(LL.syncT); LL.syncT = setTimeout(syncSong, 400); });
+const _setView = setView;
+setView = function (v) { _setView(v); if (v === "stats") renderStats(); if (v === "write") syncSong(); };
+$$("nav.tabs button").forEach(b => b.onclick = () => setView(b.dataset.view));
 
 /* ================= boot ================= */
 refresh();

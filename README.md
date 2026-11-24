@@ -56,7 +56,16 @@ an "on fire" streak bonus, a second defender once you hit 10 points, and a saved
 
 ---
 
-# Bar Lab (`bars/`)
+# Lyric Lab (`bars/`)
+
+Tabs: **Chat** (ghostwriter) · **Song** (write, Song Story Builder, Never Repeat, Version History) ·
+**Tools** (Bar Doctor, Sound Matcher, Emotion Translator, Three Ways to Say It, Word Association Map) ·
+**DNA** (Emotion DNA: emotional profile of lyrics you paste, then write original bars from it) ·
+**Flow** (beats + Flow Tester: upload a voice memo, get timing, pauses, breaths and grid fit) ·
+**Stats** (Writer Statistics dashboard) · Studio · Drills. Dark by default with a light mode switch.
+Everything works on one song, and the active Emotion DNA steers every AI tool.
+
+## Earlier notes (Bar Lab)
 
 A writing gym for lyrical rap. Open `bars/index.html` in any browser, no install.
 
