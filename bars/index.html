@@ -90,6 +90,7 @@ header.top { display: flex; flex-wrap: wrap; align-items: flex-end; justify-cont
 .brand h1 span { color: var(--accent); }
 .brand p { margin: 0; color: var(--muted); max-width: 42ch; text-wrap: balance; }
 nav.tabs { display: flex; gap: 4px; background: var(--panel); border: 1px solid var(--line); border-radius: 999px; padding: 4px; }
+@media (max-width: 560px) { nav.tabs { width: 100%; justify-content: space-between; } nav.tabs button { padding: 8px 10px !important; font-size: 14px; } }
 nav.tabs button { border: 0; background: none; padding: 8px 18px; border-radius: 999px; font-weight: 600; color: var(--muted); }
 nav.tabs button[aria-selected="true"] { background: var(--ink); color: var(--paper); }
 
@@ -292,6 +293,26 @@ details.paste[open] summary { margin-bottom: 10px; }
 .status { font-size: 14px; color: var(--muted); }
 .saved { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
 
+/* chat */
+.chatwrap { max-width: 860px; margin: 0 auto; }
+.chatcard { display: flex; flex-direction: column; gap: 12px; }
+.chatlog { display: grid; gap: 12px; min-height: 280px; max-height: 62vh; overflow-y: auto; padding: 4px 2px; }
+.msg { max-width: 92%; padding: 10px 14px; border-radius: 12px; font-size: 16px; line-height: 1.6; overflow-wrap: anywhere; }
+.msg.me { justify-self: end; background: var(--accent); color: var(--accent-ink); border-bottom-right-radius: 4px; white-space: pre-wrap; }
+.msg.bot { justify-self: start; background: var(--paper); border: 1px solid var(--line); border-bottom-left-radius: 4px; }
+.msg.bot p { margin: 0 0 8px; } .msg.bot p:last-child { margin-bottom: 0; }
+.msg.bot ul, .msg.bot ol { margin: 4px 0 8px; padding-left: 22px; }
+.msg.bot strong { color: var(--t1); }
+.msg.bot blockquote { margin: 6px 0; padding-left: 10px; border-left: 3px solid var(--margin); }
+.msg .tools { display: flex; gap: 6px; margin-top: 8px; }
+.msg .note { font-size: 12px; color: var(--muted); font-family: var(--mono); margin-top: 6px; }
+.chatform { display: grid; gap: 8px; }
+.chatform textarea { width: 100%; border: 1px solid var(--line); border-radius: 10px; background: var(--paper); padding: 10px 12px; font-size: 16px; resize: vertical; min-height: 52px; }
+.chatform textarea:focus { border-color: var(--accent); outline: none; }
+.quick .chip { font-size: 13px; }
+.chat-empty { color: var(--muted); font-size: 15px; padding: 8px 4px; }
+.chat-empty b { color: var(--ink); }
+
 /* transport strip */
 .strip {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 20; background: var(--strip); color: var(--strip-ink);
@@ -327,15 +348,47 @@ details.paste[open] summary { margin-bottom: 10px; }
   <header class="top">
     <div class="brand">
       <h1>BAR<span>LAB</span></h1>
-      <p>Type your favorite rapper and a mood, get an original song in their style, then sharpen the bars and rap it over a beat.</p>
+      <p>Your ghostwriter: rhymes, rewords, next lines and full songs in your setup, checked by a real rhyme engine.</p>
     </div>
     <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" id="t-chat" aria-selected="false" data-view="chat">Chat</button>
       <button role="tab" id="t-studio" aria-selected="false" data-view="studio">Studio</button>
       <button role="tab" id="t-write" aria-selected="true" data-view="write">Write</button>
       <button role="tab" id="t-flow" aria-selected="false" data-view="flow">Flow</button>
       <button role="tab" id="t-drills" aria-selected="false" data-view="drills">Drills</button>
     </nav>
   </header>
+
+  <!-- CHAT -->
+  <section class="view" id="v-chat" hidden>
+    <div class="chatwrap">
+      <div class="card chatcard">
+        <div class="card-head">
+          <h2>Ghostwriter</h2>
+          <div class="row">
+            <span class="eyebrow" id="chatSetup">8 words · rhyme on 4 &amp; 8</span>
+            <button class="btn small" id="chatNew">New chat</button>
+          </div>
+        </div>
+        <div class="chatlog" id="chatLog" aria-live="polite"></div>
+        <div class="chips quick" id="chatQuick">
+          <button class="chip" data-q="What rhymes with ">What rhymes with…</button>
+          <button class="chip" data-q="Reword this, keep my words: ">Reword my line</button>
+          <button class="chip" data-q="Put this in my setup: ">Fit my setup</button>
+          <button class="chip" data-q="Give me next line options for: ">Next line</button>
+          <button class="chip" data-q="Write a song about: ">Write a song about…</button>
+          <button class="chip" data-q="Rap about this and keep my setup: ">Rap about these lyrics</button>
+        </div>
+        <form class="chatform" id="chatForm">
+          <textarea id="chatIn" rows="2" placeholder="Type a line, a question, a topic, or paste lyrics…" aria-label="Message"></textarea>
+          <div class="row" style="justify-content:space-between">
+            <label class="row" style="gap:6px;font-size:13px;color:var(--muted)"><input type="checkbox" id="chatAdlibs"> Echo ad-libs in songs</label>
+            <div class="row"><button class="btn small" type="button" id="chatStop" hidden>Stop</button><button class="btn primary" type="submit" id="chatSend">Send</button></div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
 
   <!-- STUDIO -->
   <section class="view" id="v-studio" hidden>
@@ -1852,11 +1905,134 @@ renderSaved();
 renderFavs();
 showFp();
 
+/* ================= ghostwriter chat ================= */
+const chat = { turns: store.get("chat", []), ctl: null, busy: false };
+$("#chatAdlibs").checked = store.get("chatAdlibs", false);
+$("#chatAdlibs").onchange = () => store.set("chatAdlibs", $("#chatAdlibs").checked);
+function chatRules() {
+  const me = artistName() || "Baby Lyst";
+  return `You are the ghostwriter and co-writer for ${me} (also goes by nocap), a rapper. Talk like a real studio partner: short, direct, no long explanations, no lectures. The artist sends one-line bursts; answer fast.
+
+HOW YOU WORK
+- When the artist gives a line, KEEP THEIR WORDS. Change only what's needed and give 3 or 4 numbered options. Say which one is strongest in one short sentence.
+- "Reword" means: same meaning, fix what they named (like a word said twice), keep their voice.
+- Default bar setup: at most 8 words per bar, and the rhyme lands on word 4 AND word 8 (every 4th word). Count contractions as one word. Bars chain one end sound for 8 to 12 bars, then switch.
+- When they ask what rhymes with a word: give perfect rhymes, phrase rhymes, and slant rhymes as short lists, then 3 or 4 example bars in the setup.
+- Songs: Hook (8 bars, one rhyme sound), Verse 1 (16), Verse 2 (16 if asked), Hook. ${$("#chatAdlibs").checked ? 'End most bars with an echo ad-lib in parentheses repeating the last word, like (Name).' : "No ad-libs unless asked."}
+- If they paste a link, you can't open it: ask what it's about, or work from what they paste. If they paste someone else's lyrics, use the topic and rhyme scheme only. Never copy or lightly reword existing lyrics.
+- Voice: Jay Montana style. Mobile, Alabama: melodic, smooth, hustler at heart, real talk about loyalty, fake people, coming up from nothing, plus honest pain. Southern slang. Lines make sense and land the rhyme on the last word. Punchlines with double meanings (like "tote iron like Tony Stark").
+- Explicit language is fine. Never use slurs, including the n-word, even if the artist's pasted lyrics do.
+- No fake millionaire talk. No filler, no clichés.
+
+TOOLS
+- Use find_rhymes for rhyme words; it's Bar Lab's pronunciation dictionary, so trust it over guessing.
+- Before you send bars, run check_bars on them and fix any bar it flags (over 8 words, or word 4 not rhyming with the last word), unless the artist asked for a different setup.
+
+FORMAT
+Plain text. Use **bold** for the rhyme words in bars and for option numbers. Keep each reply as short as the request allows.`;
+}
+function md(text) {
+  const e = esc(text).replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>").replace(/(^|[^*])\*([^*\n]+)\*/g, "$1<em>$2</em>");
+  const out = []; let list = null;
+  for (const line of e.split("\n")) {
+    const ul = line.match(/^\s*[-•]\s+(.*)/), ol = line.match(/^\s*(\d+)[.)]\s+(.*)/), bq = line.match(/^\s*&gt;\s?(.*)/);
+    if (ul || ol) {
+      const tag = ul ? "ul" : "ol";
+      if (!list || list !== tag) { if (list) out.push(`</${list}>`); out.push(`<${tag}>`); list = tag; }
+      out.push(`<li>${ul ? ul[1] : ol[2]}</li>`); continue;
+    }
+    if (list) { out.push(`</${list}>`); list = null; }
+    if (bq) out.push(`<blockquote>${bq[1]}</blockquote>`);
+    else if (line.trim()) out.push(`<p>${line}</p>`);
+  }
+  if (list) out.push(`</${list}>`);
+  return out.join("");
+}
+function renderChat() {
+  const log = $("#chatLog");
+  if (!chat.turns.length) {
+    log.innerHTML = `<div class="chat-empty">Talk to it like you talk to me. For example:<br><b>what rhymes with alone</b><br><b>reword this, I say had twice: Wishing I had someone teach me wins, them L's had me beat</b><br><b>write a song about this</b>, then paste the video's topic or some lyrics.</div>`;
+    return;
+  }
+  log.innerHTML = chat.turns.map((t, i) => t.role === "user"
+    ? `<div class="msg me">${esc(t.content)}</div>`
+    : `<div class="msg bot">${md(t.content)}${t.note ? `<div class="note">${esc(t.note)}</div>` : ""}<div class="tools"><button class="btn small" data-pad="${i}">To pad</button><button class="btn small" data-copy="${i}">Copy</button></div></div>`).join("");
+  log.scrollTop = log.scrollHeight;
+}
+const lyricLines = t => t.split("\n").map(l => l.replace(/\*\*/g, "").replace(/^\s*(?:[-•]|\d+[.)])\s+/, "").replace(/^\s*>\s?/, "").trim())
+  .filter(l => l && !/:$/.test(l) && !/^#/.test(l) && !/^(want|pick|\d+ is|here|this one|that's)/i.test(l) && l.split(" ").length <= 20);
+$("#chatLog").addEventListener("click", async e => {
+  const p = e.target.closest("[data-pad]"), c = e.target.closest("[data-copy]");
+  if (p) {
+    const lines = lyricLines(chat.turns[+p.dataset.pad].content);
+    pad.value = pad.value.replace(/\s*$/, "") + (pad.value.trim() ? "\n" : "") + lines.join("\n"); pad.dispatchEvent(new Event("input")); toast("Added to the pad");
+  }
+  if (c) {
+    const txt = chat.turns[+c.dataset.copy].content.replace(/\*\*/g, "");
+    try { await navigator.clipboard.writeText(txt); toast("Copied"); } catch (err) { toast("Copy didn't work here. Select the text instead"); }
+  }
+});
+const CHAT_TOOLS = [
+  { name: "find_rhymes", description: "Rhymes for a word or short phrase from Bar Lab's pronunciation dictionary. Returns perfect rhymes, two-word phrase rhymes, multisyllable vowel matches and slant rhymes.",
+    inputSchema: { type: "object", properties: { word: { type: "string", description: "word or short phrase" } }, required: ["word"] },
+    execute(input) {
+      const r = findRhymes(String(input.word || "")); if (!r) throw new Error("Give a word.");
+      if (r.missing) throw new Error(`Not in the dictionary: ${r.missing.join(", ")}`);
+      const ok = e => e.rank < 20000 && !e.w.includes("'");
+      return { sound: r.T.v.slice(r.T.ls).map(v => v === "@" ? "uh" : v.toLowerCase()).join("-"), perfect: r.perfect.filter(ok).slice(0, 30).map(e => e.w),
+        phrases: r.combos.slice(0, 12).map(c => c.w), multis: r.multis.filter(x => ok(x.e)).slice(0, 15).map(x => x.e.w), slant: r.slant.filter(ok).slice(0, 20).map(e => e.w) };
+    } },
+  { name: "check_bars", description: "Checks bars, one per line. For each bar: word count, the 4th word and last word and whether they share the stressed vowel. Also lists end-rhyme misses (bars that rhyme with no nearby bar) and words repeated across verses.",
+    inputSchema: { type: "object", properties: { bars: { type: "string", description: "the bars, one per line; [Section] labels allowed" } }, required: ["bars"] },
+    execute(input) {
+      const text = String(input.bars || "");
+      const v = w => { const e = w && lookupWord(w); const I = e && info(e); return I ? I.v[I.ls] : null; };
+      const rows = text.split("\n").filter(l => l.trim() && !SECTION.test(l)).map(l => {
+        const ws = l.replace(/\([^)]*\)/g, "").match(/[A-Za-z][A-Za-z'’]*/g) || [];
+        const a = ws[3], b = ws[ws.length - 1], va = v(a), vb = v(b);
+        return { bar: l.trim(), words: ws.length, word4: a || "", last: b || "", word4RhymesLast: !!(va && vb && va === vb), unknownWord: !va || !vb };
+      });
+      const c = rhymeCheck(text);
+      return { bars: rows, over8: rows.filter(r => r.words > 8).length, word4Misses: rows.filter(r => !r.word4RhymesLast && !r.unknownWord).length,
+        endRhymeMisses: c.misses.map(([, x]) => x.raw.trim()), repeatedInVerses: c.repeats };
+    } },
+];
+function setChatBusy(b) { chat.busy = b; $("#chatSend").disabled = b; $("#chatStop").hidden = !b; }
+async function sendChat(text) {
+  if (chat.busy) return;
+  if (!sampleFn) { toast(sampleFn === null ? "Chat needs Claude: open Bar Lab on claude.ai" : "Still connecting, try again in a second"); return; }
+  chat.turns.push({ role: "user", content: text }); chat.turns.push({ role: "assistant", content: "Thinking…" });
+  chat.turns = chat.turns.slice(-30); renderChat(); setChatBusy(true);
+  const idx = chat.turns.length - 1;
+  const history = chat.turns.slice(0, -1).filter(t => t.content && t.content !== "Thinking…").slice(-16).map(t => ({ role: t.role, content: t.content }));
+  while (history.length && history[0].role !== "user") history.shift();
+  const msgs = [{ role: "user", content: chatRules() }, ...history];
+  chat.ctl = new AbortController(); let used = [];
+  const tools = CHAT_TOOLS.map(t => ({ ...t, execute: (inp, ctx) => { used.push(t.name); return t.execute(inp, ctx); } }));
+  let canTools = false;
+  try { canTools = !!(await sampleFn.limits()).tools; } catch (e) {}
+  try {
+    const r = await sampleFn(msgs, { signal: chat.ctl.signal, ...(canTools ? { tools } : { cache: false }), effort: "low",
+      onText: ({ text }) => { chat.turns[idx].content = text; const el = $$("#chatLog .msg.bot").pop(); if (el) el.innerHTML = md(text); $("#chatLog").scrollTop = $("#chatLog").scrollHeight; } });
+    chat.turns[idx].content = r.text;
+    if (used.length) chat.turns[idx].note = `checked with Bar Lab: ${[...new Set(used)].join(", ").replace(/_/g, " ")}`;
+  } catch (e) {
+    chat.turns[idx].content = e.text || (e.code === "cancelled" ? "Stopped." : (ERR[e.code] || "Couldn't reach Claude. Try again."));
+    if (HIDE.has(e.code)) { sampleFn = null; setAvail(); }
+  } finally { setChatBusy(false); store.set("chat", chat.turns); renderChat(); }
+}
+$("#chatForm").addEventListener("submit", e => { e.preventDefault(); const t = $("#chatIn").value.trim(); if (!t) return; $("#chatIn").value = ""; sendChat(t); });
+$("#chatIn").addEventListener("keydown", e => { if (e.key === "Enter" && !e.shiftKey && !window.matchMedia("(pointer: coarse)").matches) { e.preventDefault(); $("#chatForm").requestSubmit(); } });
+$("#chatQuick").addEventListener("click", e => { const b = e.target.closest("[data-q]"); if (!b) return; const i = $("#chatIn"); i.value = b.dataset.q; i.focus(); i.setSelectionRange(i.value.length, i.value.length); });
+$("#chatStop").onclick = () => chat.ctl && chat.ctl.abort();
+$("#chatNew").onclick = () => { if (chat.busy) return; chat.turns = []; store.set("chat", []); renderChat(); $("#chatIn").focus(); };
+renderChat();
+
 /* ================= boot ================= */
 refresh();
 search("pocket");
 nextDrop(); nextFlip();
-setView(store.get("view", "studio"));
+setView(store.get("chatv1", false) ? store.get("view", "chat") : "chat"); store.set("chatv1", true);
 setDrill(store.get("drill", "drop"));
 </script>
 

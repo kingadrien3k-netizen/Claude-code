@@ -60,6 +60,10 @@ an "on fire" streak bonus, a second defender once you hit 10 points, and a saved
 
 A writing gym for lyrical rap. Open `bars/index.html` in any browser, no install.
 
+- **Chat (Ghostwriter)**: talk to it like a co-writer: "what rhymes with alone", "reword this, I say had
+  twice", "put this in my setup", "next line", "write a song about…". It keeps your words, writes as Baby Lyst
+  in Jay Montana style, defaults to 8 words a bar with the rhyme on word 4 and word 8, and checks its bars with
+  the rhyme engine (find_rhymes / check_bars tools) before answering. "To pad" sends lines to the Write tab
 - **Studio**: type a rapper and a mood, hit Write, and get an original song in that rapper's style
   (flow, rhyme patterns, delivery, hooks and themes from their hits), with a note on which techniques
   it used. Optionally add your own story and details. Revise it, save it, or send it to the pad.
