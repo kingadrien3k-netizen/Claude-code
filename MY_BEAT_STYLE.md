@@ -115,3 +115,7 @@ Southern soulful melodic trap type beat, instrumental, signature sound, loop-bas
 - Feedback (Nov 24): beats sound good but are hard to find a FLOW on; rapping feels like "just talking over a beat." Likely cause: melody/pads too busy and drums not driving a clear pocket. Next beats: drums louder than the melody, steady driving hi-hats (8ths/16ths with rolls), clap/snare hitting hard on the backbeat, a simple sparse melody with space, and a punchier kick-808 pattern to ride.
 - Flow Pocket 01 missed hard ("hell no"): drum-forward, sparse-melody, 16th-hat version. Don't strip the melody/soul out to fix flow.
 - Why Flow Pocket 01 failed: ugly, too many switch-ups, and it didn't fill up the air (too sparse/empty). Beats must sound FULL and lush the whole way (pads, keys, melody filling the space) with ONE consistent loop and no switch-ups. Fix flow with a steady, consistent groove, not by emptying the beat.
+
+## Reference: "others" (Traiqo ft. Fattmack) - the FLOW pocket
+150 BPM, G minor. Steady constant 8th-note hi-hats the whole song (one tick every 0.2 s) = the easy-to-flow pocket. Brighter, fuller mix (melody fills the air). 808 drops out briefly in a couple of spots, but hats never stop.
+Prompt words that capture it: "steady constant eighth-note hi-hats ticking through the entire beat with only a few small rolls", "full lush loop filling the space", "bright full clean mix", 150 BPM.
