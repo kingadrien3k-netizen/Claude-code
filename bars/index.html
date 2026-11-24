@@ -369,6 +369,25 @@ canvas#ftWave { width: 100%; height: 140px; display: block; border-radius: 8px; 
 .limitbar b { color: var(--warn); }
 .limitbar span { flex: 1; min-width: 200px; }
 
+/* quick */
+.quickwrap { max-width: 760px; margin: 0 auto; }
+.genres { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+@media (max-width: 560px) { .genre { padding: 10px 12px; } .genre b { font-size: 15px; } }
+.genre { text-align: left; border: 1px solid var(--line); background: var(--paper); border-radius: 12px; padding: 12px 14px; display: grid; gap: 2px; }
+.genre b { font-size: 16px; }
+.genre span { font-size: 13px; color: var(--muted); }
+.genre[aria-pressed="true"] { border-color: var(--accent); box-shadow: inset 0 0 0 1px var(--accent); }
+.genre[aria-pressed="true"] b { color: var(--accent); }
+.qsheet { margin-top: 18px; }
+.qsheet .song-title { margin-bottom: 4px; }
+.qsheet .qline { font-size: 20px; font-weight: 500; line-height: 1.7; }
+.qsheet .qline .r { color: var(--t3); font-weight: 700; }
+.qsheet .qline.off .r { color: var(--t5); }
+.qmeta { font-size: 13px; color: var(--muted); margin: 10px 0; }
+nav.tabs:not(.open) .mt { display: none; }
+.moretab { border: 0; background: none; padding: 8px 14px; border-radius: 999px; font-weight: 600; color: var(--muted); }
+nav.tabs.open .moretab { color: var(--ink); }
+
 /* chat */
 .chatwrap { max-width: 860px; margin: 0 auto; }
 .chatcard { display: flex; flex-direction: column; gap: 12px; }
@@ -428,18 +447,33 @@ canvas#ftWave { width: 100%; height: 140px; display: block; border-radius: 8px; 
     </div>
     <button class="btn small themebtn" id="themeBtn" type="button" aria-label="Switch light or dark mode">Light mode</button>
     <nav class="tabs" role="tablist" aria-label="Sections">
+      <button role="tab" id="t-quick" aria-selected="false" data-view="quick">Quick</button>
       <button role="tab" id="t-chat" aria-selected="false" data-view="chat">Chat</button>
       <button role="tab" id="t-write" aria-selected="true" data-view="write">Song</button>
-      <button role="tab" id="t-tools" aria-selected="false" data-view="tools">Tools</button>
-      <button role="tab" id="t-dna" aria-selected="false" data-view="dna">DNA</button>
-      <button role="tab" id="t-flow" aria-selected="false" data-view="flow">Flow</button>
-      <button role="tab" id="t-stats" aria-selected="false" data-view="stats">Stats</button>
-      <button role="tab" id="t-studio" aria-selected="false" data-view="studio">Studio</button>
-      <button role="tab" id="t-drills" aria-selected="false" data-view="drills">Drills</button>
+      <button role="tab" class="mt" id="t-tools" aria-selected="false" data-view="tools">Tools</button>
+      <button role="tab" class="mt" id="t-dna" aria-selected="false" data-view="dna">DNA</button>
+      <button role="tab" class="mt" id="t-flow" aria-selected="false" data-view="flow">Flow</button>
+      <button role="tab" class="mt" id="t-stats" aria-selected="false" data-view="stats">Stats</button>
+      <button role="tab" class="mt" id="t-studio" aria-selected="false" data-view="studio">Studio</button>
+      <button role="tab" class="mt" id="t-drills" aria-selected="false" data-view="drills">Drills</button>
+      <button type="button" class="moretab" id="moreTab" aria-expanded="false">More</button>
     </nav>
   </header>
   <div class="ctxbar" id="ctxbar"></div>
   <div class="limitbar" id="limitbar" hidden></div>
+
+  <!-- QUICK -->
+  <section class="view" id="v-quick" hidden>
+    <div class="quickwrap">
+      <div class="card">
+        <div class="card-head"><h2>Quick lyrics</h2><span class="eyebrow">pick the feel · tap write</span></div>
+        <div class="genres" id="genres"></div>
+        <input class="mini" id="qTopic" type="text" autocomplete="off" placeholder="What's it about? (optional)" style="margin-top:12px">
+        <button class="btn primary big" id="qGo">Write it</button>
+        <div id="qOut"></div>
+      </div>
+    </div>
+  </section>
 
   <!-- CHAT -->
   <section class="view" id="v-chat" hidden>
@@ -1329,7 +1363,7 @@ var setView = function (v) {
   store.set("view", v);
   if (v === "flow") renderPrompter();
 }
-$$("nav.tabs button").forEach(b => b.onclick = () => setView(b.dataset.view));
+$$("nav.tabs button[data-view]").forEach(b => b.onclick = () => setView(b.dataset.view));
 let drill = "drop";
 function setDrill(d) {
   drill = d;
@@ -2243,11 +2277,87 @@ $("#chatStop").onclick = () => chat.ctl && chat.ctl.abort();
 $("#chatNew").onclick = () => { if (chat.busy) return; chat.turns = []; store.set("chat", []); renderChat(); $("#chatIn").focus(); };
 renderChat();
 
+/* ================= QUICK LYRICS ================= */
+const GENRES = [
+  { id: "gospel", name: "Ghetto Gospel", feel: "faith and struggle: God, Mama, praying through the hard times, coming out the dirt, choir energy, call and response", bpm: 96, voice: ["Little David"] },
+  { id: "pain", name: "Pain", feel: "slow and hurt: loss, people who left, missing someone, honest pain, melodic and spaced out", bpm: 86, voice: ["Sixty Percent"] },
+  { id: "love", name: "Pluggnb Love", feel: "dreamy love: wanting her to stay, loyalty, soft but real, melodic and catchy", bpm: 94, voice: ["Why Would You Ever Leave"] },
+  { id: "motivational", name: "Jay Montana Motivational", feel: "hustler motivation: winning energy, coming up from nothing, stay down, fake people fell off, never sorry-sounding", bpm: 140, voice: ["Hit Them Charts", "All Love Now"] },
+  { id: "flex", name: "Dark Flex", feel: "cold confidence: quiet money, moving smart, they watching, minimal words that hit hard", bpm: 138, voice: [] },
+  { id: "heavenly", name: "Heavenly", feel: "peaceful and grateful: calm after the storm, faith, still shining, soft and reflective", bpm: 90, voice: ["Shining More"] },
+  { id: "acoustic", name: "Acoustic", feel: "simple and emotional: real feelings said plain, like talking over a guitar", bpm: 88, voice: [] },
+];
+let qGenre = store.get("qGenre", "motivational"), qLast = null;
+$("#genres").innerHTML = GENRES.map(g => `<button class="genre" type="button" data-genre="${g.id}" aria-pressed="${g.id === qGenre}"><b>${esc(g.name)}</b><span>${esc(g.feel.split(":")[0])}</span></button>`).join("");
+$("#genres").addEventListener("click", e => { const b = e.target.closest("[data-genre]"); if (!b) return; qGenre = b.dataset.genre; store.set("qGenre", qGenre); $$("#genres .genre").forEach(x => x.setAttribute("aria-pressed", x === b)); });
+$("#qTopic").value = store.get("qTopic", ""); $("#qTopic").addEventListener("input", () => store.set("qTopic", $("#qTopic").value));
+function voiceLines(g) {
+  const lines = []; CATALOG.filter(c => g.voice.includes(c.title)).forEach(c => c.text.split("\n").filter(l => l && !/^\[/.test(l)).slice(0, 6).forEach(l => lines.push(l.replace(/\s*\([^)]*\)\s*$/, ""))));
+  return lines.slice(0, 8);
+}
+function qCheckLine(l) {
+  const ws = l.replace(/\([^)]*\)/g, "").match(/[A-Za-z][A-Za-z'’]*/g) || [];
+  const v = w => { const e = w && lookupWord(w); const I = e && info(e); return I ? I.v[I.ls] : null; };
+  const a = ws[3], b = ws[ws.length - 1]; const ok = ws.length <= 8 && (!v(a) || !v(b) || v(a) === v(b));
+  return { ok, n: ws.length, a, b };
+}
+function qRender(text, done) {
+  const lines = text.split("\n"); let title = ""; const body = [];
+  lines.forEach(l => { const m = l.match(/^\s*TITLE:\s*(.*)/i); if (m) title = m[1].trim(); else body.push(l); });
+  let good = 0, total = 0;
+  const html = body.map(l => {
+    if (!l.trim()) return "";
+    if (/^\s*\[.*\]\s*$/.test(l)) return `<div class="sec">${esc(l.trim().slice(1, -1))}</div>`;
+    const c = qCheckLine(l); total++; if (c.ok) good++;
+    let h = esc(l);
+    [c.a, c.b].filter(Boolean).forEach(w => { const re = new RegExp(`\\b(${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")})\\b(?![^<]*>)`); h = h.replace(re, '<span class="r">$1</span>'); });
+    return `<div class="qline${c.ok ? "" : " off"}">${h}</div>`;
+  }).join("");
+  $("#qOut").innerHTML = `<div class="qsheet">${title ? `<div class="song-title">${esc(title)}</div>` : ""}<div class="song">${html}</div>
+    ${done ? `<p class="qmeta">${good}/${total} bars hit your setup (8 words, rhyme on word 4 and 8). Green = the rhymes.</p>
+    <div class="row"><button class="btn primary" id="qAgain">Another one</button><button class="btn" id="qMore">Add a verse</button><button class="btn" id="qPad">Send to Song</button><button class="btn" id="qCopy">Copy</button></div>` : ""}</div>`;
+  if (!done) return;
+  $("#qAgain").onclick = () => qWrite();
+  $("#qMore").onclick = () => qWrite(text);
+  $("#qPad").onclick = () => { pad.value = body.join("\n").trim(); pad.dispatchEvent(new Event("input")); if ($("#songTitle")) { $("#songTitle").value = title; store.set("f.songTitle", title); } setView("write"); window.scrollTo(0, 0); toast("It's on the Song tab"); };
+  $("#qCopy").onclick = async () => { try { await navigator.clipboard.writeText((title ? title + "\n\n" : "") + body.join("\n").trim()); toast("Copied"); } catch (e) { toast("Select the text to copy it"); } };
+}
+async function qWrite(extend) {
+  const out = $("#qOut"); if (!needAI(out)) return;
+  const g = GENRES.find(x => x.id === qGenre) || GENRES[0]; const topic = $("#qTopic").value.trim(); const me = artistName() || "Baby Lyst";
+  const voice = voiceLines(g);
+  const prompt = extend ? `Here's a short rap song written for ${me} in the "${g.name}" feel (${g.feel}):
+
+${extend}
+
+Add one more verse of 8 bars that continues it. Same setup: every bar at most 8 words, and the rhyme lands on word 4 and word 8. Simple words, easy to rap, makes sense.
+Return the WHOLE song with the new [Verse 2] added, same format (TITLE: line, then [Section] labels, one bar per line). Nothing else.` :
+  `Write a short, simple rap song for ${me} in the "${g.name}" feel: ${g.feel}.
+${topic ? `It's about: ${topic}.` : "Pick a real, relatable situation that fits the feel."}
+${voice.length ? `This is how ${me} writes in this feel (for voice only, don't reuse these lines):\n${voice.map(l => "- " + l).join("\n")}\n` : ""}
+Setup, follow it exactly:
+- Every bar is at most 8 words, and the rhyme lands on word 4 AND word 8 (example: "Clocked out, came home, thumb on my phone").
+- Stay on one rhyme sound for the hook; the verse can switch sound once halfway.
+- Simple, quick, easy to rap. Plain words, one clear feeling, every bar makes sense.
+- Explicit is fine, never slurs. Never copy existing songs.
+Song: [Hook] 4 bars, [Verse] 8 bars.
+Format exactly: TITLE: the title, then [Hook], its bars, then [Verse], its bars. One bar per line. Nothing else.`;
+  out.innerHTML = `<p class="status">Writing ${esc(g.name)}…</p>`;
+  try {
+    const r = await sampleFn(prompt, { cache: false, effort: "low", onText: ({ text }) => qRender(text, false) });
+    qLast = r.text; qRender(r.text, true); limitCleared();
+    songs = [{ title: (r.text.match(/TITLE:\s*(.*)/i) || [])[1] || g.name, artist: g.name, text: r.text, at: Date.now() }, ...songs].slice(0, 12); store.set("songs", songs); renderSaved();
+  } catch (e) { if (e.text) qRender(e.text, true); else aiFail(out, e); }
+}
+$("#qGo").onclick = () => qWrite();
+$("#moreTab").onclick = () => { const n = $("nav.tabs"); const open = !n.classList.contains("open"); n.classList.toggle("open", open); $("#moreTab").setAttribute("aria-expanded", open); $("#moreTab").textContent = open ? "Less" : "More"; store.set("moreTabs", open); };
+if (store.get("moreTabs", false)) $("#moreTab").click();
+
 /* ================= LYRIC LAB ================= */
 /* usage limit: keep the request, pause AI tools, one tap to retry after the reset */
 const LIMIT = { at: store.get("limit.at", 0), redo: null, what: "" };
 document.addEventListener("click", e => {
-  const b = e.target.closest("#docGo, #thrGo, #storyPlan, #storyCheck, #nrFix, #dnaGo, #dnaMine, #dnaWrite, #ftCoach, [data-mapleaf], #againBtn");
+  const b = e.target.closest("#qGo, #qAgain, #qMore, #docGo, #thrGo, #storyPlan, #storyCheck, #nrFix, #dnaGo, #dnaMine, #dnaWrite, #ftCoach, [data-mapleaf], #againBtn");
   if (b) { LIMIT.redo = () => b.isConnected ? b.click() : null; LIMIT.what = (b.textContent || "").trim().slice(0, 40); }
 }, true);
 document.addEventListener("submit", e => {
@@ -2932,13 +3042,14 @@ function syncSong() { renderOutline(); renderNR(); renderCtx(); if (view === "st
 pad.addEventListener("input", () => { clearTimeout(LL.syncT); LL.syncT = setTimeout(syncSong, 400); });
 const _setView = setView;
 setView = function (v) { _setView(v); if (v === "stats") renderStats(); if (v === "write") syncSong(); };
-$$("nav.tabs button").forEach(b => b.onclick = () => setView(b.dataset.view));
+$$("nav.tabs button[data-view]").forEach(b => b.onclick = () => setView(b.dataset.view));
 
 /* ================= boot ================= */
 refresh();
 search("pocket");
 nextDrop(); nextFlip();
-setView(store.get("chatv1", false) ? store.get("view", "chat") : "chat"); store.set("chatv1", true);
+setView(store.get("quickv1", false) ? store.get("view", "quick") : "quick"); store.set("quickv1", true);
+if (["tools", "dna", "flow", "stats", "studio", "drills"].includes(view) && !$("nav.tabs").classList.contains("open")) $("#moreTab").click();
 setDrill(store.get("drill", "drop"));
 </script>
 
