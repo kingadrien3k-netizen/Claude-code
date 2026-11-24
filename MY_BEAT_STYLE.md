@@ -124,3 +124,7 @@ Prompt words that capture it: "steady constant eighth-note hi-hats ticking throu
 ## HIT: Gospel Pocket 01 (150 BPM, G minor, 1:55) - master for gospel + easy flow
 Ghetto gospel street trap type beat, instrumental, Florida soulful heartfelt vibe, loop-based, one full repeating 4-bar gospel piano chord loop with warm church organ and a soft gospel choir pad filling the space the whole way, minimal chord changes, steady constant eighth-note hi-hats ticking through the entire beat with only a few small rolls, loud punchy kick drum and heavy deep 808 bass up front following the kick, snappy clap on the backbeat, gritty warm full mix, half-time head-nod pocket, full drums and 808 start within the first few seconds, one steady consistent groove from start to finish, emotional bittersweet prayerful street mood, G minor, 150 BPM, raw mix
 (Edit method: vidIQ gave intro/hook/break/verse/hook/outro. Built it from ONLY the full hook sections, repeated on bar lines, so it stays full with no switches.)
+
+## Reference: TikTok clip (Nov 24) - 808-dominant style
+About 142 BPM, G# minor, roughly 85% of the energy in the sub bass (under 80 Hz), quiet tucked-back hats, bouncy 2-bar 808 pattern.
+Made: 808 Heavy Cold 01 (140 BPM, 1:55). Came back steady with no breaks (75% sub energy). Only trimmed the outro.
