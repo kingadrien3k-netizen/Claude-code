@@ -119,3 +119,4 @@ Southern soulful melodic trap type beat, instrumental, signature sound, loop-bas
 ## Reference: "others" (Traiqo ft. Fattmack) - the FLOW pocket
 150 BPM, G minor. Steady constant 8th-note hi-hats the whole song (one tick every 0.2 s) = the easy-to-flow pocket. Brighter, fuller mix (melody fills the air). 808 drops out briefly in a couple of spots, but hats never stop.
 Prompt words that capture it: "steady constant eighth-note hi-hats ticking through the entire beat with only a few small rolls", "full lush loop filling the space", "bright full clean mix", 150 BPM.
+- Steady Pocket 01 missed: girly. "soft bright bell" + "bright clean mix" = girly. Keep the steady 8th-hat pocket, but use the street/gospel sound instead (gospel piano + church organ + choir pad, heavy 808, gritty warm mix). Never say "bright" or "soft bell" again.
