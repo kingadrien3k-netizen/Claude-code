@@ -134,3 +134,4 @@ Made: 808 Heavy Cold 01 (140 BPM, 1:55). Came back steady with no breaks (75% su
 
 ## Reference: "Please Don't Judge Me" (Fatt Mack visualizer)
 About 152 BPM, steady 8th-note hats with triplet bounce, roughly 70% of the energy in the sub bass, around F# minor / E major, calm ~12 s intro then steady the whole way.
+- Pain Rap 09 (ATL underground, 161 BPM): didn't make me want to rap about getting rich. For money/flex songs, use the Swag ATL 01 lane with a "luxurious confident rich flexing victory, money-counting swagger" mood.
