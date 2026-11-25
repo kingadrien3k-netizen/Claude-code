@@ -135,3 +135,4 @@ Made: 808 Heavy Cold 01 (140 BPM, 1:55). Came back steady with no breaks (75% su
 ## Reference: "Please Don't Judge Me" (Fatt Mack visualizer)
 About 152 BPM, steady 8th-note hats with triplet bounce, roughly 70% of the energy in the sub bass, around F# minor / E major, calm ~12 s intro then steady the whole way.
 - Pain Rap 09 (ATL underground, 161 BPM): didn't make me want to rap about getting rich. For money/flex songs, use the Swag ATL 01 lane with a "luxurious confident rich flexing victory, money-counting swagger" mood.
+- Rich Flex 01 (150 BPM) = YES, but wants a "heavenly floating" layer on top to show the Babylyst signature: Swag/Rich Flex base + angelic choir pads and airy harp shimmer floating above (from Heavenly 01, a hit).
