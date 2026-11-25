@@ -20,3 +20,12 @@ Feedback: "my voice can't be heard." Split every song into vocals and beat with 
 - Beat: same per-song bass/mid fixes as v1, plus a pocket carved for the voice (-3 dB at 2.8 kHz, -1.5 dB at 900 Hz).
 - Balance: vocal set 7 LU over the beat on every song (before: Lost +0.9, Hard Headed +2.4, Rapping +4.4, Breadwinner +2.0, Charts +2.5, World4U +4.1, Turning Over +3.1, measured on the raw split stems).
 - Master: glue compression, about -11 LUFS on all, true peak at or below -0.7 dBTP, no clipping.
+
+## v3 remix (blended), Nov 25
+Feedback on v2: "it don't sound mixed at all" (the vocal sounded pasted on top). New approach:
+- Base = the ORIGINAL full song (keeps it glued), with the per-song bass/mid fixes.
+- Plus a cleaned vocal layer (split with Demucs) 9 dB under the existing vocal: high-pass 100 Hz, mud/box cuts, +2.5 dB at 3 kHz, de-esser, 4:1 compression, soft saturation.
+- Space: tempo-synced 1/8-note echo plus a short room reverb on a send.
+- The beat ducks gently (1.6:1) only when the vocal plays. No static EQ hole.
+- Bus glue (1.8:1), soft clip, master to about -10.6 LUFS, true peak at or below -0.3 dBTP.
+- Result (measured): vocal over beat went from +0.9 to +5.6 on Lost, +2.0 to +3.4 on Breadwinner, +3.1 to +5.4 on Turning Over.
