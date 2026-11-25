@@ -29,3 +29,7 @@ Feedback on v2: "it don't sound mixed at all" (the vocal sounded pasted on top).
 - The beat ducks gently (1.6:1) only when the vocal plays. No static EQ hole.
 - Bus glue (1.8:1), soft clip, master to about -10.6 LUFS, true peak at or below -0.3 dBTP.
 - Result (measured): vocal over beat went from +0.9 to +5.6 on Lost, +2.0 to +3.4 on Breadwinner, +3.1 to +5.4 on Turning Over.
+
+## FINAL (Nov 25): original songs, untouched
+I asked to stop editing my vocals and not mix anything. The official album is my ORIGINAL uploaded songs, with the audio byte-for-byte unchanged (verified by audio checksum). Only the album, artist and track-number tags were added. The v1, v2 and v3 masters are not used.
+Rule going forward: don't process, EQ, or remix my vocals or songs unless I ask.
