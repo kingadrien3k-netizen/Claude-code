@@ -40,3 +40,6 @@ Chain: high-pass 28 Hz, per-song tone fix (same as v1 but gentler), +1.5 dB at 3
 Result: every song at exactly -11.0 LUFS, true peak -0.3 to -1.5 dBTP, no clipping.
 Loudness range (LRA) before -> after: Lost 4.1->1.9, Hard Headed 1.3->1.1, Rapping 3.7->2.6, Breadwinner 0.9->0.9, Charts 6.0->1.6, World4U 2.8->2.4, Turning Over 4.3->3.6.
 Delivered as WAV (for DistroKid) and 320 kbps MP3.
+
+## v5 (Nov 27): reference match to "Please Don't Judge Me"
+Tone-matched the original song to the Fatt Mack reference (1/3-octave curve, ±6 dB max, level-neutral), then light glue compression and a limiter to about -11 LUFS. The test on Lost was liked ("this good"), except the bass was too high, so the sub boost under 150 Hz was cut in half (about +3 dB at 50 Hz instead of +6). Nothing else changed. If approved, apply the same to all 7 songs.
