@@ -43,3 +43,7 @@ Delivered as WAV (for DistroKid) and 320 kbps MP3.
 
 ## v5 (Nov 27): reference match to "Please Don't Judge Me"
 Tone-matched the original song to the Fatt Mack reference (1/3-octave curve, ±6 dB max, level-neutral), then light glue compression and a limiter to about -11 LUFS. The test on Lost was liked ("this good"), except the bass was too high, so the sub boost under 150 Hz was cut in half (about +3 dB at 50 Hz instead of +6). Nothing else changed. If approved, apply the same to all 7 songs.
+
+## FINAL MASTER (Nov 27): approved method
+Applied the v5 reference match (Please Don't Judge Me, bass boost x0.5) to all 7 original songs, then glue compression, limiter at 0.72, trim. Result: -11.3 to -11.7 LUFS, true peak -0.4 to -1.8 dBTP, no clipping. Delivered as WAV (release) and 320 kbps MP3.
+To recreate: match2.py with BASS_SCALE=0.5 against the reference, then the same chain.
