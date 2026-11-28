@@ -145,3 +145,11 @@ About 152 BPM, steady 8th-note hats with triplet bounce, roughly 70% of the ener
 About 160 BPM, E minor, short punchy sparse 808 hits with gaps (not a constant rumble), quick 16th hats, 808 drops out in a couple of sections, balanced vocal-forward mix (not sub-dominant). Close to the Pain Rap 08 ATL underground lane.
 - Heartless Lane 01 (dark plucks, sparse 808, 160) = "no music". Wants something good to the ear that you can RIDE to: smooth, melodic, cruising. Default back to the Southern Bounce 01 lane.
 - Ride Out 01: wanted MORE bass ("that bass to bass"). Fix: +5 dB low shelf at 120 Hz, +2 dB at 55 Hz, limiter at 0.85 (about -10.5 LUFS, no clipping). Default ride beats to this heavier low end.
+
+## PERFECT: Ride Out 01 (Feel Good), 145 BPM. Master for ride beats and the default finishing chain
+Prompt: Smooth Southern melodic trap beat, instrumental, soulful heartfelt vibe, loop-based, starts with a short calm intro of only warm keys for a few seconds, then nostalgic warm electric piano chords with a smooth catchy warm bell lead melody and soft gospel organ pad, dreamy reverb, deep rumbling 808 bass locked with the kick, crisp hi-hat rolls and a soft snap on the backbeat, smooth bouncy half-time head-nod groove made for riding and cruising at night, one steady groove after the drop, pleasant easy-on-the-ear bittersweet mood, 146 BPM, warm polished mix
+Edits: intro to 4 bars, cut a 2-bar gap on the beat, fade the end.
+FINISHING CHAIN (apply to every beat from now on):
+1) Bass up: lowshelf 120 Hz +5 dB, +2 dB at 55 Hz
+2) Feel good: -2 dB at 280 Hz (mud), +1.5 dB at 3 kHz (melody), +2.5 dB shelf at 9.5 kHz (shine), glue comp 1.6:1
+3) Level to about -10.5 LUFS, limiter 0.85, check no clipping
