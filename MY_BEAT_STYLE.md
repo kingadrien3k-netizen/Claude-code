@@ -161,3 +161,4 @@ FINISHING CHAIN (apply to every beat from now on):
 
 ## Reference: "808s." by 1300SAINT (Nov 28)
 About 152 BPM, D minor / F major. The 808 IS the beat: thick, distorted, constantly sustained rumble, about 67% of the energy in the sub. Dark, very little high end. Mastered LOUD, about -8.8 LUFS.
+- 808 Heavy 02 (from the 808s. reference): 150 BPM, D minor, about 71% sub energy, starts on the drop. LOUD master method: feel-good EQ (no extra bass shelf when the 808 is already heavy), glue 1.8:1, +9.5 dB, tanh soft clip at 0.9, limiter 0.8 = about -9.5 LUFS, true peak -0.7 dBTP, no clipping.
