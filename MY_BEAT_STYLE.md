@@ -143,3 +143,4 @@ About 152 BPM, steady 8th-note hats with triplet bounce, roughly 70% of the ener
 
 ## Reference: "Heartless Kid" (Nov 28)
 About 160 BPM, E minor, short punchy sparse 808 hits with gaps (not a constant rumble), quick 16th hats, 808 drops out in a couple of sections, balanced vocal-forward mix (not sub-dominant). Close to the Pain Rap 08 ATL underground lane.
+- Heartless Lane 01 (dark plucks, sparse 808, 160) = "no music". Wants something good to the ear that you can RIDE to: smooth, melodic, cruising. Default back to the Southern Bounce 01 lane.
