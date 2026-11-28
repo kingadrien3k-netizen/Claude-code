@@ -157,3 +157,4 @@ FINISHING CHAIN (apply to every beat from now on):
 - Nov 28: recent beats (Ride Out, Smooth Hustle) are too SOFT ("they gone think I'm soft with these beats"). Needs harder street energy: menacing dark piano and strings, hard distorted 808, hard snare, aggressive hat rolls, Southern pattern (not drill). Smooth is for cruising only.
 - Hard Street 01 (dark menacing piano/strings, distorted 808, 150) = "hell nah". Guessing "hard" isn't working. Need a reference song for the hard sound.
 - Intros (Nov 28): vidIQ's own keys-only intros are often "ass". Better default: build the intro from the first 4 bars of the real groove, high-passed around 400 Hz (no 808 or kick) at about 80% volume, then the full beat drops.
+- RULE (Nov 28): NO INTROS. Doesn't like any intro (not vidIQ's, not the filtered-groove one). Start every beat right on the drop, full from the first second.
