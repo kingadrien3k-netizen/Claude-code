@@ -140,3 +140,6 @@ About 152 BPM, steady 8th-note hats with triplet bounce, roughly 70% of the ener
 - NEW METHOD (layering): to add a vibe to a beat I already like, generate a beatless pad (e.g. heavenly choir + harp) in the beat's key, check its key (vidIQ often ignores the key, so pitch-shift it to match), high-pass it around 250 Hz, and blend it at about 30% under the original. Did this for "Rich Flex 01 - Heavenly Float" (F major / D minor).
 - Rich Flex 02 had "somebody singing": the AI turned the "soulful pitched-up vocal sample/chop" wording into actual singing. For instrumental beats, drop all "vocal" words. Get the soul feel from instruments instead (soulful electric piano / Rhodes, gospel organ, chopped soul piano stabs).
 - RULE: never edit, mix or master my vocals or finished songs unless I explicitly ask. "Make the song real" = keep it exactly how I made it.
+
+## Reference: "Heartless Kid" (Nov 28)
+About 160 BPM, E minor, short punchy sparse 808 hits with gaps (not a constant rumble), quick 16th hats, 808 drops out in a couple of sections, balanced vocal-forward mix (not sub-dominant). Close to the Pain Rap 08 ATL underground lane.
