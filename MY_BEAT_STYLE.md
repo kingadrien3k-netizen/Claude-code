@@ -154,3 +154,4 @@ FINISHING CHAIN (apply to every beat from now on):
 2) Feel good: -2 dB at 280 Hz (mud), +1.5 dB at 3 kHz (melody), +2.5 dB shelf at 9.5 kHz (shine), glue comp 1.6:1
 3) Level to about -10.5 LUFS, limiter 0.85, check no clipping
 - Ride Out 02: not for money/hustler raps. Ride Out = cruising. For money/hustle songs, use the Rich Flex lane with NO vocal words (chopped soulful Rhodes stabs + dark rich electric piano, stacked claps, triplet hats, "hungry hustler grind, money-counting swagger"), 150 BPM.
+- Nov 28: recent beats (Ride Out, Smooth Hustle) are too SOFT ("they gone think I'm soft with these beats"). Needs harder street energy: menacing dark piano and strings, hard distorted 808, hard snare, aggressive hat rolls, Southern pattern (not drill). Smooth is for cruising only.
