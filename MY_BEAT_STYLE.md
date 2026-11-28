@@ -158,3 +158,6 @@ FINISHING CHAIN (apply to every beat from now on):
 - Hard Street 01 (dark menacing piano/strings, distorted 808, 150) = "hell nah". Guessing "hard" isn't working. Need a reference song for the hard sound.
 - Intros (Nov 28): vidIQ's own keys-only intros are often "ass". Better default: build the intro from the first 4 bars of the real groove, high-passed around 400 Hz (no 808 or kick) at about 80% volume, then the full beat drops.
 - RULE (Nov 28): NO INTROS. Doesn't like any intro (not vidIQ's, not the filtered-groove one). Start every beat right on the drop, full from the first second.
+
+## Reference: "808s." by 1300SAINT (Nov 28)
+About 152 BPM, D minor / F major. The 808 IS the beat: thick, distorted, constantly sustained rumble, about 67% of the energy in the sub. Dark, very little high end. Mastered LOUD, about -8.8 LUFS.
